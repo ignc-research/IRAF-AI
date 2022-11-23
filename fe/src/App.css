@@ -1,0 +1,56 @@
+body, html, #root, .App, .tab-pane, .Tab {
+    height: 100%;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.mh-0 {
+    min-height: 0;
+}
+
+.mw-0 {
+    min-width: 0;
+}
+
+.config-name {
+    max-width: 15ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.tab-content {
+    flex: 1;
+    min-height: 0;
+}
+
+.Tab {
+    display: flex;
+    flex-direction: column;
+
+}
+.Tab-header {
+    display: flex;
+    justify-content: space-around;
+    align-items:center;
+}
+.Tab-body {
+    min-height: 0;
+    flex: 1;
+    display: flex;
+}
+.cursor-pointer {
+    cursor:pointer;
+}
+
+.modal {
+    top: unset !important;
+    position: absolute !important;
+}

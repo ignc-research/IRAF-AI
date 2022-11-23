@@ -1,0 +1,9 @@
+.pane {
+    width: 400px;
+    color: black;
+    overflow: hidden;
+    transition: all .25s;
+}
+.pane-collapsed {
+    width: 0px;
+}

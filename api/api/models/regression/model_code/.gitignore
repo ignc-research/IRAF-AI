@@ -1,0 +1,4 @@
+prediction/*
+!predicton/base_model
+data/*
+!data/database/

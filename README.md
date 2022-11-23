@@ -1,2 +1,7 @@
-# IRAF-AI
-IRAF stands for "Industrial Robot Automation Framework powered by AI"
+# industrial-web-application
+
+## Backend 
+Code and readme file in folder `./api`
+
+## Frontend 
+Code and readme file in folder `./fe`

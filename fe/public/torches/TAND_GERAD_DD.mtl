@@ -1,0 +1,15 @@
+newmtl farbe_256
+Kd 0.0000 0.0000 0.0000
+d 1.00
+newmtl farbe_9
+Kd 0.7529 0.7529 0.7529
+d 1.00
+newmtl farbe_254
+Kd 0.8392 0.8392 0.8392
+d 1.00
+newmtl farbe_3
+Kd 0.0000 1.0000 0.0000
+d 0.33
+newmtl farbe_1
+Kd 1.0000 0.0000 0.0000
+d 0.33

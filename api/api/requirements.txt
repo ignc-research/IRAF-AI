@@ -1,0 +1,9 @@
+numpy==1.21.5
+open3d==0.14.1
+trimesh==3.12.6
+scikit-learn==1.0.2
+h5py==3.7.0
+flask==2.2.2
+flask_cors==3.0.10
+tensorflow==2.10.0
+pybullet==3.2.5

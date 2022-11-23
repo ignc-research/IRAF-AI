@@ -1,0 +1,5 @@
+numpy==1.21.5
+open3d==0.14.1
+trimesh==3.12.6
+scikit-learn==1.0.2
+h5py==3.7.0
