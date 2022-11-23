@@ -1,4 +1,4 @@
-# industrial-web-application
+# IRAF-AI
 
 ## Backend 
 Code and readme file in folder `./api`
