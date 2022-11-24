@@ -149,6 +149,7 @@ def train(
     units: int,
     beam_files: str,
     num_ray: int,
+    num_sensors: int,
     epochs: int,
 ):
 
@@ -208,7 +209,7 @@ def train(
             validation_data=(X_test, y_test),
         )
 
-    model_name_plus_beams = f"{model_name}_{num_ray}"
+    model_name_plus_beams = f"{model_name}_{num_sensors}_{num_ray}"
 
     save_path = "{}/{}".format("./prediction", model_name_plus_beams)
 

@@ -39,6 +39,7 @@ def training(
     input_xmls,
     input_objs,
     num_ray,
+    num_sensors,
     model_name,
     model_type,
     num_layers,
@@ -69,7 +70,7 @@ def training(
             xml_file.write(file["file"])
 
     laser_beam_path = "{}/{}".format(
-        folder_path, f"objects_beam_files_num_ray_{num_ray}"
+        folder_path, f"objects_beam_files_num_ray_{num_sensors}_{num_ray}"
     )
     try:
         os.mkdir(laser_beam_path)
@@ -85,6 +86,7 @@ def training(
             object_xml_file=f"./data/{fileBase}/{file}",
             target_dir=laser_beam_path,
             num_ray=num_ray,
+            num_sensors=num_sensors,
             sensor_loc_factor=sensor_loc_factor,
             miss_fraction=-1,
             _urdf_path=f"./data/{fileBase}/objects_urdfs",
@@ -99,8 +101,9 @@ def training(
         model_type=model_type,
         num_layers=num_layers,
         units=units,
-        beam_files="{}/{}".format(folder_path, f"objects_beam_files_num_ray_{num_ray}"),
+        beam_files="{}/{}".format(folder_path, f"objects_beam_files_num_ray_{num_sensors}_{num_ray}"),
         num_ray=num_ray,
+        num_sensors=num_sensors,
         epochs=epochs,
     )
 
@@ -146,17 +149,23 @@ def predict(model_type, model_name, object_name, xml, obj):
             model_name == "convolutional_base_model"
             or model_name == "fully_connected_base_model"
         ):
+            # Change these if trainingsdata was created with higher number of sensors/rays
             num_ray = 5
+            num_sensors = 1
         else:
             num_ray = int(model_name.split("_")[-1])
+            num_sensors = int(model_name.split("_")[-2])
 
     else:
+        # Change these if database was created with higher number of sensors/rays
         num_ray = 5
+        num_sensors = 1
 
     generate_beam_files_for_obj(
         object_xml_file=input_data_xml_file,
         target_dir=f"{folder_path}/object_beam_files",
         num_ray=num_ray,
+        num_sensors=num_sensors,
         sensor_loc_factor=1,
         miss_fraction=-1,
         _urdf_path=f"./data/{object_name}/objects_urdfs",

@@ -23,6 +23,7 @@ class RegressionModel(BaseModel):
         model_name = params["model_name"]["value"]
         model_type = params["model_type"]["value"]
         num_ray = int(params["num_ray"]["value"])
+        num_sensors = int(params.get("num_sensors", {}).get("value", 1))
         num_layers = int(params["num_layers"]["value"])
         activation_function = params["activation_function"]["value"]
         units = int(params["units"]["value"])
@@ -39,6 +40,7 @@ class RegressionModel(BaseModel):
                 xmls,
                 objs,
                 num_ray,
+                num_sensors,
                 model_name,
                 model_type,
                 num_layers,
@@ -75,7 +77,7 @@ class RegressionModel(BaseModel):
 
         return PredictionResult(
             f"Regression {datestr}",
-            f"Successfully ran prediction\n{log.get_text()}",
+            f"Successfully ran prediction!\n{log.get_text()}",
             [PredictionLayer(f"{modelType}/{modelName}", xml)],
         )
 
@@ -99,6 +101,7 @@ class RegressionModel(BaseModel):
                 },
             },
             "num_ray": {"display": "Number of Rays", "type": "number", "value": "20"},
+            "num_sensors": {"display": "Number of Sensors", "type": "number", "value": "1"},
             "num_layers": {
                 "display": "Number of Layers",
                 "type": "number",

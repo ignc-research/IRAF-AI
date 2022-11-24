@@ -18,18 +18,29 @@ def setup_pb():
 
 
 def generate_hit_for_punkt(
-        db_file_path: str,
-        Punkt_th: Element,
-        Frame_th: Element,
-        num_ray: int = 32,
-        sensor_loc_factor: float = 1,
-        miss_fraction: float = -1,
-        _type: str = "norm"
+    db_file_path: str,
+    Punkt_th: Element,
+    second_Punkt_th: Element,
+    Frame_th: Element,
+    num_ray: int = 32,
+    num_sensors: int = 1,
+    sensor_loc_factor: float = 1,
+    miss_fraction: float = -1,
+    _type: str = "norm",
 ):
-    punk_xyz = np.array(
+    punkt_xyz = np.array(
         [float(Punkt_th.get("X")), float(Punkt_th.get("Y")), float(Punkt_th.get("Z"))]
     )
-    print(f"Working: punk_xyz={punk_xyz}")
+
+    second_punkt_xyz = np.array(
+        [
+            float(second_Punkt_th.get("X")),
+            float(second_Punkt_th.get("Y")),
+            float(second_Punkt_th.get("Z")),
+        ]
+    )
+
+    print(f"Working: punkt_xyz={punkt_xyz}")
 
     fl_norms = []
     for Fl_Norm in Punkt_th.findall("Fl_Norm"):
@@ -67,29 +78,42 @@ def generate_hit_for_punkt(
     rayFrom = []
     rayTo = []
 
-    sensor_loc = generate_sensor_loc(punk_xyz, fl_norms[0], fl_norms[1], sensor_loc_factor)
-    ray_len = np.linalg.norm(punk_xyz - sensor_loc)
+    boundary_for_sensor_locations = generate_sensor_loc(
+        second_punkt_xyz, fl_norms[0], fl_norms[1], sensor_loc_factor
+    )
+    sensor_loc = generate_sensor_loc(
+        punkt_xyz, fl_norms[0], fl_norms[1], sensor_loc_factor
+    )
+    sensor_locations = []
+    shift = (boundary_for_sensor_locations[0] - sensor_loc[0]) / num_sensors
+    for factor in range(0, num_sensors):
+        sensor_loc = sensor_loc + factor * np.array([shift, 0, 0])
+        sensor_locations.append(sensor_loc)
 
-    for xy in range(num_ray):
-        for z in range(num_ray):
-            start_pos = sensor_loc / 1000
-            phi = 2.0 * math.pi * float(xy) / num_ray
-            theta = 2.0 * math.pi * float(z) / num_ray
-            end_pos = [
-                s + e
-                for s, e in zip(
-                    [
-                        ray_len * math.sin(phi) * math.cos(theta),
-                        ray_len * math.sin(phi) * math.sin(theta),
-                        ray_len * math.cos(phi),
-                    ],
-                    start_pos,
-                )
-            ]
-            rayFrom.append(start_pos)
-            rayTo.append(end_pos)
+    for sensor_loc in sensor_locations:
 
-    results = p.rayTestBatch(rayFrom, rayTo)
+        ray_len = np.linalg.norm(punkt_xyz - sensor_loc)
+
+        for xy in range(num_ray):
+            for z in range(num_ray):
+                start_pos = sensor_loc / 1000
+                phi = 2.0 * math.pi * float(xy) / num_ray
+                theta = 2.0 * math.pi * float(z) / num_ray
+                end_pos = [
+                    s + e
+                    for s, e in zip(
+                        [
+                            ray_len * math.sin(phi) * math.cos(theta),
+                            ray_len * math.sin(phi) * math.sin(theta),
+                            ray_len * math.cos(phi),
+                        ],
+                        start_pos,
+                    )
+                ]
+                rayFrom.append(start_pos)
+                rayTo.append(end_pos)
+
+        results = p.rayTestBatch(rayFrom, rayTo)
 
     for i in range(0, len(results)):
         hitObjectUid = results[i][0]
@@ -154,23 +178,26 @@ def generate_hit_for_punkt(
                 )
 
 
-def generate_sensor_loc(schweisspunkt, flnorm_1, flnorm_2, faktor):
+def generate_sensor_loc(schweisspunkt, flnorm_1, flnorm_2, factor):
 
-    sensor_loc = schweisspunkt + faktor * np.array(flnorm_1) + faktor * np.array(flnorm_2)
+    sensor_loc = (
+        schweisspunkt + factor * np.array(flnorm_1) + factor * np.array(flnorm_2)
+    )
 
-    print(f"sensor_loc: punk_xyz={sensor_loc}")
+    print(f"sensor_loc: punkt_xyz={sensor_loc}")
 
     return sensor_loc
 
 
 def generate_beam_files_for_obj(
-        object_xml_file: str,
-        target_dir: str,
-        num_ray: int = 32,
-        sensor_loc_factor: float = 1.0,
-        miss_fraction: float = -1.0,
-        _type: str = "norm",
-        _urdf_path: str = "../data/objects_urdfs"
+    object_xml_file: str,
+    target_dir: str,
+    num_ray: int = 5,
+    num_sensors: int = 1,
+    sensor_loc_factor: float = 1.0,
+    miss_fraction: float = -1.0,
+    _type: str = "norm",
+    _urdf_path: str = "../data/objects_urdfs",
 ):
     """
     For each SchweissPunkt, create a lidar map around and export all rays to csv file.
@@ -185,10 +212,7 @@ def generate_beam_files_for_obj(
     urdf = "{}/{}".format(_urdf_path, urdf_file)
 
     object_id = p.loadURDF(
-        urdf,
-        basePosition=[0, 0, 0],
-        baseOrientation=[0, 0, 0, 1],
-        useFixedBase=True
+        urdf, basePosition=[0, 0, 0], baseOrientation=[0, 0, 0, 1], useFixedBase=True
     )
 
     tree = et.parse(object_xml_file)
@@ -205,14 +229,22 @@ def generate_beam_files_for_obj(
         for i in range(0, len(Punkt_s)):
 
             db_file_path = f"{target_dir}/{object_xml_file.split('/')[-1].replace('.xml', '')}.{Name}.{WkzName}.{WkzWkl}.{i}.csv"
+
+            if i < len(Punkt_s) - 1:
+                second_Punkt_th = Punkt_s[i + 1]
+            else:
+                second_Punkt_th = Punkt_s[i - 1]
+
             generate_hit_for_punkt(
                 db_file_path=db_file_path,
                 Punkt_th=Punkt_s[i],
+                second_Punkt_th=second_Punkt_th,
                 Frame_th=Frame_s[i],
                 num_ray=num_ray,
+                num_sensors=num_sensors,
                 sensor_loc_factor=sensor_loc_factor,
                 miss_fraction=miss_fraction,
-                _type=_type
+                _type=_type,
             )
 
 
@@ -228,7 +260,8 @@ if __name__ == "__main__":
             object_xml_file=f"./data/objects_xmls/{file}",
             target_dir="./data/new_database",
             num_ray=5,
+            num_sensors=1,
             sensor_loc_factor=100,
             miss_fraction=-1,
-            _type="norm"
+            _type="norm",
         )

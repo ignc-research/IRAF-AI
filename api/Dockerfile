@@ -16,7 +16,8 @@ WORKDIR /home/api
 
 
 # Copy requirements files
-COPY ./* .
+COPY ./api/requirements.txt .
+COPY ./api/requirements_py27.txt .
 
 # Install miniconda
 ENV CONDA_DIR /home/api/miniconda3
