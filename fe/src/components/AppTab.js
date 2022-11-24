@@ -1,11 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
-import FileSelector from './FileSelector';
 import ThreeView from './preview/ThreeView';
 import RightPane from './right-pane/RightPane';
-
-import { ToastHelper } from '../ToastHelper';
-import { ConfigHelper } from './ConfigHelper';
 import { MultiViewContext } from './MultiViewContext';
 import { TabContext } from './TabContext';
 import LeftPane from './left-pane/LeftPane';

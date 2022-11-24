@@ -5,7 +5,7 @@ import ConfigEditor from './ConfigEditor';
 import { TabContext } from '../TabContext';
 import WeldListView from './WeldView/WeldListView';
 import './RightPane.css';
-import FileSelector from '../FileSelector';
+import FileSelector from '../shared/FileSelector';
 import { Icon } from '@iconify/react';
 import { ConfigHelper } from '../ConfigHelper';
 import { ToastHelper } from '../../ToastHelper';
@@ -33,7 +33,7 @@ function RightPane (){
         }
     }
 
-    const hasObjectAndConfig = Object.keys(tabContext.configs).length > 0 && tabContext.weldingElement.obj && tabContext.weldingElement.mtl;
+    const hasObjectAndConfig = Object.keys(tabContext.configs).length > 0 && tabContext.weldingElement.obj;
 
     return (
         <>

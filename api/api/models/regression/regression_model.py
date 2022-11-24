@@ -147,7 +147,7 @@ class RegressionModel(BaseModel):
         modelNames = {
             name: {"display": name}
             for name in os.listdir("./prediction")
-            if os.path.isdir(f"./prediction/{name}")
+            if os.path.isdir(f"./prediction/{name}") and name != "__pycache__"
         }
 
         return {

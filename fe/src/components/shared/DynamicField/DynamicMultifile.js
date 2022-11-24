@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import FileSelector from "../../FileSelector";
+import FileSelector from "../FileSelector";
 import { Icon } from '@iconify/react';
 export default function DynamicMultifile(props) {
     const model = props.model;

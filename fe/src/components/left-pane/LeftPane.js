@@ -4,7 +4,7 @@ import React from "react";
 export default function LeftPane(props) {
 
     return (
-        <Collapsable side="left">
+        <Collapsable collapsed={true} side="left">
         
         </Collapsable>
     )

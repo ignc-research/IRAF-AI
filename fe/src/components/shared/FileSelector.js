@@ -1,4 +1,4 @@
-import React,{Component, useRef} from 'react'; 
+import React,{useRef} from 'react'; 
 function FileSelector(props) {      
     // On file select (from the pop up) 
     const onFileChange = async(event) => { 
@@ -10,7 +10,9 @@ function FileSelector(props) {
         };
         reader.readAsText(x);
       })));
-      props.onChange(result);
+      if (result.length > 0) {
+        props.onChange(result);
+      }
     }; 
 
     const fileInput = useRef(null);
