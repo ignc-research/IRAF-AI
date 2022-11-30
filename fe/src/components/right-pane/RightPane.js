@@ -37,7 +37,7 @@ function RightPane (){
 
     return (
         <>
-           <Collapsable>
+           <Collapsable title="Pose estimation">
                 <div className="text-center text-white bg-primary">
                     <h2 className="m-0 py-1">Pose Estimation</h2>
                 </div>

@@ -1,4 +1,5 @@
 .pane {
+    position: relative;
     width: 400px;
     color: black;
     overflow: hidden;
@@ -6,4 +7,38 @@
 }
 .pane-collapsed {
     width: 0px;
+}
+
+.button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+
+.button > * {
+    display: block;
+}
+
+.title {
+    display: inline-block;
+    overflow: hidden;
+    font-size: 1.25rem;
+    width: 1.5em;
+    line-height: 1.5;
+    margin: 8px 0px 8px -4px;
+}
+.title-inner {
+    display: inline-block;
+    white-space: nowrap;
+
+    transform: translate(0,100%) rotate(-90deg);
+    transform-origin: 0 0;
+}
+.title-inner:after {
+    content: "";
+    float: left;
+    margin-top: 100%;
 }
