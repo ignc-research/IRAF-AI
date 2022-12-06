@@ -1,0 +1,31 @@
+
+.close-icon {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+}
+.config-editor {
+    max-height: 40%;
+    overflow: auto;
+}
+
+input[type=color] {
+    border: none;
+    padding: 0;
+    margin: 0;
+    height: 28px;
+    width: 28px;
+    overflow: hidden;
+}
+
+.small-btn {
+    background: #aaa;
+    border-radius: 25%;
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+}
+
+textarea {
+    background-color: #ccc !important;
+}
