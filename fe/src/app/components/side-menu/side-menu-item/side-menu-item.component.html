@@ -1,0 +1,6 @@
+<button class="icon-btn" mat-icon-button [routerLink]="routerLink" [routerLinkActive]="['is-active']">
+    <mat-icon>{{icon}}</mat-icon>
+</button>
+<button class="text-btn" mat-button [routerLink]="routerLink" [routerLinkActive]="['is-active']"  [class.closed]="!sideMenu.opened">
+    <ng-content></ng-content>
+</button>

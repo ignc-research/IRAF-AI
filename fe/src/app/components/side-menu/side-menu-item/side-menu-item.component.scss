@@ -1,0 +1,22 @@
+:host {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 8px;
+}
+.text-btn {
+    margin-left: 8px;
+    justify-content: start;
+    overflow: hidden;
+    transition: all .25s;
+    width: 150px;
+    height: unset;
+    &.closed {
+        width: 0px;
+        min-width: 0px;
+        padding: 0;
+        margin: 0;
+    }
+}
+.icon-btn.is-active {
+    background: #bbb;
+}

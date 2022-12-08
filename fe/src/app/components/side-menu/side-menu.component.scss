@@ -1,0 +1,8 @@
+
+.container {
+    height: 100%;
+    background: #eee;
+    & > .inner {
+        padding: 8px;
+    }
+}

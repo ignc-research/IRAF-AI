@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="navOpened = !navOpened">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>IRAF-AI</span>
+  <span class="example-spacer"></span>
+</mat-toolbar>
+<div class="content">
+  <app-side-menu [opened]="navOpened">
+    <app-side-menu-item icon="home" routerLink="home">Home</app-side-menu-item>
+    <app-side-menu-item icon="precision_manufacturing" routerLink="pose-estimation">Pose Estimation</app-side-menu-item>
+  </app-side-menu>
+  <div class="router-outlet">
+    <router-outlet></router-outlet>
+  </div>
+</div>
