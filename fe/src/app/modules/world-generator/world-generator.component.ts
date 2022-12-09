@@ -1,10 +1,12 @@
 // world-generator.component.ts
 import { Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Scene, PerspectiveCamera, DirectionalLight, Group, LoadingManager, Color, WebGLRenderer } from 'three';
+import { Scene, PerspectiveCamera, DirectionalLight, Group, LoadingManager, Color, WebGLRenderer, Object3D, PointLight, AmbientLight, Raycaster, Vector2, PCFSoftShadowMap, Mesh, MeshStandardMaterial, PlaneBufferGeometry } from 'three';
 import URDFLoader from 'urdf-loader';
+import { URDFJoint } from 'urdf-loader';
 import { WorldGeneratorRoutingModule } from './world-generator-routing.module';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import * as THREE from 'three';
 
 @Component({
   selector: 'app-world-generator',
@@ -22,28 +24,70 @@ export class WorldGeneratorComponent {
   canvas!: HTMLCanvasElement;
   renderer!: WebGLRenderer;
   controls!: OrbitControls;
-
+  raycaster: Raycaster;
 
   constructor() {
     this.scene = new Scene();
-    this.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.raycaster = new Raycaster();
+    this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.light = new DirectionalLight(0xffffff, 1);
     this.group = new Group();
     this.manager = new LoadingManager();
     this.loader = new URDFLoader(this.manager);
-    this.scene.background = new Color(0x000000);
-    this.camera.position.set(0, 0, 10);
+    this.scene.background = new Color(0x1c252e);
+    this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera.position.set(0, -12, 10);
     this.light.position.set(0, 0, 10);
-    this.scene.add(this.light);
-    this.scene.add(this.group);
-    this.manager.onLoad = () => {
-      this.group.position.set(0, 0, 0);
-      this.group.scale.set(0.1, 0.1, 0.1);
-      this.group.rotation.set(0, 0, 0);
-    };
+    
+    // Add an AmbientLight to the scene
+    const ambientLight = new AmbientLight(0xffffff, 0.7);
+    this.scene.add(ambientLight);
+
+    // Add a PointLight to the scene
+    const pointLight = new PointLight(0xffffff, 0.6);
+    pointLight.position.set(0, 0, 20);
+    this.scene.add(pointLight);
+
+    // Create a PlaneBufferGeometry
+    const geometry = new PlaneBufferGeometry(100, 30);
+
+    // Create a MeshStandardMaterial and set its color to a light gray
+    const material = new MeshStandardMaterial({ color: 0x2c3640 });
+    material.side = THREE.DoubleSide;
+
+    // Create a Mesh using the geometry and material
+    const plane = new Mesh(geometry, material);
+
+    // Enable shadow casting and receiving for the plane and robot
+    plane.castShadow = true;
+    plane.receiveShadow = true;
+
+    // Set the position of the plane so that it's bottom is at y=0
+    plane.position.set(0, 0, 0);
+
+    // Rotate the plane 90 degrees on the x-axis to make it horizontal
+    plane.rotation.set(0, 0, 0);
+
+    // Add the plane to the scene
+    this.scene.add(plane);
+
+    // Set up the Raycaster to detect intersections with the robot model
+    this.raycaster = new Raycaster();
+
     this.loader.load('/assets/urdf/T12/urdf/T12.URDF', (robot) => {
-      this.group.add(robot);
+
+      // Enable shadow casting and receiving for the robot
+      robot.castShadow = true;
+      robot.receiveShadow = true;
+      robot.rotateOnAxis(new THREE.Vector3(0, 0, 1), Math.PI / 2);
+      robot.position.set(0, 0, 3);
+
+      console.log(robot);
+      this.scene.add(robot);
+      
     });
+
+
   }
 
   update() {
@@ -61,6 +105,8 @@ export class WorldGeneratorComponent {
     // Create a WebGLRenderer and set its size
     this.renderer = new WebGLRenderer({ canvas: this.canvas });
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = PCFSoftShadowMap;
   
     // Add a resize event listener to the window object
     window.addEventListener('resize', () => {
@@ -70,6 +116,27 @@ export class WorldGeneratorComponent {
 
     // Create an instance of OrbitControls
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+    //this.controls.maxPolarAngle = Math.PI / 2;
+    this.controls.minDistance = 1;
+    this.controls.maxDistance = 15;
+
+    // Add a click event listener to the canvas element
+    this.canvas.addEventListener('click', (event) => {
+      // Create a new Raycaster
+      const raycaster = new Raycaster();
+
+      // Set the Raycaster to use the camera's position and the mouse's position on the canvas
+      raycaster.setFromCamera(new Vector2(event.clientX, event.clientY), this.camera);
+
+      // Use the Raycaster to check if the user's click intersects with any objects in the scene
+      const intersects = raycaster.intersectObjects(this.scene.children);
+
+      // If there are any intersections, log the first intersected object to the console
+      if (intersects.length > 0) {
+        console.log(intersects[0].object);
+      }
+    });
 
   
     // Add a requestAnimationFrame() loop that calls the update() function
