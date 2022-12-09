@@ -1,0 +1,11 @@
+<ngt-mesh
+  (beforeRender)="onCubeBeforeRender($event)"
+  (click)="active = !active"
+  (pointerover)="hovered = true"
+  (pointerout)="hovered = false"
+  [scale]="active ? 1.5 : 1"
+  [position]="position"
+>
+  <ngt-box-geometry></ngt-box-geometry>
+  <ngt-mesh-standard-material [color]="hovered ? 'turquoise' : 'tomato'"></ngt-mesh-standard-material>
+</ngt-mesh>

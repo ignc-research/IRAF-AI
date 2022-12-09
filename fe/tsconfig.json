@@ -1,8 +1,11 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "typeRoots": ["node_modules/@types", "node_modules/@angular", "node_modules/@angular/material"],
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules/@angular",
+      "node_modules/@angular/material"
+    ],
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -23,7 +26,8 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "skipLibCheck": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
