@@ -10,6 +10,7 @@
     transition: all .25s;
     width: 150px;
     height: unset;
+    white-space: nowrap;
     &.closed {
         width: 0px;
         min-width: 0px;
