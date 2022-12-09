@@ -12,6 +12,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/pose-estimation/pose-estimation.module').then(m => m.PoseEstimationModule)
   },
   {
+    path: 'evaluation',
+    loadChildren: () => import('./modules/evaluation/evaluation.module').then(m => m.EvaluationModule)
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'home'
