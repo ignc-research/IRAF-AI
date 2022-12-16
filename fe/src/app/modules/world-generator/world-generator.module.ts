@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Scene, PerspectiveCamera, DirectionalLight, Group, LoadingManager, Color } from 'three';
 import URDFLoader from 'urdf-loader';
@@ -14,7 +14,8 @@ import { WorldGeneratorComponent } from './world-generator.component';
   imports: [
     CommonModule,
     WorldGeneratorRoutingModule
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 
 export class WorldGeneratorModule {

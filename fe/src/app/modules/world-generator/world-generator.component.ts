@@ -6,12 +6,13 @@ import URDFLoader from 'urdf-loader';
 import { URDFJoint } from 'urdf-loader';
 import { WorldGeneratorRoutingModule } from './world-generator-routing.module';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import * as THREE from 'three';
 
 @Component({
   selector: 'app-world-generator',
   templateUrl: './world-generator.component.html',
-  styleUrls: ['./world-generator.component.scss']
+  styleUrls: ['./world-generator.component.scss', './styles.scss']
 })
 
 export class WorldGeneratorComponent {
@@ -23,7 +24,7 @@ export class WorldGeneratorComponent {
   group: Group;
   canvas!: HTMLCanvasElement;
   renderer!: WebGLRenderer;
-  controls!: OrbitControls;
+  controls!: TrackballControls;
   raycaster: Raycaster;
 
   constructor() {
@@ -36,7 +37,7 @@ export class WorldGeneratorComponent {
     this.loader = new URDFLoader(this.manager);
     this.scene.background = new Color(0x1c252e);
     this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set(0, -12, 10);
+    this.camera.position.set(0, 0, 10);
     this.light.position.set(0, 0, 10);
     
     // Add an AmbientLight to the scene
@@ -74,12 +75,12 @@ export class WorldGeneratorComponent {
     // Set up the Raycaster to detect intersections with the robot model
     this.raycaster = new Raycaster();
 
+    //this.loader.load('/assets/urdf/kuka/urdf/kr120r2500pro.urdf', (robot) => {
     this.loader.load('/assets/urdf/T12/urdf/T12.URDF', (robot) => {
 
       // Enable shadow casting and receiving for the robot
       robot.castShadow = true;
       robot.receiveShadow = true;
-      robot.rotateOnAxis(new THREE.Vector3(0, 0, 1), Math.PI / 2);
       robot.position.set(0, 0, 3);
 
       console.log(robot);
@@ -114,12 +115,15 @@ export class WorldGeneratorComponent {
       this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
     });
 
-    // Create an instance of OrbitControls
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    // Create an instance of TrackballControls
+    this.controls = new TrackballControls(this.camera, this.canvas);
 
     //this.controls.maxPolarAngle = Math.PI / 2;
     this.controls.minDistance = 1;
-    this.controls.maxDistance = 15;
+    this.controls.maxDistance = 25;
+    this.controls.rotateSpeed = 10;
+    this.controls.zoomSpeed = 1.2;
+
 
     // Add a click event listener to the canvas element
     this.canvas.addEventListener('click', (event) => {
