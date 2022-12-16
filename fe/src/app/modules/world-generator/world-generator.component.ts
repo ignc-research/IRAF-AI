@@ -12,7 +12,7 @@ import * as THREE from 'three';
 @Component({
   selector: 'app-world-generator',
   templateUrl: './world-generator.component.html',
-  styleUrls: ['./world-generator.component.scss', './styles.scss']
+  styleUrls: ['./world-generator.component.scss']
 })
 
 export class WorldGeneratorComponent {
