@@ -11,8 +11,8 @@
   "private": true,
   "dependencies": {
     "@angular-three/core": "^6.0.0",
-    "@angular-three/soba": "^6.0.1",
     "@angular-three/schematics": "^6.0.1",
+    "@angular-three/soba": "^6.0.1",
     "@angular/animations": "^15.0.0",
     "@angular/cdk": "^15.0.2",
     "@angular/common": "^15.0.0",
@@ -26,6 +26,7 @@
     "rxjs": "~7.5.0",
     "three": "~0.142.0",
     "tslib": "^2.3.0",
+    "urdf-loader": "^0.10.4",
     "zone.js": "~0.12.0"
   },
   "devDependencies": {

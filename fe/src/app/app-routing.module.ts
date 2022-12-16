@@ -16,6 +16,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/evaluation/evaluation.module').then(m => m.EvaluationModule)
   },
   {
+    path: 'world-generator',
+    loadChildren: () => import('./modules/world-generator/world-generator.module').then(m => m.WorldGeneratorModule)
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'home'
