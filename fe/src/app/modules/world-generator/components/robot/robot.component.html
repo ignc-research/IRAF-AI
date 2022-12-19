@@ -1,11 +1,1 @@
-<ngt-mesh
-  (beforeRender)="onRobotBeforeRender($event)"
-  (click)="active = !active"
-  (pointerover)="hovered = true"
-  (pointerout)="hovered = false"
-  [scale]="active ? 1.5 : 1"
-  [position]="position"
->
-  <ngt-box-geometry></ngt-box-geometry>
-  <ngt-mesh-standard-material [color]="hovered ? 'turquoise' : 'tomato'"></ngt-mesh-standard-material>
-</ngt-mesh>
+<ngt-primitive (click)="onRobotClick($event)" [position]="position" [scale]="1" [object]="robot"></ngt-primitive>
