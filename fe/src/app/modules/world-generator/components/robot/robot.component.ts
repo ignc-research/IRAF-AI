@@ -41,6 +41,15 @@ export class RobotComponent {
     console.log(this.searchParentJoint(intersection.object), this.searchParentLink(ev.object));
   }
 
+  pointerOver(ev: NgtEvent<PointerEvent>) {
+    console.log("over", ev);
+  }
+
+  
+  pointerOut(ev: NgtEvent<PointerEvent>) {
+    console.log("out", ev);
+  }
+
   constructor() {
     const manager = new LoadingManager();
     const loader = new URDFLoader( manager );
