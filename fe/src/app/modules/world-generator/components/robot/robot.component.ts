@@ -4,8 +4,8 @@ import { NgtPrimitive } from '@angular-three/core/primitive';
 import { NgtBoxGeometry } from '@angular-three/core/geometries';
 import { NgtMeshStandardMaterial } from '@angular-three/core/materials';
 import { NgtEvent, NgtRenderState, NgtVector3 } from '@angular-three/core';
-import { LoaderUtils, Mesh, Object3D } from 'three';
-import URDFLoader, { URDFRobot } from 'urdf-loader';
+import { Color, LoaderUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
+import URDFLoader, { URDFJoint, URDFRobot } from 'urdf-loader';
 import { LoadingManager } from 'three';
 
 @Component({
@@ -23,6 +23,16 @@ export class RobotComponent {
 
   hovered = false;
   active = false;
+  currentJoint: URDFJoint | null = null;
+  hoverObject: Object3D | null = null;
+  colorSave: Color | null = null;
+  hoverList: Object3D[] = [];
+  currentJointValue: Number = 0;
+
+  onRobotBeforeRender($event: { state: NgtRenderState; object: Mesh }) {
+    const robot = $event.object;
+    robot.castShadow = true;
+  }
 
   findObjOfType(obj: Object3D, type: string) {
     let searchObj: Object3D | null = obj;
@@ -38,16 +48,67 @@ export class RobotComponent {
 
   onRobotClick(ev: NgtEvent<MouseEvent>) {
     const intersection = ev.intersections[0];
-    console.log(this.searchParentJoint(intersection.object), this.searchParentLink(ev.object));
+    if(!intersection) return;
+    this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
+    this.currentJointValue = this.currentJoint.jointValue[0];
+    this.currentJoint.setJointValue(this.currentJointValue.valueOf() + 0.1);
+    if(this.currentJoint) {
+      this.currentJointValue = this.currentJoint.jointValue[0];
+      this.currentJoint.setJointValue(this.currentJointValue.valueOf() + ev.delta * 0.01);
+    }
+    console.log("joint : " + this.currentJoint.name);
+    //console.log(this.searchParentJoint(intersection.object), this.searchParentLink(ev.object));
   }
 
+  onRobotMove(ev: NgtEvent<MouseEvent>) {
+    const intersection = ev.intersections[0];
+    if(!intersection) return;
+    this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
+    if(this.currentJoint) {
+      this.currentJointValue = this.currentJoint.jointValue[0];
+      this.currentJoint.setJointValue(this.currentJointValue.valueOf() + ev.delta * 0.01);
+    }
+  }
+
+
+
+
   pointerOver(ev: NgtEvent<PointerEvent>) {
-    console.log("over", ev);
+    const intersection = ev.intersections[0];
+    
+    if(!intersection){
+      return;
+    };
+    
+    
+    console.log("hoverobject: " , this.hoverObject);
+
+    this.hoverObject = ev.object;
+    this.hoverList.push(this.hoverObject);
+    console.log("hoverobject: " , this.hoverObject);
+    console.log("new colored object: " , ev.object);
+    if ( (this.hoverObject instanceof Mesh) ) {
+      console.log("setting new color");
+      try {
+        this.colorSave = (<any> this.hoverObject).material.color.clone();
+        (<any> this.hoverObject).material.color.b = 0.99;
+      } catch (error) {
+        console.log("error: " , error);
+      }
+
+      
+    }
+    
+    //console.log("color: " , JSON.parse(JSON.stringify(this.hoverObject)));
+    
   }
 
   
   pointerOut(ev: NgtEvent<PointerEvent>) {
-    console.log("out", ev);
+    console.log("out", ev.object);
+    (<any> ev.object).material.color = this.colorSave;
+    
+
   }
 
   constructor() {
