@@ -4,12 +4,14 @@ import { NgtAmbientLight, NgtSpotLight, NgtPointLight } from '@angular-three/cor
 import { NgtAxesHelper } from '@angular-three/core/helpers';
 import { NgtSobaOrbitControls } from '@angular-three/soba/controls';
 import { RobotComponent } from './components/robot/robot.component';
+import { InformationComponent } from './components/information/information.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   templateUrl: './world-generator.component.html',
   imports: [
+    InformationComponent,
     RobotComponent,
     NgtCanvas,
     NgtAxesHelper,
@@ -21,5 +23,9 @@ import { RobotComponent } from './components/robot/robot.component';
 })
 
 export class WorldGeneratorComponent {
+  constructor() {
+    
 
+
+   }
 }

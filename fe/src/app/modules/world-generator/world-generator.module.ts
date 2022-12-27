@@ -5,6 +5,7 @@ import { WorldGeneratorRoutingModule } from './world-generator-routing.module';
 import { WorldGeneratorComponent } from './world-generator.component';
 import { NgtCanvasModule } from '@angular-three/core';
 import { RobotComponent } from './components/robot/robot.component';
+import { InformationComponent } from './components/information/information.component';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import { RobotComponent } from './components/robot/robot.component';
   ],
   imports: [
     RobotComponent,
+    InformationComponent,
     WorldGeneratorComponent,
     CommonModule,
     WorldGeneratorRoutingModule

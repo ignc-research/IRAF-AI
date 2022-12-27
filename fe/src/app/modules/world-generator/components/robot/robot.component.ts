@@ -52,23 +52,21 @@ export class RobotComponent {
     this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
     this.currentJointValue = this.currentJoint.jointValue[0];
     this.currentJoint.setJointValue(this.currentJointValue.valueOf() + 0.1);
-    if(this.currentJoint) {
-      this.currentJointValue = this.currentJoint.jointValue[0];
-      this.currentJoint.setJointValue(this.currentJointValue.valueOf() + ev.delta * 0.01);
-    }
+    
     console.log("joint : " + this.currentJoint.name);
     //console.log(this.searchParentJoint(intersection.object), this.searchParentLink(ev.object));
   }
 
-  onRobotMove(ev: NgtEvent<MouseEvent>) {
+  onRobotRightClick(ev: NgtEvent<MouseEvent>) {
     const intersection = ev.intersections[0];
     if(!intersection) return;
     this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
-    if(this.currentJoint) {
-      this.currentJointValue = this.currentJoint.jointValue[0];
-      this.currentJoint.setJointValue(this.currentJointValue.valueOf() + ev.delta * 0.01);
-    }
+    this.currentJointValue = this.currentJoint.jointValue[0];
+    this.currentJoint.setJointValue(this.currentJointValue.valueOf() - 0.1);
+    
   }
+
+  
 
 
 
@@ -85,13 +83,16 @@ export class RobotComponent {
 
     this.hoverObject = ev.object;
     this.hoverList.push(this.hoverObject);
-    console.log("hoverobject: " , this.hoverObject);
-    console.log("new colored object: " , ev.object);
+    //console.log("hoverobject: " , this.hoverObject);
+    //console.log("new colored object: " , ev.object);
     if ( (this.hoverObject instanceof Mesh) ) {
-      console.log("setting new color");
+      //console.log("setting new color");
       try {
         this.colorSave = (<any> this.hoverObject).material.color.clone();
-        (<any> this.hoverObject).material.color.b = 0.99;
+        (<any> this.hoverObject).material.color.r += 0.1;
+        (<any> this.hoverObject).material.color.g += 0.1;
+        (<any> this.hoverObject).material.color.b += 0.1;
+        console.log("color: ", (<any> this.hoverObject).material.color);
       } catch (error) {
         console.log("error: " , error);
       }
