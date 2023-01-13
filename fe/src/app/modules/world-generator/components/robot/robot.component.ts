@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { NgtMesh } from '@angular-three/core/meshes';
 import { NgtPrimitive } from '@angular-three/core/primitive';
 import { NgtBoxGeometry } from '@angular-three/core/geometries';
@@ -21,18 +21,40 @@ export class RobotComponent {
 
   @Input() position?: NgtVector3;
 
+  @Input() dataObject?: {
+    hoverObject: Object3D | null,
+    currentJoint: URDFJoint | null,
+    currentJointValue: Number
+  }
+  
+  @Output() newDataObject = new EventEmitter<{
+    hoverObject: Object3D | null,
+    currentJoint: URDFJoint | null,
+    currentJointValue: Number
+  }>();
+
+
   hovered = false;
   active = false;
-  currentJoint: URDFJoint | null = null;
   hoverObject: Object3D | null = null;
+  currentJoint: URDFJoint | null = null;
+  //hoverObject: Object3D | null = null;
   colorSave: Color | null = null;
   hoverList: Object3D[] = [];
   currentJointValue: Number = 0;
+
 
   onRobotBeforeRender($event: { state: NgtRenderState; object: Mesh }) {
     const robot = $event.object;
     robot.castShadow = true;
   }
+
+  addNewDataObject(obj: { hoverObject: Object3D | null, currentJoint: URDFJoint | null, currentJointValue: Number }) {
+    if(this.dataObject) {
+      this.newDataObject.emit(obj);
+    }
+  }
+
 
   findObjOfType(obj: Object3D, type: string) {
     let searchObj: Object3D | null = obj;
@@ -52,6 +74,13 @@ export class RobotComponent {
     this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
     this.currentJointValue = this.currentJoint.jointValue[0];
     this.currentJoint.setJointValue(this.currentJointValue.valueOf() + 0.1);
+
+    if(this.dataObject) {
+      this.dataObject.currentJoint = this.currentJoint;
+      this.dataObject.currentJointValue = this.currentJointValue;
+      this.addNewDataObject(this.dataObject);
+    }
+
     
     console.log("joint : " + this.currentJoint.name);
     //console.log(this.searchParentJoint(intersection.object), this.searchParentLink(ev.object));
@@ -63,11 +92,38 @@ export class RobotComponent {
     this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
     this.currentJointValue = this.currentJoint.jointValue[0];
     this.currentJoint.setJointValue(this.currentJointValue.valueOf() - 0.1);
+
+    if(this.dataObject) {
+      this.dataObject.currentJoint = this.currentJoint;
+      this.dataObject.currentJointValue = this.currentJointValue;
+      this.addNewDataObject(this.dataObject);
+    }
     
   }
 
-  
+  onWheel(ev: NgtEvent<WheelEvent>) {
+    const intersection = ev.intersections[0];
+    if(!intersection) return;
+    this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
+    this.currentJointValue = this.currentJoint.jointValue[0];
+    this.currentJoint.setJointValue(this.currentJointValue.valueOf() + 0.001 * ev.nativeEvent.deltaY);
 
+    if(this.dataObject) {
+      this.dataObject.currentJoint = this.currentJoint;
+      this.dataObject.currentJointValue = this.currentJointValue;
+      this.addNewDataObject(this.dataObject);
+    }
+  }
+
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['dataObject']) {
+      if(this.dataObject) {
+        this.dataObject = changes['dataObject'].currentValue;
+        console.log("dataObject: " , this.dataObject);
+      }
+    }
+  }
 
 
 
@@ -82,6 +138,14 @@ export class RobotComponent {
     console.log("hoverobject: " , this.hoverObject);
 
     this.hoverObject = ev.object;
+
+    this.dataObject = {
+      hoverObject: this.hoverObject,
+      currentJoint: this.currentJoint,
+      currentJointValue: this.currentJointValue
+    }
+
+    this.addNewDataObject(this.dataObject);
     this.hoverList.push(this.hoverObject);
     //console.log("hoverobject: " , this.hoverObject);
     //console.log("new colored object: " , ev.object);
@@ -108,6 +172,12 @@ export class RobotComponent {
   pointerOut(ev: NgtEvent<PointerEvent>) {
     console.log("out", ev.object);
     (<any> ev.object).material.color = this.colorSave;
+
+    if(this.dataObject) {
+      this.dataObject.hoverObject = null;
+      this.addNewDataObject(this.dataObject);
+    }
+    
     
 
   }
@@ -116,9 +186,9 @@ export class RobotComponent {
     const manager = new LoadingManager();
     const loader = new URDFLoader( manager );
 
-    loader.packages = '/assets/urdf/kuka_kr210_support';
+    loader.packages = '/assets/urdf/kuka_kr6_support';
     loader.load(
-      '/assets/urdf/kuka_kr210_support/urdf/kr210l150.urdf',
+      '/assets/urdf/kuka_kr6_support/urdf/kr6r700sixx.urdf',
       robot => {
         this.robot = robot;
         console.log(robot);
