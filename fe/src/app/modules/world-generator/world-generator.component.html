@@ -1,5 +1,7 @@
 <app-information [dataObject]="dataObject"></app-information>
-
+<div style="z-index: 999;">
+  <app-popover *ngIf="showPopover" [position]="popoverPosition"></app-popover>
+</div>
 <div style="height: 100%; width: 100%;">
   <ngt-canvas>
     <ngt-ambient-light intensity="0.5"></ngt-ambient-light>
@@ -10,4 +12,5 @@
     <ngt-soba-orbit-controls [enableZoom]="enableZoom"></ngt-soba-orbit-controls>
   </ngt-canvas>
 </div>
+
 

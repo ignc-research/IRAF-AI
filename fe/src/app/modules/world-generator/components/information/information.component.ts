@@ -1,12 +1,15 @@
 import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Color, LoaderUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
 import URDFLoader, { URDFJoint, URDFRobot } from 'urdf-loader';
+import * as YAML from 'js-yaml';
+import { SharedModule } from '../shared.module';
 
 @Component({
   selector: 'app-information',
   standalone: true,
   templateUrl: './information.component.html',
-  styleUrls: ['./information.component.scss']
+  styleUrls: ['./information.component.scss'],
+  imports: [SharedModule]
 })
 export class InformationComponent {
 
@@ -15,13 +18,38 @@ export class InformationComponent {
   @Input() dataObject?: {
     hoverObject: Object3D | null,
     currentJoint: URDFJoint | null,
-    currentJointValue: Number
+    currentJointValue: Number,
+    selectedJoint: URDFJoint | null
   };
 
   @Output() newDataObject = new EventEmitter<Object3D>();
+  @Output() filesSelected = new EventEmitter<any>();
 
   @Input() currentJoint: URDFJoint | null = null;
   @Input() currentJointValue: Number = 0;
+
+  config: any;
+
+  onFileSelected(event: Event) {
+    if (event.target instanceof HTMLInputElement) {
+        const file = event.target.files![0];
+        const reader = new FileReader();
+        reader.onload = async () => {
+            if (typeof reader.result === 'string') {
+                let fileContent = reader.result;
+                try {
+                    const data = YAML.load(fileContent, { json: true, filename: file.name });
+                    this.config = data;
+                    console.log(data);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        };
+        reader.readAsText(file);
+    }
+}
+
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes['hoverObject']) {
@@ -29,6 +57,7 @@ export class InformationComponent {
         this.dataObject = changes['dataObject'].currentValue;
         console.log("dataObject: " , this.dataObject);
       }
+      
     }
   }
 

@@ -24,13 +24,19 @@ export class RobotComponent {
   @Input() dataObject?: {
     hoverObject: Object3D | null,
     currentJoint: URDFJoint | null,
-    currentJointValue: Number
+    currentJointValue: Number,
+    selectedJoint: URDFJoint | null,
+    showPopover: boolean;
+    popoverPosition: {x: number, y: number};
   }
   
   @Output() newDataObject = new EventEmitter<{
     hoverObject: Object3D | null,
     currentJoint: URDFJoint | null,
-    currentJointValue: Number
+    currentJointValue: Number,
+    selectedJoint: URDFJoint | null,
+    showPopover: boolean;
+    popoverPosition: {x: number, y: number};
   }>();
 
 
@@ -38,6 +44,9 @@ export class RobotComponent {
   active = false;
   hoverObject: Object3D | null = null;
   currentJoint: URDFJoint | null = null;
+  selectedJoint: URDFJoint | null = null;
+  showPopover: boolean = false;
+  popoverPosition: {x: number, y: number} = {x:100, y:100};
   //hoverObject: Object3D | null = null;
   colorSave: Color | null = null;
   hoverList: Object3D[] = [];
@@ -49,7 +58,7 @@ export class RobotComponent {
     robot.castShadow = true;
   }
 
-  addNewDataObject(obj: { hoverObject: Object3D | null, currentJoint: URDFJoint | null, currentJointValue: Number }) {
+  addNewDataObject(obj: { hoverObject: Object3D | null, currentJoint: URDFJoint | null, currentJointValue: Number, selectedJoint: URDFJoint | null, showPopover: boolean, popoverPosition: {x: number, y: number} }) {
     if(this.dataObject) {
       this.newDataObject.emit(obj);
     }
@@ -71,18 +80,14 @@ export class RobotComponent {
   onRobotClick(ev: NgtEvent<MouseEvent>) {
     const intersection = ev.intersections[0];
     if(!intersection) return;
-    this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
-    this.currentJointValue = this.currentJoint.jointValue[0];
-    this.currentJoint.setJointValue(this.currentJointValue.valueOf() + 0.1);
-
+    this.selectedJoint = this.searchParentJoint(intersection.object) as URDFJoint;
     if(this.dataObject) {
-      this.dataObject.currentJoint = this.currentJoint;
-      this.dataObject.currentJointValue = this.currentJointValue;
+      this.dataObject.selectedJoint = this.selectedJoint;
       this.addNewDataObject(this.dataObject);
     }
 
     
-    console.log("joint : " + this.currentJoint.name);
+    console.log("joint : " + this.selectedJoint.name);
     //console.log(this.searchParentJoint(intersection.object), this.searchParentLink(ev.object));
   }
 
@@ -91,11 +96,14 @@ export class RobotComponent {
     if(!intersection) return;
     this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
     this.currentJointValue = this.currentJoint.jointValue[0];
-    this.currentJoint.setJointValue(this.currentJointValue.valueOf() - 0.1);
-
+    this.showPopover = true;
+    this.popoverPosition = {x: ev.nativeEvent.clientX + 20, y: ev.nativeEvent.clientY + 20};
+    
     if(this.dataObject) {
       this.dataObject.currentJoint = this.currentJoint;
       this.dataObject.currentJointValue = this.currentJointValue;
+      this.dataObject.showPopover = this.showPopover;
+      this.dataObject.popoverPosition = this.popoverPosition;
       this.addNewDataObject(this.dataObject);
     }
     
@@ -142,7 +150,10 @@ export class RobotComponent {
     this.dataObject = {
       hoverObject: this.hoverObject,
       currentJoint: this.currentJoint,
-      currentJointValue: this.currentJointValue
+      currentJointValue: this.currentJointValue,
+      selectedJoint: this.selectedJoint,
+      showPopover: false,
+      popoverPosition: {x: 0, y: 0}
     }
 
     this.addNewDataObject(this.dataObject);

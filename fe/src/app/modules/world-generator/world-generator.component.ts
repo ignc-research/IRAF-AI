@@ -7,6 +7,8 @@ import { RobotComponent } from './components/robot/robot.component';
 import { InformationComponent } from './components/information/information.component';
 import { Object3D } from 'three';
 import { URDFJoint } from 'urdf-loader';
+import { PopoverComponent } from './components/popover/popover.component';
+import { SharedModule } from './components/shared.module';
 
 @Component({
   selector: 'app-home',
@@ -20,29 +22,45 @@ import { URDFJoint } from 'urdf-loader';
     NgtAmbientLight,
     NgtSpotLight,
     NgtPointLight,
-    NgtSobaOrbitControls],
+    NgtSobaOrbitControls,
+    PopoverComponent,
+    SharedModule],
   styleUrls: ['./world-generator.component.scss']
 })
 
 export class WorldGeneratorComponent {
   constructor() {
-    this.enableZoom = true;
-   }
+   this.enableZoom = true;
+  }
 
-   dataObject?: {
+  dataObject?: {
     hoverObject: Object3D | null,
     currentJoint: URDFJoint | null,
-    currentJointValue: Number
-   }
+    currentJointValue: Number,
+    selectedJoint: URDFJoint | null,
+    showPopover: boolean;
+    popoverPosition: {x: number, y: number};
+  }
 
-   enableZoom?: boolean;
+  showPopover: boolean = false;
+  popoverPosition: {x: number, y: number} = {x:0, y:0};
+  enableZoom?: boolean;
 
-   changeDataObject(object: any) {
+    changeDataObject(object: any) {
       this.dataObject = object;
       if(this.dataObject?.hoverObject) {
         this.enableZoom = false;
       } else {
         this.enableZoom = true;
       }
+      if(this.dataObject?.showPopover) {
+        this.showPopover = this.dataObject?.showPopover;
+        this.popoverPosition = this.dataObject?.popoverPosition;
+        console.log(this.dataObject?.popoverPosition);
+      } else {
+        this.showPopover = false;
+      }
     }
+
+  
 }

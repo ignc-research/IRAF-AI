@@ -1,10 +1,29 @@
-<div style="position: absolute; background-color: rgb(171, 226, 224); width: 100%; height: 100px; top: 400px; margin-top: -200px; display: flex; justify-content: center; align-items: center; flex-direction: column; font-size: 2em;">
+
+<div style="position: absolute; background-color: c; width: 15rem; z-index: 999; height: 600px; top: 300px; margin-top: -200px; padding: 10px; display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column; font-size: 1em;">
     <div style="display: flex; justify-content: center; align-items: center;">
-        <p unselectable="on">Current Joint:</p>
-        <p unselectable="on">{{dataObject?.hoverObject?.name}}</p>
+        <input type="file" (change)="onFileSelected($event)" accept=".yml,.yaml" />
+    </div> 
+    <div style="display: flex; justify-content: center; align-items: center;  margin-top: 30px;">
+        <p style="font-weight: bold">Current Joint:</p>
+        <p>{{dataObject?.hoverObject?.name}}</p>
     </div> 
     <div style="display: flex; justify-content: center; align-items: center;">
-        <p unselectable="on">Joint Value:</p>
-        <p unselectable="on">{{dataObject?.currentJointValue}}</p>
+        <p style="font-weight: bold">Joint Value:</p>
+        <p>{{dataObject?.currentJointValue}}</p>
+    </div> 
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <p style="font-weight: bold">Selected Joint:</p>
+        <p>{{dataObject?.selectedJoint?.name}}</p>
+    </div> 
+    <div>
+        <p style="font-weight: bold">Current Sensors:</p><br>
+        <div id="sensorList" style="text-align: left;">
+            <div *ngFor="let sensor of config?.world.robot.sensors">
+                <strong>Type:</strong> {{sensor.type}} <br>
+                <strong>Link:</strong> {{sensor.link}} <br>
+                <strong>Position:</strong> <br>x: {{sensor.position.x}}, <br>y: {{sensor.position.y}}, <br>z: {{sensor.position.z}} <br>
+                <strong>Rotation:</strong> <br>r: {{sensor.rotation.r}}, <br>p: {{sensor.rotation.p}}, <br>y: {{sensor.rotation.y}}
+            </div>
+        </div>
     </div> 
 </div>
