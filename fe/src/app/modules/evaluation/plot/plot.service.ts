@@ -53,6 +53,7 @@ export class PlotService {
       data: []
     };
 
+    // ToDo: Kategorien sin abhängig vom experiment, daher muss das iwie dynamisch passieren
     await Promise.all(this.categories.map(async(category) => {
       const type = category.name;
       const trajectories: Data[] = [];
