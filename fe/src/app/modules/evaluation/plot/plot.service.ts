@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import {Data} from "plotly.js-dist-min";
 import * as d3 from "d3";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlotService {
 
-  categories: BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([
+  categoryChanged = new Subject<Category>();
+
+  categories: Category[] = [
     {
       name: 'RRT',
       color: '#0000ff'
@@ -25,7 +27,7 @@ export class PlotService {
       name: 'prm',
       color: '#ff0000'
     }
-  ]);
+  ];
   experiments: Experiment[] = [];
 
   constructor() {
@@ -50,22 +52,48 @@ export class PlotService {
       name: name,
       data: []
     };
-    for (let y = 0; y < this.categories.value.length; y++) {
-      const type = this.categories.value[y].name;
+
+    await Promise.all(this.categories.map(async(category) => {
+      const type = category.name;
       const trajectories: Data[] = [];
       for (let i = 1; i < 31; i++) {
         const remoteData = await d3.dsv(" ", `http://localhost:4200/assets/${name}/${type}/${i}.txt`);
         const mappedData = this.mapRemoteData(remoteData)
         trajectories.push(mappedData);
       }
+      const avgTrajectory = this.getAverageXyz(trajectories);
       newExperiment.data.push({
-        trajectories: trajectories,
-        avgTrajectory: this.getAverageXyz(trajectories),
-        category: this.categories.value[y]
+        trajectories,
+        category,
+        avgTrajectory,
+        avgPathLength: this.getAvgPathLength(trajectories)
       });
-    }
+    }));
+
     this.experiments.push(newExperiment);
     return newExperiment;
+  }
+
+  getAvgPathLength(trajectories: Data[]) {
+    return this.getAvg(trajectories.map(x => this.getPathLength(x)));
+  }
+
+  getPathLength(data: any) {
+    let length = 0;
+    for (let i = 1; i < data.x.length; i++) {
+      length += Math.sqrt(
+        Math.pow(data.x[i] - data.x[i - 1], 2) +
+        Math.pow(data.y[i] - data.y[i - 1], 2) +
+        Math.pow(data.z[i] - data.z[i - 1], 2)
+        );
+    }
+    return length;
+  }
+
+  getAvg(data: number[]) {
+    const sum = data.reduce((a, b) => a + b, 0);
+    const avg = (sum / data.length) || 0;
+    return avg;
   }
 
   getAverageXyz(data: Data[]): Data {
@@ -104,9 +132,12 @@ export class PlotService {
     }
   }
 
-  updateCategory(category: Category) {
-    const newCategories = [...this.categories.value];
-
+  updateColor(category: string, color: string) {
+    const cat = this.categories.find(x => x.name == category);
+    if (cat) {
+       cat.color = color;
+       this.categoryChanged.next(cat);
+    }
   }
 }
 
@@ -124,4 +155,5 @@ export type ExperimentData = {
   category: Category;
   trajectories: Data[];
   avgTrajectory: Data;
+  avgPathLength: number;
 }

@@ -1,22 +1,23 @@
 <div class="plot-container">
   <!-- 3D DRL-->
-  <h1 *ngIf="!dataLoaded">
+  <h1 *ngIf="!plot">
     Loading...
   </h1>
 
-  <plotly-plot *ngIf="trajectoryPlot"
-               [data]="trajectoryPlot.data"
-               [layout]="trajectoryPlot.layout"
+  <plotly-plot *ngIf="plot"
+               [data]="plot.data"
+               [layout]="plot.layout"
                [useResizeHandler]="true"
                [style]="{ position: 'relative', width: '100%', height: '100%'}">
   </plotly-plot>
 
-  <div class="titleChange">
-    <input (change)="titleChange($event)" />
-  </div>
+
 
   <div class="legend">
-    <div class="legend-item" *ngFor="let category of plotService.categories.value">
+    <div class="titleChange">
+      <input (change)="titleChange($event)" />
+    </div>
+    <div class="legend-item" *ngFor="let category of plotService.categories">
       <input type="checkbox" checked (change)="toggleAverage($event.target, category.name)" />
       <select (change)="changeLineType($event.target, category.name)">
         <option value="none">
@@ -35,10 +36,10 @@
           Dot
         </option>
       </select>
-      <input type="color" value="#0000ff" (change)="changeColor($event.target, category.name)" />
+
+      <app-color-picker [category]="category"></app-color-picker>
       <span>{{category.name}}</span>
       <!--  <input type="color" (change)="changeColor($event.target, 'avg_' + type)" /> -->
-
     </div>
   </div>
 </div>

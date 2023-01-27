@@ -1,37 +1,38 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Category, PlotService} from "../plot.service";
 import {PlotlyDataLayoutConfig} from "plotly.js-dist-min";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-trajectory-plot',
   templateUrl: './trajectory-plot.component.html',
   styleUrls: ['./trajectory-plot.component.scss']
 })
-export class TrajectoryPlotComponent {
-  dataLoaded = () => this.plotService.experiments;
-
+export class TrajectoryPlotComponent implements OnInit, OnDestroy {
+  private colorChangeSubscription: Subscription;
 
   @Input()
   experimentName: string = '';
 
-  trajectoryPlot!: any;
+  plot!: any;
 
   constructor(protected plotService: PlotService) {
+    this.colorChangeSubscription = this.plotService.categoryChanged.subscribe(x => this.onServiceCategoryChange(x));
+  }
+
+  ngOnInit(): void {
+    this.loadTrajectoryPlot();
+  }
+
+  ngOnDestroy(): void {
+    this.colorChangeSubscription.unsubscribe();
   }
 
   async loadTrajectoryPlot() {
     const newPlot: PlotlyDataLayoutConfig = {
-      // ['DRL', 'RRT'] -->types
-      // --> 'DRL, RRT'
       layout: {
         autosize: true,
         title: this.experimentName,
-        xaxis: {
-          title: 'x-axis title'
-        },
-        yaxis: {
-          title: 'y-axis title'
-        },
         showlegend: false
       },
       data: [] as any[]
@@ -49,7 +50,7 @@ export class TrajectoryPlotComponent {
           mode: 'lines',
           line: {
             //color: 'rgb(80, 85, 95)',
-            color: 'rgb(135,206,250)',
+            color: robotData.category.color,
             dash: 'dashdot',
           },
         };
@@ -63,35 +64,35 @@ export class TrajectoryPlotComponent {
         legendgroup: `avg_${robotData.category.name}`,
         name: `Average ${robotData.category.name}`,
         line: {
-          color: 'blue',
+          color: robotData.category.color,
           width: 10,
         }
       };
       newPlot.data.push(newAvgTrj as any);
     });
 
-    this.trajectoryPlot = newPlot;
+    this.plot = newPlot;
   }
 
 
 
   titleChange = (ev: any) => {
     const newValue = ev.target.value;
-    this.trajectoryPlot.layout.title = newValue;
+    this.plot.layout.title = newValue;
   }
 
 
 
   toggleAverage(eventTarget: any, type: string) {
     const isVisible = eventTarget.checked;
-    this.trajectoryPlot.data.filter((data: any) => data.legendgroup === `avg_${type}`).forEach((data: any) => {
+    this.plot.data.filter((data: any) => data.legendgroup === `avg_${type}`).forEach((data: any) => {
       data.visible = isVisible;
     });
   }
 
   changeLineType(eventTarget: any, type: string) {
     const lineType = eventTarget.value;
-    this.trajectoryPlot.data.filter((data: any) => data.legendgroup === type).forEach((data: any) => {
+    this.plot.data.filter((data: any) => data.legendgroup === type).forEach((data: any) => {
       if (lineType === "none") {
         data.visible = false;
         return;
@@ -102,18 +103,8 @@ export class TrajectoryPlotComponent {
   }
 
   onServiceCategoryChange(category: Category) {
-    this.trajectoryPlot.data.filter((data: any) => data.legendgroup === category.name || data.legendgroup === `avg_${category.name}`).forEach((data: any) => {
+    this.plot.data.filter((data: any) => data.legendgroup === category.name || data.legendgroup === `avg_${category.name}`).forEach((data: any) => {
       data.line.color = category.color;
     });
-  }
-
-  changeColor (eventTarget: any, type: string): void {
-    const inputColor = eventTarget.value;
-
-  }
-
-
-  ngOnInit() {
-
   }
 }

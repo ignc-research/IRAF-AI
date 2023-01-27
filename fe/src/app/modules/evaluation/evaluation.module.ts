@@ -6,15 +6,17 @@ import { EvaluationComponent } from './evaluation.component';
 
 import * as PlotlyJS from 'plotly.js-dist-min';
 import { PlotlyModule } from 'angular-plotly.js';
-import { PlotComponent } from './plot/plot.component';
 import { TrajectoryPlotComponent } from './plot/trajectory-plot/trajectory-plot.component';
+import { BarPlotComponent } from './plot/bar-plot/bar-plot.component';
+import { ColorPickerComponent } from './plot/color-picker/color-picker.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
   declarations: [
     EvaluationComponent,
-    PlotComponent,
-    TrajectoryPlotComponent
+    TrajectoryPlotComponent,
+    BarPlotComponent,
+    ColorPickerComponent
   ],
   imports: [
     CommonModule,

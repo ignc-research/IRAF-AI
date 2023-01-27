@@ -13,9 +13,11 @@
              [useResizeHandler]="true" [style]="{position: 'relative', width: '35%', height: '35%'}">
 </plotly-plot>`
 -->
+<div class="plots">
+  <app-trajectory-plot [experimentName]="'lowerleft'"></app-trajectory-plot>
+  <app-bar-plot [experiments]="['lowerleft', 'lowerright']"></app-bar-plot>
+</div>
 
-
-<app-plot [types]="['RRT', 'DRL', 'prm','NC-RRT']" foldername="lowerleft" ></app-plot>
 <!--<app-plot [types]="['RRT', 'DRL', 'prm','NC-RRT']" foldername="lowerright" ></app-plot>
 <app-plot [types]="['RRT', 'DRL', 'prm','NC-RRT']" foldername="upperleft" ></app-plot>
 <app-plot [types]="['RRT', 'DRL', 'prm','NC-RRT']" foldername="upperright" ></app-plot>-->
