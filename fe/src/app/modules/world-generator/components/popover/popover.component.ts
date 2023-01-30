@@ -1,5 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { SharedModule } from '../shared.module';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-popover',
@@ -30,7 +31,10 @@ import { SharedModule } from '../shared.module';
       font-weight: bold;
     }
   `],
-  imports: [SharedModule]
+  imports: [
+    CommonModule,
+    FormsModule
+  ]
 })
 
 export class PopoverComponent {

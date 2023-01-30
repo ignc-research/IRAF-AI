@@ -39,6 +39,9 @@ export class RobotComponent {
     popoverPosition: {x: number, y: number};
   }>();
 
+  userData = {
+    "type": "Robot"
+  }
 
   hovered = false;
   active = false;
@@ -87,7 +90,7 @@ export class RobotComponent {
     }
 
     
-    console.log("joint : " + this.selectedJoint.name);
+    //console.log("joint : " + this.selectedJoint?.name);
     //console.log(this.searchParentJoint(intersection.object), this.searchParentLink(ev.object));
   }
 
@@ -128,7 +131,7 @@ export class RobotComponent {
     if(changes['dataObject']) {
       if(this.dataObject) {
         this.dataObject = changes['dataObject'].currentValue;
-        console.log("dataObject: " , this.dataObject);
+        //console.log("dataObject: " , this.dataObject);
       }
     }
   }
@@ -143,7 +146,7 @@ export class RobotComponent {
     };
     
     
-    console.log("hoverobject: " , this.hoverObject);
+    //console.log("hoverobject: " , this.hoverObject);
 
     this.hoverObject = ev.object;
 
@@ -167,9 +170,9 @@ export class RobotComponent {
         (<any> this.hoverObject).material.color.r += 0.1;
         (<any> this.hoverObject).material.color.g += 0.1;
         (<any> this.hoverObject).material.color.b += 0.1;
-        console.log("color: ", (<any> this.hoverObject).material.color);
+        //console.log("color: ", (<any> this.hoverObject).material.color);
       } catch (error) {
-        console.log("error: " , error);
+        //console.log("error: " , error);
       }
 
       
@@ -181,7 +184,7 @@ export class RobotComponent {
 
   
   pointerOut(ev: NgtEvent<PointerEvent>) {
-    console.log("out", ev.object);
+    //console.log("out", ev.object);
     (<any> ev.object).material.color = this.colorSave;
 
     if(this.dataObject) {
