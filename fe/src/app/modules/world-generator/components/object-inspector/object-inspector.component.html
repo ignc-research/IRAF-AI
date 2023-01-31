@@ -1,0 +1,13 @@
+<div class="inspector">
+    <div class="content">
+        <div>
+            <app-transform-input [object]="sceneService.selectedObject"></app-transform-input>
+        </div>
+        <div>
+            <app-user-data [userData]="userData"></app-user-data>
+        </div>
+        <div *ngIf="objectType == 'Robot'">
+            <app-robot-inspector [robot]="robot"></app-robot-inspector>
+        </div>
+    </div>
+</div>

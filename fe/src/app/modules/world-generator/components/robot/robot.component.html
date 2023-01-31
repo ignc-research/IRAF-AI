@@ -1,12 +1,12 @@
-<ngt-primitive 
+<ngt-primitive
 (pointerover)="pointerOver($event)" 
 (pointerout)="pointerOut($event)" 
 (click)="onRobotClick($event)" 
 (contextmenu)="onRobotRightClick($event)"
 (wheel)="onWheel($event)"
-[position]="position" 
-[userData]="userData"
-[scale]="2" 
+[position]="position"
+[scale]="2"
+[userData]="robot.userData"
 [object]="robot">
 
 </ngt-primitive>

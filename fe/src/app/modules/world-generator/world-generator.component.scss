@@ -1,0 +1,13 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .horizontal-container {
+        display: flex;
+        flex: 1;
+        ngt-canvas {
+            height: 100%;
+        }
+    }
+}

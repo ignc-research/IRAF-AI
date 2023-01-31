@@ -1,10 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-
 @Component({
   selector: 'app-popover',
-  standalone: true,
   template: `
     <div *ngIf="active" [style.top]="top" [style.left]="left" class="popover">
         <div class="popover-title">
@@ -30,11 +26,7 @@ import { FormsModule } from '@angular/forms';
     .popover-title {
       font-weight: bold;
     }
-  `],
-  imports: [
-    CommonModule,
-    FormsModule
-  ]
+  `]
 })
 
 export class PopoverComponent {

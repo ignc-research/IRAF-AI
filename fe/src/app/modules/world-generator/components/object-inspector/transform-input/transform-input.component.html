@@ -1,0 +1,49 @@
+<mat-card *ngIf="object">
+    <mat-card-header>
+      <mat-card-subtitle>Transform</mat-card-subtitle>
+    </mat-card-header>
+    <div class="section">
+        <h5>Position</h5>
+        <div class="row">
+            <mat-form-field>
+                <mat-label>X</mat-label>
+                <input [(ngModel)]="object.position.x" matInput type="number">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Y</mat-label>
+                <input [(ngModel)]="object.position.y" matInput type="number">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Z</mat-label>
+                <input [(ngModel)]="object.position.z" matInput type="number">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="section">
+        <h5>Rotation</h5>
+        <div class="row">
+            <mat-form-field>
+                <mat-label>Roll</mat-label>
+                <input [(ngModel)]="rotationX" matInput type="number">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Pitch</mat-label>
+                <input [(ngModel)]="rotationY" matInput type="number">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Yaw</mat-label>
+                <input [(ngModel)]="rotationZ" matInput type="number">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="section">
+        <h5>Scale</h5>
+        <div class="row">
+            <mat-form-field>
+                <mat-label>Scale</mat-label>
+                <input [(ngModel)]="scale" matInput type="number">
+            </mat-form-field>
+        </div>
+    </div>
+    
+</mat-card>

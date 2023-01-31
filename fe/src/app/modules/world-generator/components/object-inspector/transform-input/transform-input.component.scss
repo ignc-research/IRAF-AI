@@ -1,0 +1,13 @@
+.row {
+    display: flex;
+    &>* {
+        width: 100%;
+    }
+}
+h5 {
+    margin-bottom: .25rem;
+    margin-left: .75rem;
+}
+.section {
+ margin-top: .5rem;
+}

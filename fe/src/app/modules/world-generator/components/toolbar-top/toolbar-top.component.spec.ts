@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SensorComponent } from './sensor.component';
+import { ToolbarTopComponent } from './toolbar-top.component';
 
-describe('SensorComponent', () => {
-  let component: SensorComponent;
-  let fixture: ComponentFixture<SensorComponent>;
+describe('ToolbarTopComponent', () => {
+  let component: ToolbarTopComponent;
+  let fixture: ComponentFixture<ToolbarTopComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SensorComponent ]
+      declarations: [ ToolbarTopComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SensorComponent);
+    fixture = TestBed.createComponent(ToolbarTopComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

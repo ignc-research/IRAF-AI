@@ -1,0 +1,7 @@
+<ngt-soba-transform-controls *ngIf="controlledObject"
+[mode]="uiService.transformControlMode"
+[object]="controlledObject" #controls
+(change)="onControlsChange($event)"
+>
+    
+</ngt-soba-transform-controls>

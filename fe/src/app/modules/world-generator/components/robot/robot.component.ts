@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, SimpleChanges, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { NgtMesh } from '@angular-three/core/meshes';
 import { NgtPrimitive } from '@angular-three/core/primitive';
 import { NgtBoxGeometry } from '@angular-three/core/geometries';
@@ -7,17 +7,28 @@ import { NgtEvent, NgtRenderState, NgtVector3 } from '@angular-three/core';
 import { Color, LoaderUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
 import URDFLoader, { URDFJoint, URDFRobot } from 'urdf-loader';
 import { LoadingManager } from 'three';
+import { SceneService } from '../../services/scene.service';
+
 
 @Component({
   selector: 'app-robot',
-  standalone: true,
-  templateUrl: 'robot.component.html',
-  imports: [NgtMesh, NgtPrimitive, NgtBoxGeometry, NgtMeshStandardMaterial]
+  templateUrl: 'robot.component.html'
 })
 
 
 export class RobotComponent {
-  robot!: URDFRobot;
+  _robot!: URDFRobot;
+
+  @Input()
+  set robot(value: URDFRobot) {
+    if (value) {
+      this._robot = value;
+    }
+  }
+
+  get robot() {
+    return this._robot;
+  }
 
   @Input() position?: NgtVector3;
 
@@ -38,10 +49,6 @@ export class RobotComponent {
     showPopover: boolean;
     popoverPosition: {x: number, y: number};
   }>();
-
-  userData = {
-    "type": "Robot"
-  }
 
   hovered = false;
   active = false;
@@ -81,6 +88,7 @@ export class RobotComponent {
   searchParentJoint = (obj: Object3D) => this.findObjOfType(obj, "URDFJoint");
 
   onRobotClick(ev: NgtEvent<MouseEvent>) {
+    this.sceneService.selectedObject = this.robot;
     const intersection = ev.intersections[0];
     if(!intersection) return;
     this.selectedJoint = this.searchParentJoint(intersection.object) as URDFJoint;
@@ -89,9 +97,6 @@ export class RobotComponent {
       this.addNewDataObject(this.dataObject);
     }
 
-    
-    //console.log("joint : " + this.selectedJoint?.name);
-    //console.log(this.searchParentJoint(intersection.object), this.searchParentLink(ev.object));
   }
 
   onRobotRightClick(ev: NgtEvent<MouseEvent>) {
@@ -196,17 +201,7 @@ export class RobotComponent {
 
   }
 
-  constructor() {
-    const manager = new LoadingManager();
-    const loader = new URDFLoader( manager );
+  constructor(private sceneService: SceneService) {
 
-    loader.packages = '/assets/urdf/kuka_kr6_support';
-    loader.load(
-      '/assets/urdf/kuka_kr6_support/urdf/kr6r700sixx.urdf',
-      robot => {
-        this.robot = robot;
-        console.log(robot);
-      }
-    );
   }
 }

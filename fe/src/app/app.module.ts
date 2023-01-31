@@ -11,6 +11,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { SideMenuItemComponent } from './components/side-menu/side-menu-item/side-menu-item.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SideMenuItemComponent } from './components/side-menu/side-menu-item/sid
     SideMenuItemComponent
   ],
   imports: [
+    HttpClientModule,
     MatListModule,
     MatSidenavModule,
     MatButtonModule,
