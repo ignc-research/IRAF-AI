@@ -20,8 +20,8 @@ export class SceneService {
   async addRobot(urdfPath: string) {
     const robot = await new AdvancedUrdfLoader().loadRobot(urdfPath);
     robot.userData = {
-      "type": new UserDataEntry("Robot"),
-      "urdf": new UserDataEntry(urdfPath)
+      "type": "Robot",
+      "urdf": urdfPath
     };
 
     this.robots.push(robot);
@@ -48,16 +48,4 @@ export class SceneService {
   }
  
 }
-export type UserData = { [key: string]: UserDataEntry }
-export type UserDataEntryType = 'text' | 'number' | 'checkbox';
-export class UserDataEntry {
-  editable: boolean;
-  value: any;
-  type: UserDataEntryType;
-
-  constructor(value: any, editable: boolean = false, type: UserDataEntryType = 'text') {
-    this.value = value;
-    this.editable = editable;
-    this.type = type;
-  }
-}
+export type UserData = { [key: string]: any }

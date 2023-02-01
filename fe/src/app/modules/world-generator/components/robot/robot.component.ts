@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, SimpleChanges, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, SimpleChanges, Output, EventEmitter, AfterViewInit, NgZone } from '@angular/core';
 import { NgtMesh } from '@angular-three/core/meshes';
 import { NgtPrimitive } from '@angular-three/core/primitive';
 import { NgtBoxGeometry } from '@angular-three/core/geometries';
@@ -91,12 +91,8 @@ export class RobotComponent {
     this.sceneService.selectedObject = this.robot;
     const intersection = ev.intersections[0];
     if(!intersection) return;
-    this.selectedJoint = this.searchParentJoint(intersection.object) as URDFJoint;
-    if(this.dataObject) {
-      this.dataObject.selectedJoint = this.selectedJoint;
-      this.addNewDataObject(this.dataObject);
-    }
-
+    const selectedLink = this.searchParentLink(intersection.object) as URDFJoint;
+    this.robot.userData['selectedLink'] = selectedLink;
   }
 
   onRobotRightClick(ev: NgtEvent<MouseEvent>) {
@@ -201,7 +197,7 @@ export class RobotComponent {
 
   }
 
-  constructor(private sceneService: SceneService) {
+  constructor(private sceneService: SceneService, private zone: NgZone) {
 
   }
 }

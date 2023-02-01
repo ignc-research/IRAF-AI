@@ -1,11 +1,11 @@
-<mat-card *ngIf="((userData | keyvalue)?.length ?? 0) > 0">
+<mat-card *ngIf="userDataKeyValues.length > 0">
     <mat-card-header>
       <mat-card-subtitle>Properties</mat-card-subtitle>
     </mat-card-header>
     <div class="entries">
-        <mat-form-field *ngFor="let keyValue of userData | keyvalue" class="example-full-width">
+        <mat-form-field *ngFor="let keyValue of userDataKeyValues" class="example-full-width">
             <mat-label>{{keyValue.key}}</mat-label>
-            <input [readonly]="!keyValue.value.editable" matInput [type]="keyValue.value.type" [(ngModel)]="keyValue.value.value">
+            <input [readonly]="true" matInput type="text" [(ngModel)]="keyValue.value">
         </mat-form-field>
     </div>
 </mat-card>

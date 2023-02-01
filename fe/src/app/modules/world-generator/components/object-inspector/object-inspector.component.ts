@@ -18,7 +18,7 @@ export class ObjectInspectorComponent {
   }
 
   get objectType() {
-    return this.userData['type']?.value;
+    return this.userData['type'];
   }
 
   constructor(public sceneService: SceneService){
