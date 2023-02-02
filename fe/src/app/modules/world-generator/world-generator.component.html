@@ -3,18 +3,21 @@
   <app-toolbar-top></app-toolbar-top>
   <div class="horizontal-container">
     <app-object-inspector></app-object-inspector>
-    <ngt-canvas (pointermissed)="pointerMissed($event)" style="background: rgba(0, 0, 0, .8)">
+    <ngt-canvas [scene]="scene" (pointermissed)="pointerMissed($event)" style="background: rgba(0, 0, 0, .8)">
       <ngt-ambient-light intensity="0.5"></ngt-ambient-light>
       <ngt-spot-light [position]="10" angle="0.15" penumbra="1"></ngt-spot-light>
       <ngt-point-light [position]="-10"></ngt-point-light>
       <ngt-axes-helper [scale]="1"></ngt-axes-helper>
 
+
       <app-robot *ngFor="let robot of sceneService.robots" [robot]="robot"></app-robot>
-      <app-transform-controls [controlledObject]="sceneService.selectedObject"></app-transform-controls>
+      <app-sensor *ngFor="let sensor of sceneService.sensors" [sensor]="sensor"></app-sensor>
+
+      <app-obstacle *ngFor="let obstacle of sceneService.obstacles" [obstacle]="obstacle"></app-obstacle>
+
+      <app-transform-controls [controlledObject]="uiService.selectedObject"></app-transform-controls>
       <ngt-soba-orbit-controls [makeDefault]="true" [enableZoom]="uiService.enableZoom"></ngt-soba-orbit-controls>
     </ngt-canvas>
   </div>
-  
 </div>
-
-
+<app-robot-popover></app-robot-popover>

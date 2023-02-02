@@ -5,9 +5,10 @@ import { NgtBoxGeometry } from '@angular-three/core/geometries';
 import { NgtMeshStandardMaterial } from '@angular-three/core/materials';
 import { NgtEvent, NgtRenderState, NgtVector3 } from '@angular-three/core';
 import { Color, LoaderUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
-import URDFLoader, { URDFJoint, URDFRobot } from 'urdf-loader';
+import URDFLoader, { URDFJoint, URDFLink, URDFRobot } from 'urdf-loader';
 import { LoadingManager } from 'three';
 import { SceneService } from '../../services/scene.service';
+import { UiControlService } from '../../services/ui-control.service';
 
 
 @Component({
@@ -88,11 +89,15 @@ export class RobotComponent {
   searchParentJoint = (obj: Object3D) => this.findObjOfType(obj, "URDFJoint");
 
   onRobotClick(ev: NgtEvent<MouseEvent>) {
-    this.sceneService.selectedObject = this.robot;
     const intersection = ev.intersections[0];
-    if(!intersection) return;
-    const selectedLink = this.searchParentLink(intersection.object) as URDFJoint;
-    this.robot.userData['selectedLink'] = selectedLink;
+    if(intersection && intersection.object.userData['type'] == "Sensor") {
+      this.uiService.selectedObject = intersection.object;
+      return;
+    }
+    console.log(intersection.object);
+    this.uiService.selectedObject = this.robot;
+    // const selectedLink = this.searchParentLink(intersection.object) as URDFJoint;
+    // this.robot.userData['selectedLink'] = selectedLink;
   }
 
   onRobotRightClick(ev: NgtEvent<MouseEvent>) {
@@ -101,7 +106,11 @@ export class RobotComponent {
     this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
     this.currentJointValue = this.currentJoint.jointValue[0];
     this.showPopover = true;
-    this.popoverPosition = {x: ev.nativeEvent.clientX + 20, y: ev.nativeEvent.clientY + 20};
+    this.uiService.robotPopover = {
+      selectedLink: this.searchParentLink(intersection.object) as URDFLink,
+      x: ev.nativeEvent.clientX + 20,
+      y: ev.nativeEvent.clientY + 20
+    };
     
     if(this.dataObject) {
       this.dataObject.currentJoint = this.currentJoint;
@@ -197,7 +206,7 @@ export class RobotComponent {
 
   }
 
-  constructor(private sceneService: SceneService, private zone: NgZone) {
+  constructor(public sceneService: SceneService, private uiService: UiControlService) {
 
   }
 }

@@ -33,9 +33,12 @@ import { TransformInputComponent } from './components/object-inspector/transform
 import { MatCardModule } from '@angular/material/card';
 import { TransformModeSelectorComponent } from './components/toolbar-top/transform-mode-selector/transform-mode-selector.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { RobotInspectorComponent } from './components/object-inspector/robot-inspector/robot-inspector.component';
 import { TransformControlsComponent } from './components/transform-controls/transform-controls.component';
 import { ZoomControlsComponent } from './components/toolbar-top/zoom-controls/zoom-controls.component';
+import { RobotPopoverComponent } from './components/robot/robot-popover/robot-popover.component';
+import { SensorComponent } from './components/sensor/sensor.component';
+import { ObstacleSelectorComponent } from './components/toolbar-top/obstacle-selector/obstacle-selector.component';
+import { ObstacleComponent } from './components/obstacle/obstacle.component';
 
 @NgModule({
   
@@ -53,9 +56,12 @@ import { ZoomControlsComponent } from './components/toolbar-top/zoom-controls/zo
     WorldGeneratorComponent,
     TransformInputComponent,
     TransformModeSelectorComponent,
-    RobotInspectorComponent,
     TransformControlsComponent,
-    ZoomControlsComponent
+    ZoomControlsComponent,
+    RobotPopoverComponent,
+    SensorComponent,
+    ObstacleSelectorComponent,
+    ObstacleComponent,
   ],
   imports: [
     CommonModule,

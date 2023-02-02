@@ -19,12 +19,11 @@ export class AdvancedUrdfLoader {
     return null;
   }
 
-  loadRobot(urdfPath: string): Promise<URDFRobot> {
+  loadUrdf(urdfPath: string): Promise<URDFRobot> {
       return new Promise<URDFRobot>((resolve, reject) => {
         const manager = new LoadingManager();
         const loader = new URDFLoader( manager );
     
-        const basePath = '/urdf/robot/';
         loader.loadMeshCb = async (url, manager, onLoad) => {
           const fileExt = url.split('.').pop()?.toLowerCase();
           if (fileExt) {
@@ -41,7 +40,7 @@ export class AdvancedUrdfLoader {
           }
         }
         loader.load(
-          environment.apiUrl + basePath + urdfPath,
+          environment.apiUrl + urdfPath,
           robot => resolve(robot),
           undefined,
           () => reject()

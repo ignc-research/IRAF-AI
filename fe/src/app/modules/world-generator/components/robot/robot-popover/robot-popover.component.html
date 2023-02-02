@@ -1,0 +1,9 @@
+
+<mat-card *ngIf="uiService.robotPopover" [style.left]="uiService.robotPopover.x + 'px'" [style.top]="uiService.robotPopover.y + 'px'">
+    <mat-card-header>
+        <mat-card-title>{{uiService.robotPopover.selectedLink.name}}</mat-card-title>
+    </mat-card-header>
+    <div>
+        <button mat-button (click)="addSensor()">Add Sensor</button>
+    </div>
+</mat-card>

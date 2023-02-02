@@ -1,4 +1,4 @@
-import { NgtCanvas, NgtEvent } from '@angular-three/core';
+import { NgtCameraOptions, NgtCanvas, NgtEvent, NgtSceneOptions } from '@angular-three/core';
 import { Component, NgZone } from '@angular/core';
 import { SceneService } from './services/scene.service';
 import { GeneratorApiService } from './services/generator.api.service';
@@ -11,6 +11,14 @@ import { UiControlService } from './services/ui-control.service';
 })
 
 export class WorldGeneratorComponent {
+  camera: NgtCameraOptions = {
+
+  }
+
+  scene: NgtSceneOptions = {
+    up: [0, 0, 1]
+  }
+
   constructor(public sceneService: SceneService, private zone: NgZone, public uiService: UiControlService) {
  
   }
@@ -18,7 +26,7 @@ export class WorldGeneratorComponent {
   
 
     pointerMissed = (ev: any) => {
-      this.zone.run(() => this.sceneService.selectedObject = null);
+      this.zone.run(() => this.uiService.onMiss());
     }
   
 }

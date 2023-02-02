@@ -13,11 +13,11 @@ export class GeneratorApiService  {
 
   constructor(private httpClient: HttpClient) { 
     this.httpClient.get<string[]>(`${environment.apiUrl}/urdf/obstacle`).subscribe(x => {
-      this.obstacleUrdfs = x;
+      this.obstacleUrdfs = x.map(x => '/urdf/obstacle/' + x);
       console.log("ROBOT URDFS", this.obstacleUrdfs);
     });
     this.httpClient.get<string[]>(`${environment.apiUrl}/urdf/robot`).subscribe(x => {
-      this.robotUrdfs = x;
+      this.robotUrdfs = x.map(x => '/urdf/robot/' + x);
       console.log("ROBOT URDFS", this.robotUrdfs);
     });
   }

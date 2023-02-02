@@ -15,7 +15,7 @@ export class UrdfPreviewCanvasComponent {
   @Input()
   set urdfPath(value: string) {
     if (value) {
-      new AdvancedUrdfLoader().loadRobot(value).then(x => this.robot = x);
+      new AdvancedUrdfLoader().loadUrdf(value).then(x => this.robot = x);
     }
     this._urdfPath = value;
   }

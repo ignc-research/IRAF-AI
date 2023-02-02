@@ -1,0 +1,10 @@
+<mat-form-field hintLabel="Available Robot URDFs" appearance="fill">
+    <mat-label>Obstacles</mat-label>
+    <mat-select [(ngModel)]="selectedObstacle">
+      <mat-option *ngFor="let obstacle of generatorApi.obstacleUrdfs" [value]="obstacle">{{getFileName(obstacle)}}</mat-option>
+    </mat-select>
+</mat-form-field>
+<app-urdf-preview *ngIf="selectedObstacle" [urdfPath]="selectedObstacle"></app-urdf-preview>
+<button *ngIf="selectedObstacle" mat-icon-button aria-label="Add" (click)="addObstacle()">
+  <mat-icon>add</mat-icon>
+</button>
