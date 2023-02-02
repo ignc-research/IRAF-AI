@@ -13,9 +13,7 @@ export class SceneService {
 
   obstacles: THREE.Object3D[] = [];
 
-  robots: URDFRobot[] = [];
-
-  sensors: Sensor[] = [];
+  robots: Robot[] = [];
 
   constructor() { }
 
@@ -36,29 +34,31 @@ export class SceneService {
       "urdf": urdfPath
     };
 
-    this.robots.push(robot);
+    this.robots.push({
+      robot,
+      sensors: []
+    });
   }
 
-  addSensor(link: URDFLink) {
-    this.sensors.push({
+  addSensor(robot: Robot, link: URDFLink) {
+    robot.sensors.push({
       link: link,
       sensorRef: new Ref<THREE.Object3D>()
     });
   }
 
   deleteRobot(uuid: string) {
-    const findRobot = this.robots.find(x => x.uuid == uuid);
+    const findRobot = this.robots.find(x => x.robot.uuid == uuid);
     if (findRobot) {
-      const robotLinks = Object.values(findRobot.links);
-
-      this.sensors = this.sensors.filter(x => robotLinks.indexOf(x.link) < 0);
-      this.robots = this.robots.filter(x => x.uuid != uuid);
+      const robotLinks = Object.values(findRobot.robot.links);
+      this.robots = this.robots.filter(x => x.robot.uuid != uuid);
     }
-    console.log(this.sensors, this.robots);
   }
 
   deleteSensor(visualObjUuid: string) {
-    this.sensors = this.sensors.filter(x => x.sensorRef.value.uuid != visualObjUuid);
+    this.robots.forEach(robot => {
+      robot.sensors = robot.sensors.filter(x => x.sensorRef.value.uuid != visualObjUuid);
+    })
   }
 
   deleteObstacle(uuid: string) {
@@ -80,6 +80,11 @@ export class SceneService {
 
   }
  
+}
+
+export type Robot = {
+  robot: URDFRobot;
+  sensors: Sensor[];
 }
 
 export type Sensor = {

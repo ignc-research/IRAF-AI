@@ -1,4 +1,4 @@
-<mat-form-field hintLabel="Available Robot URDFs" appearance="fill">
+<mat-form-field appearance="fill">
     <mat-label>Robots</mat-label>
     <mat-select [(ngModel)]="selectedRobot">
       <mat-option *ngFor="let robot of generatorApi.robotUrdfs" [value]="robot">{{getFileName(robot)}}</mat-option>

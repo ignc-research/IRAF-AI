@@ -6,7 +6,7 @@
 (wheel)="onWheel($event)"
 [position]="position"
 [scale]="2"
-[userData]="robot.userData"
-[object]="robot">
-    
+[userData]="robot.robot.userData"
+[object]="robot.robot">
+    <app-sensor *ngFor="let sensor of robot.sensors" [sensor]="sensor"></app-sensor>
 </ngt-primitive>

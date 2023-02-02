@@ -1,7 +1,7 @@
 import { HostListener, Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { URDFLink } from 'urdf-loader';
 
-import { SceneService } from './scene.service';
+import { Robot, SceneService } from './scene.service';
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +54,7 @@ export class UiControlService implements OnDestroy {
 export type TransformControlType = 'translate' | 'scale' | 'rotate';
 
 export type RobotPopover = {
+  robot: Robot;
   selectedLink: URDFLink;
   x: number;
   y: number;

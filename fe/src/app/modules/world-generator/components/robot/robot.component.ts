@@ -7,7 +7,7 @@ import { NgtEvent, NgtRenderState, NgtVector3 } from '@angular-three/core';
 import { Color, LoaderUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
 import URDFLoader, { URDFJoint, URDFLink, URDFRobot } from 'urdf-loader';
 import { LoadingManager } from 'three';
-import { SceneService } from '../../services/scene.service';
+import { Robot, SceneService } from '../../services/scene.service';
 import { UiControlService } from '../../services/ui-control.service';
 
 
@@ -18,10 +18,10 @@ import { UiControlService } from '../../services/ui-control.service';
 
 
 export class RobotComponent {
-  _robot!: URDFRobot;
+  _robot!: Robot;
 
   @Input()
-  set robot(value: URDFRobot) {
+  set robot(value: Robot) {
     if (value) {
       this._robot = value;
     }
@@ -95,7 +95,7 @@ export class RobotComponent {
       return;
     }
     console.log(intersection.object);
-    this.uiService.selectedObject = this.robot;
+    this.uiService.selectedObject = this.robot.robot;
     // const selectedLink = this.searchParentLink(intersection.object) as URDFJoint;
     // this.robot.userData['selectedLink'] = selectedLink;
   }
@@ -107,6 +107,7 @@ export class RobotComponent {
     this.currentJointValue = this.currentJoint.jointValue[0];
     this.showPopover = true;
     this.uiService.robotPopover = {
+      robot: this.robot,
       selectedLink: this.searchParentLink(intersection.object) as URDFLink,
       x: ev.nativeEvent.clientX + 20,
       y: ev.nativeEvent.clientY + 20

@@ -14,7 +14,7 @@ export class RobotPopoverComponent {
 
   addSensor() {
     if (this.uiService.robotPopover) {
-      this.sceneService.addSensor(this.uiService.robotPopover.selectedLink);
+      this.sceneService.addSensor(this.uiService.robotPopover.robot, this.uiService.robotPopover.selectedLink);
       this.uiService.robotPopover = null;
     }
   }
