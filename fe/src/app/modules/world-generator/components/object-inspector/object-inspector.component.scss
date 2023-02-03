@@ -1,7 +1,7 @@
 .inspector {
     height: 100%;
     width: 300px;
-    background: #888;
+    background: #ccc;
 }
 .content {
     padding: 8px;
@@ -10,5 +10,6 @@
     }
     ::ng-deep .mat-mdc-form-field{
         margin-bottom: -1em;
+        width: 100%;
     }
 }

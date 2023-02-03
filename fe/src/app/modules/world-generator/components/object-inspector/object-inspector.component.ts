@@ -18,10 +18,6 @@ export class ObjectInspectorComponent {
     return this.uiService.selectedObject as URDFRobot;
   }
 
-  get objectType() {
-    return this.userData['type'];
-  }
-
   constructor(public uiService: UiControlService){
    
   }

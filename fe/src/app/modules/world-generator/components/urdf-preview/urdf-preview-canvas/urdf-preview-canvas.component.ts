@@ -9,13 +9,23 @@ import { SceneService } from '../../../services/scene.service';
   styleUrls: ['./urdf-preview-canvas.component.scss']
 })
 export class UrdfPreviewCanvasComponent {
-  _urdfPath: string = '';
-  robot!: URDFRobot;
-  
+  _urdfPath: string | null = '';
+  robot!: URDFRobot | null;
+  hasError: boolean = false;
   @Input()
-  set urdfPath(value: string) {
+  set urdfPath(value: string | null) {
+    if (value != this._urdfPath) {
+      this.robot = null;
+    }
     if (value) {
-      new AdvancedUrdfLoader().loadUrdf(value).then(x => this.robot = x);
+      new AdvancedUrdfLoader().loadUrdf(value).then(x => {
+         this.robot = x;
+         this.hasError = false;
+        }).catch(err => {
+          this.robot = null;
+          this.hasError = true;
+          console.error("URDF LOADING FAILED", err);
+      });
     }
     this._urdfPath = value;
   }

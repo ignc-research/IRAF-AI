@@ -1,6 +1,19 @@
 <div class="inspector">
     <div class="content">
         <div>
+            <app-environment-inspector *ngIf="!uiService.selectedObject">
+            </app-environment-inspector>
+        </div>
+        <div class="section" *ngIf="uiService.selectedObject">
+            <div class="row">
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input [(ngModel)]="uiService.selectedObject.name" matInput type="text">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div>
             <app-transform-input [object]="uiService.selectedObject"></app-transform-input>
         </div>
         <div>

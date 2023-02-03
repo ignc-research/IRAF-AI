@@ -39,6 +39,14 @@ import { RobotPopoverComponent } from './components/robot/robot-popover/robot-po
 import { SensorComponent } from './components/sensor/sensor.component';
 import { ObstacleSelectorComponent } from './components/toolbar-top/obstacle-selector/obstacle-selector.component';
 import { ObstacleComponent } from './components/obstacle/obstacle.component';
+import { TreeViewComponent } from './components/tree-view/tree-view.component';
+import { MatListModule } from '@angular/material/list';
+import { EnvironmentInspectorComponent } from './components/object-inspector/environment-inspector/environment-inspector.component';
+import { ObstacleDialogComponent } from './components/toolbar-top/obstacle-selector/obstacle-dialog/obstacle-dialog.component';
+import { ParameterEditorComponent } from './components/parameter-editor/parameter-editor.component';
+import { ParameterInputComponent } from './components/parameter-editor/parameter-input/parameter-input.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   
@@ -62,6 +70,11 @@ import { ObstacleComponent } from './components/obstacle/obstacle.component';
     SensorComponent,
     ObstacleSelectorComponent,
     ObstacleComponent,
+    TreeViewComponent,
+    EnvironmentInspectorComponent,
+    ObstacleDialogComponent,
+    ParameterEditorComponent,
+    ParameterInputComponent,
   ],
   imports: [
     CommonModule,
@@ -71,13 +84,16 @@ import { ObstacleComponent } from './components/obstacle/obstacle.component';
     // Material Design
     MatButtonModule,
     MatButtonToggleModule,
+    MatCheckboxModule,
     MatCardModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatListModule,
     MatInputModule,
     MatIconModule,
     MatSelectModule,
     MatToolbarModule,
+    MatChipsModule,
     
     // Angular Three
     NgtAxesHelperModule,

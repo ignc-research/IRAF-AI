@@ -1,5 +1,6 @@
 import { NgtEvent } from '@angular-three/core';
 import { Component, Input } from '@angular/core';
+import { ThreeUtils } from 'src/app/helpers/three-utils';
 import { URDFRobot } from 'urdf-loader';
 import { SceneService } from '../../services/scene.service';
 import { UiControlService } from '../../services/ui-control.service';
@@ -18,15 +19,13 @@ export class ObstacleComponent {
 
   }
 
+
+
   onClick(ev: NgtEvent<MouseEvent>) {
     const intersection = ev.intersections[0];
-    if(intersection && intersection.object.userData['type'] == "Sensor") {
-      this.uiService.selectedObject = intersection.object;
-      return;
+
+    if(intersection && ThreeUtils.isChildOf(intersection.object, this.obstacle)) {
+      this.uiService.selectedObject = this.obstacle;
     }
-    console.log(intersection.object);
-    this.uiService.selectedObject = this.obstacle;
-    // const selectedLink = this.searchParentLink(intersection.object) as URDFJoint;
-    // this.robot.userData['selectedLink'] = selectedLink;
   }
 }

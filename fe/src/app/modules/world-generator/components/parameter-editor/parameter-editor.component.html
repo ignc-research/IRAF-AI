@@ -1,0 +1,5 @@
+<div class="editor">
+    <div class="entry" *ngFor="let parameter of parameters | keyvalue" [style.width]="width">
+        <app-parameter-input [label]="parameter.key" [parameter]="parameter.value"></app-parameter-input>
+    </div>
+</div>

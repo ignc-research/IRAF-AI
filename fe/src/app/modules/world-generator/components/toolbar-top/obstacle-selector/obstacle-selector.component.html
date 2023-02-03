@@ -1,4 +1,4 @@
-<mat-form-field appearance="fill">
+<!-- <mat-form-field appearance="fill">
     <mat-label>Obstacles</mat-label>
     <mat-select [(ngModel)]="selectedObstacle">
       <mat-option *ngFor="let obstacle of generatorApi.obstacleUrdfs" [value]="obstacle">{{getFileName(obstacle)}}</mat-option>
@@ -7,4 +7,5 @@
 <app-urdf-preview *ngIf="selectedObstacle" [urdfPath]="selectedObstacle"></app-urdf-preview>
 <button *ngIf="selectedObstacle" mat-icon-button aria-label="Add" (click)="addObstacle()">
   <mat-icon>add</mat-icon>
-</button>
+</button> -->
+<button mat-button (click)="openDialog()">Add Obstacle</button>

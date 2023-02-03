@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { StringUtils } from 'src/app/helpers/string-utils';
 import { GeneratorApiService } from '../../../services/generator.api.service';
 import { SceneService } from '../../../services/scene.service';
 
@@ -19,5 +20,5 @@ export class RobotSelectorComponent {
     this.sceneService.addRobot(this.selectedRobot);
   }
 
-  getFileName = (path: string) => path.replace(/^.*[\\\/]/, '');
+  getFileName = StringUtils.getFileName;
 }

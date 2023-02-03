@@ -1,0 +1,25 @@
+
+<h1 mat-dialog-title>Add Obstacle</h1>
+<div class="dialog-content" mat-dialog-content>
+    <mat-form-field>
+        <mat-label>Obstacly Category</mat-label>
+        <mat-select [(ngModel)]="selectedCategory" (ngModelChange)="refreshPreview()">
+          <mat-option *ngFor="let obstacleCategory of apiService.obstacles" [value]="obstacleCategory">{{obstacleCategory.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="selectedCategory?.urdfs">
+        <mat-label>Urdf</mat-label>
+        <mat-select [(ngModel)]="selectedCategory.urdf" (ngModelChange)="refreshPreview()">
+          <mat-option *ngFor="let urdf of selectedCategory.urdfs" [value]="urdf">{{urdf}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <app-parameter-editor *ngIf="selectedCategory?.params" [parameters]="selectedCategory.params"></app-parameter-editor>
+    <div class="preview">
+        <app-urdf-preview-canvas [urdfPath]="urdfPath"></app-urdf-preview-canvas>
+    </div>
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-button (click)="refreshPreview()">Refresh Preview</button>
+    <button mat-button [mat-dialog-close]="selectedCategory" cdkFocusInitial color="primary">Ok</button>
+</div>

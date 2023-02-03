@@ -2,7 +2,10 @@ import { NgtInstance, NgtObject, Ref } from '@angular-three/core';
 import { Injectable } from '@angular/core';
 
 import { AdvancedUrdfLoader } from 'src/app/helpers/advanced-urdf-loader';
+import { StringUtils } from 'src/app/helpers/string-utils';
+import { getObstacleUrl, ObstacleDefinition } from 'src/app/models/obstacle';
 import { environment } from 'src/environment/environment';
+import * as THREE from 'three';
 import { LoadingManager } from 'three';
 import URDFLoader, { URDFLink, URDFRobot } from 'urdf-loader';
 
@@ -17,14 +20,21 @@ export class SceneService {
 
   constructor() { }
 
-  async addObstacle(urdfPath: string) {
-    const obstacle = await new AdvancedUrdfLoader().loadUrdf(urdfPath);
-    obstacle.userData = {
+  getLastIndex = (objs: THREE.Object3D[], prefix: string) => (objs.filter(x => x.name.startsWith(prefix))
+                                                                  .map(x => +(x.name.split('_').at(-1) ?? 0))
+                                                                  .sort((a, b) => b - a)[0] ?? 0)
+                                                                  
+  async addObstacle(obstacle: ObstacleDefinition) {
+    const obstacleObj = await new AdvancedUrdfLoader().loadUrdf(getObstacleUrl(obstacle));
+    obstacleObj.userData = {
       "type": "Obstacle",
-      "urdf": urdfPath
+      "urdf": getObstacleUrl(obstacle),
+      "params": obstacle.params
     };
+    const newIndex = this.getLastIndex(this.obstacles, obstacle.name) + 1;
+    obstacleObj.name = `${obstacle.name}_${newIndex}`;
 
-    this.obstacles.push(obstacle);
+    this.obstacles.push(obstacleObj);
   }
 
   async addRobot(urdfPath: string) {
@@ -33,6 +43,8 @@ export class SceneService {
       "type": "Robot",
       "urdf": urdfPath
     };
+    const newIndex = this.getLastIndex(this.robots.map(x => x.robot), StringUtils.getFileNameWithoutExt(urdfPath)) + 1;
+    robot.name = `${StringUtils.getFileNameWithoutExt(urdfPath)}_${newIndex}`;
 
     this.robots.push({
       robot,
@@ -41,9 +53,20 @@ export class SceneService {
   }
 
   addSensor(robot: Robot, link: URDFLink) {
+    const geometry = new THREE.SphereGeometry(1, 32, 16);
+    const material = new THREE.MeshBasicMaterial({
+      color: 0xffff00
+    });
+    const sensor = new THREE.Mesh(geometry, material);
+    const newIndex = this.getLastIndex(robot.sensors.map(x => x.sensor), "Sensor") + 1;
+    sensor.name = `${"Sensor"}_${newIndex}`;
+    sensor.userData = {
+      "type": "Sensor",
+      "link": link.name
+    };
     robot.sensors.push({
       link: link,
-      sensorRef: new Ref<THREE.Object3D>()
+      sensor: sensor
     });
   }
 
@@ -57,7 +80,7 @@ export class SceneService {
 
   deleteSensor(visualObjUuid: string) {
     this.robots.forEach(robot => {
-      robot.sensors = robot.sensors.filter(x => x.sensorRef.value.uuid != visualObjUuid);
+      robot.sensors = robot.sensors.filter(x => x.sensor.uuid != visualObjUuid);
     })
   }
 
@@ -82,13 +105,15 @@ export class SceneService {
  
 }
 
+
+
 export type Robot = {
   robot: URDFRobot;
   sensors: Sensor[];
 }
 
 export type Sensor = {
-  sensorRef: Ref<THREE.Object3D>;
+  sensor: THREE.Object3D;
   link: URDFLink;
 }
 

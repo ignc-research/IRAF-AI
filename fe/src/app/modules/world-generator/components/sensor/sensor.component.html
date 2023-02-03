@@ -1,10 +1,9 @@
-<ngt-mesh
-    [ref]="sensor.sensorRef"
+<ngt-primitive
+    [object]="sensor.sensor"
+    [name]="sensor.sensor.name"
     [appendTo]="sensor.link"
-    [userData]="userData"
+    [userData]="sensor.sensor.userData"
     [scale]=".1"
     [position]="[0, 0, .2]"
 >
-    <ngt-sphere-geometry></ngt-sphere-geometry>
-    <ngt-mesh-standard-material [color]="'hotpink'"></ngt-mesh-standard-material>
-</ngt-mesh>
+</ngt-primitive>

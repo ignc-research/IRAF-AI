@@ -39,12 +39,15 @@ export class AdvancedUrdfLoader {
             }
           }
         }
-        loader.load(
-          environment.apiUrl + urdfPath,
-          robot => resolve(robot),
-          undefined,
-          () => reject()
-        );
+
+          loader.load(
+            environment.apiUrl + urdfPath,
+            robot => resolve(robot),
+            undefined,
+            ((err: any) => reject(err)) as any
+          );
+    
+        
       });
     }
 }

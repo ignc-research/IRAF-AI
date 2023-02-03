@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="wrapper">
+        <mat-nav-list>
+            <div class="category-header" mat-subheader>Robots</div>
+            <div class="item" *ngFor="let robot of sceneService.robots">
+                <a mat-list-item (click)="uiService.selectedObject = robot.robot" [activated]="uiService.selectedObject == robot.robot">
+                    <mat-icon matListItemIcon>precision_manufacturing</mat-icon>
+                    <span matListItemTitle>{{robot.robot.name}}</span>
+                </a>
+                <mat-nav-list class="sensor-list" *ngIf="robot.sensors.length > 0">
+                    <div class="subheader" mat-subheader>Sensors</div>
+                    <div *ngFor="let sensor of robot.sensors">
+                        <a mat-list-item (click)="uiService.selectedObject = sensor.sensor" [activated]="uiService.selectedObject == sensor.sensor">
+                            <mat-icon matListItemIcon>sensors</mat-icon>
+                            <span matListItemTitle>{{sensor.sensor.name }}</span>
+                        </a>
+                    </div>
+                </mat-nav-list>
+            </div>
+        </mat-nav-list>
+
+        <mat-nav-list class="obstacle-list">
+            <div class="category-header" mat-subheader>Obstacles</div>
+            <div class="item" *ngFor="let obstacle of sceneService.obstacles">
+                <a mat-list-item (click)="uiService.selectedObject = obstacle" [activated]="uiService.selectedObject == obstacle">
+                    <mat-icon matListItemIcon>folder</mat-icon>
+                    <span matListItemTitle>{{obstacle.name}}</span>
+                </a>
+            </div>
+        </mat-nav-list>
+    </div>
+</div>

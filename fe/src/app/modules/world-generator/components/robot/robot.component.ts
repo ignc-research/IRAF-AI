@@ -9,6 +9,7 @@ import URDFLoader, { URDFJoint, URDFLink, URDFRobot } from 'urdf-loader';
 import { LoadingManager } from 'three';
 import { Robot, SceneService } from '../../services/scene.service';
 import { UiControlService } from '../../services/ui-control.service';
+import { ThreeUtils } from 'src/app/helpers/three-utils';
 
 
 @Component({
@@ -33,23 +34,6 @@ export class RobotComponent {
 
   @Input() position?: NgtVector3;
 
-  @Input() dataObject?: {
-    hoverObject: Object3D | null,
-    currentJoint: URDFJoint | null,
-    currentJointValue: Number,
-    selectedJoint: URDFJoint | null,
-    showPopover: boolean;
-    popoverPosition: {x: number, y: number};
-  }
-  
-  @Output() newDataObject = new EventEmitter<{
-    hoverObject: Object3D | null,
-    currentJoint: URDFJoint | null,
-    currentJointValue: Number,
-    selectedJoint: URDFJoint | null,
-    showPopover: boolean;
-    popoverPosition: {x: number, y: number};
-  }>();
 
   hovered = false;
   active = false;
@@ -69,12 +53,6 @@ export class RobotComponent {
     robot.castShadow = true;
   }
 
-  addNewDataObject(obj: { hoverObject: Object3D | null, currentJoint: URDFJoint | null, currentJointValue: Number, selectedJoint: URDFJoint | null, showPopover: boolean, popoverPosition: {x: number, y: number} }) {
-    if(this.dataObject) {
-      this.newDataObject.emit(obj);
-    }
-  }
-
 
   findObjOfType(obj: Object3D, type: string) {
     let searchObj: Object3D | null = obj;
@@ -84,43 +62,38 @@ export class RobotComponent {
     return searchObj;
   }
 
-  searchParentLink = (obj: Object3D) => this.findObjOfType(obj, "URDFLink");
+  searchParentLink = (obj: Object3D) => this.findObjOfType(obj, "URDFLink") ?? this.robot.robot;
 
   searchParentJoint = (obj: Object3D) => this.findObjOfType(obj, "URDFJoint");
 
   onRobotClick(ev: NgtEvent<MouseEvent>) {
-    const intersection = ev.intersections[0];
-    if(intersection && intersection.object.userData['type'] == "Sensor") {
-      this.uiService.selectedObject = intersection.object;
+    const intersection = ev.intersections[0]?.object;
+    if (!intersection) {
       return;
     }
-    console.log(intersection.object);
+    if (!ThreeUtils.isChildOf(intersection, this.robot.robot)) {
+      return;
+    }
+
+    if(intersection.userData['type'] == "Sensor") {
+      this.uiService.selectedObject = intersection;
+      return;
+    }
+    
     this.uiService.selectedObject = this.robot.robot;
-    // const selectedLink = this.searchParentLink(intersection.object) as URDFJoint;
-    // this.robot.userData['selectedLink'] = selectedLink;
   }
 
   onRobotRightClick(ev: NgtEvent<MouseEvent>) {
     const intersection = ev.intersections[0];
     if(!intersection) return;
-    this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
-    this.currentJointValue = this.currentJoint.jointValue[0];
-    this.showPopover = true;
+    console.log(intersection)
+
     this.uiService.robotPopover = {
       robot: this.robot,
       selectedLink: this.searchParentLink(intersection.object) as URDFLink,
       x: ev.nativeEvent.clientX + 20,
       y: ev.nativeEvent.clientY + 20
     };
-    
-    if(this.dataObject) {
-      this.dataObject.currentJoint = this.currentJoint;
-      this.dataObject.currentJointValue = this.currentJointValue;
-      this.dataObject.showPopover = this.showPopover;
-      this.dataObject.popoverPosition = this.popoverPosition;
-      this.addNewDataObject(this.dataObject);
-    }
-    
   }
 
   onWheel(ev: NgtEvent<WheelEvent>) {
@@ -129,24 +102,7 @@ export class RobotComponent {
     this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
     this.currentJointValue = this.currentJoint.jointValue[0];
     this.currentJoint.setJointValue(this.currentJointValue.valueOf() + 0.001 * ev.nativeEvent.deltaY);
-
-    if(this.dataObject) {
-      this.dataObject.currentJoint = this.currentJoint;
-      this.dataObject.currentJointValue = this.currentJointValue;
-      this.addNewDataObject(this.dataObject);
-    }
   }
-
-
-  ngOnChanges(changes: SimpleChanges) {
-    if(changes['dataObject']) {
-      if(this.dataObject) {
-        this.dataObject = changes['dataObject'].currentValue;
-        //console.log("dataObject: " , this.dataObject);
-      }
-    }
-  }
-
 
 
   pointerOver(ev: NgtEvent<PointerEvent>) {
@@ -155,56 +111,25 @@ export class RobotComponent {
     if(!intersection){
       return;
     };
-    
-    
-    //console.log("hoverobject: " , this.hoverObject);
 
     this.hoverObject = ev.object;
 
-    this.dataObject = {
-      hoverObject: this.hoverObject,
-      currentJoint: this.currentJoint,
-      currentJointValue: this.currentJointValue,
-      selectedJoint: this.selectedJoint,
-      showPopover: false,
-      popoverPosition: {x: 0, y: 0}
-    }
-
-    this.addNewDataObject(this.dataObject);
-    this.hoverList.push(this.hoverObject);
-    //console.log("hoverobject: " , this.hoverObject);
-    //console.log("new colored object: " , ev.object);
     if ( (this.hoverObject instanceof Mesh) ) {
-      //console.log("setting new color");
       try {
         this.colorSave = (<any> this.hoverObject).material.color.clone();
         (<any> this.hoverObject).material.color.r += 0.1;
         (<any> this.hoverObject).material.color.g += 0.1;
         (<any> this.hoverObject).material.color.b += 0.1;
-        //console.log("color: ", (<any> this.hoverObject).material.color);
       } catch (error) {
-        //console.log("error: " , error);
       }
 
       
     }
-    
-    //console.log("color: " , JSON.parse(JSON.stringify(this.hoverObject)));
-    
   }
 
   
   pointerOut(ev: NgtEvent<PointerEvent>) {
-    //console.log("out", ev.object);
     (<any> ev.object).material.color = this.colorSave;
-
-    if(this.dataObject) {
-      this.dataObject.hoverObject = null;
-      this.addNewDataObject(this.dataObject);
-    }
-    
-    
-
   }
 
   constructor(public sceneService: SceneService, private uiService: UiControlService) {
