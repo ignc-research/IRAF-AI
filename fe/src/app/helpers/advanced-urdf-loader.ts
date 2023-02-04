@@ -1,22 +1,32 @@
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/ObjLoader.js';
-import URDFLoader, { URDFRobot } from 'urdf-loader';
+import URDFLoader, { URDFRobot } from 'libs/urdf-loader/URDFLoader';
 import { environment } from 'src/environment/environment';
 import { Loader, LoadingManager } from 'three';
+import * as THREE from 'three';
 
 export class AdvancedUrdfLoader {
 
-  getLoaderByExtension(extension: string, manager?: LoadingManager): Loader | null {
-    switch(extension) {
+  async loadByExtension(path: string, manager?: LoadingManager): Promise<THREE.Object3D> {
+    const fileExt = path.split('.').pop()?.toLowerCase();
+
+    switch(fileExt) {
       case 'dae':
-        return new ColladaLoader(manager);
+        const daeLoader = new ColladaLoader(manager);
+        const dae = await daeLoader.loadAsync(path);
+        return dae.scene;
       case 'stl':
-        return new STLLoader(manager);
+        const stlLoader = new STLLoader(manager);
+        const geom = await stlLoader.loadAsync(path);
+        const mesh = new THREE.Mesh(geom, new THREE.MeshPhongMaterial());
+        return mesh;
       case 'obj':
-        return new OBJLoader(manager);
+        const objLoader = new OBJLoader(manager);
+        const obj = await objLoader.loadAsync(path);
+        return obj;
     }
-    return null;
+    throw "Invalid File Format";
   }
 
   loadUrdf(urdfPath: string): Promise<URDFRobot> {
@@ -24,20 +34,17 @@ export class AdvancedUrdfLoader {
         const manager = new LoadingManager();
         const loader = new URDFLoader( manager );
     
+        console.log()
+        loader.packages = `${environment.apiUrl}/${urdfPath.substring(0, urdfPath.lastIndexOf('/'))}`;
         loader.loadMeshCb = async (url, manager, onLoad) => {
-          const fileExt = url.split('.').pop()?.toLowerCase();
-          if (fileExt) {
-            const loader = this.getLoaderByExtension(fileExt, manager);
-            try {
-              const result = await loader?.loadAsync(url);
-
-              // Unschön aber solange nur 3 Loader okay
-              onLoad(fileExt == 'obj' ? result : result.scene);
-            }
-            catch (err: any) {
-              onLoad(null as any, err);
-            }
+          try {
+            const result = await this.loadByExtension(url, manager);
+            onLoad(result);
           }
+          catch (err: any) {
+            onLoad(null as any, err);
+          }
+
         }
 
           loader.load(

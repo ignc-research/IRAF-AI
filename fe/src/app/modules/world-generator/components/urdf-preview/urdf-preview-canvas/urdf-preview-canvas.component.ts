@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AdvancedUrdfLoader } from 'src/app/helpers/advanced-urdf-loader';
-import { URDFRobot } from 'urdf-loader';
+import { URDFRobot } from 'libs/urdf-loader/URDFLoader';
 import { SceneService } from '../../../services/scene.service';
 
 @Component({

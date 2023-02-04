@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory, send_file
+from flask import Flask, request, send_from_directory, send_file, Response
 from flask_cors import CORS
 from models.obstacle_definitions import ObstacleDefinitions
 from ir_drl.shared.maze_generator import MazeGenerator
@@ -20,14 +20,10 @@ def home():
 def get_custom_obstacle_urdf(type, path):
     if type == "human":
         return send_from_directory(HUMAN_PATH, path)
-    if type == "maze":
-        maze = MazeGenerator(request.args)
-        file_name = maze.generate()
-        return send_file(os.path.join(MAZE_PATH, file_name))
-    if type == "shelf":
-        shelf = ShelfGenerator(request.args)
-        file_name = shelf.generate()
-        return send_file(os.path.join(SHELF_PATH, file_name))
+    if type == "maze" or type == "shelf":
+        generator = MazeGenerator(request.args) if type == "maze" else ShelfGenerator(request.args)
+        return Response(generator.generate(), mimetype="text/urdf", headers={"Content-disposition":
+                 "attachment; filename=generated.urdf"}) 
     if type == "basic":
         if os.path.exists(os.path.join(WORKSPACE_PATH, path)):
             return send_from_directory(WORKSPACE_PATH, path)

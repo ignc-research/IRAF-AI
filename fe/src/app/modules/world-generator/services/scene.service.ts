@@ -1,5 +1,6 @@
 import { NgtInstance, NgtObject, Ref } from '@angular-three/core';
 import { Injectable } from '@angular/core';
+import { URDFLink, URDFRobot } from 'libs/urdf-loader/URDFLoader';
 
 import { AdvancedUrdfLoader } from 'src/app/helpers/advanced-urdf-loader';
 import { StringUtils } from 'src/app/helpers/string-utils';
@@ -7,7 +8,6 @@ import { getObstacleUrl, ObstacleDefinition } from 'src/app/models/obstacle';
 import { environment } from 'src/environment/environment';
 import * as THREE from 'three';
 import { LoadingManager } from 'three';
-import URDFLoader, { URDFLink, URDFRobot } from 'urdf-loader';
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +31,9 @@ export class SceneService {
       "urdf": getObstacleUrl(obstacle),
       "params": obstacle.params
     };
-    const newIndex = this.getLastIndex(this.obstacles, obstacle.name) + 1;
-    obstacleObj.name = `${obstacle.name}_${newIndex}`;
+    const name = StringUtils.getFileNameWithoutExt(getObstacleUrl(obstacle));
+    const newIndex = this.getLastIndex(this.obstacles, name) + 1;
+    obstacleObj.name = `${name}_${newIndex}`;
 
     this.obstacles.push(obstacleObj);
   }

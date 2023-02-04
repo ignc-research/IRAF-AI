@@ -1,7 +1,7 @@
 import { NgtEvent } from '@angular-three/core';
 import { Component, Input } from '@angular/core';
 import { ThreeUtils } from 'src/app/helpers/three-utils';
-import { URDFRobot } from 'urdf-loader';
+import { URDFRobot } from 'libs/urdf-loader/URDFLoader';
 import { SceneService } from '../../services/scene.service';
 import { UiControlService } from '../../services/ui-control.service';
 

@@ -1,15 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, SimpleChanges, Output, EventEmitter, AfterViewInit, NgZone } from '@angular/core';
-import { NgtMesh } from '@angular-three/core/meshes';
-import { NgtPrimitive } from '@angular-three/core/primitive';
-import { NgtBoxGeometry } from '@angular-three/core/geometries';
-import { NgtMeshStandardMaterial } from '@angular-three/core/materials';
+import { Component, Input } from '@angular/core';
 import { NgtEvent, NgtRenderState, NgtVector3 } from '@angular-three/core';
-import { Color, LoaderUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
-import URDFLoader, { URDFJoint, URDFLink, URDFRobot } from 'urdf-loader';
+import { Color, Mesh, Object3D } from 'three';
+// import URDFLoader, { URDFJoint, URDFLink, URDFRobot } from 'libs/urdf-loader/URDFLoader';
 import { LoadingManager } from 'three';
 import { Robot, SceneService } from '../../services/scene.service';
 import { UiControlService } from '../../services/ui-control.service';
 import { ThreeUtils } from 'src/app/helpers/three-utils';
+import { URDFJoint, URDFLink } from 'libs/urdf-loader/URDFLoader';
 
 
 @Component({

@@ -11,7 +11,7 @@ class ObstacleDefinitions:
         },
         {
             "name": "human",
-            "urdf": "man.urdf",
+            "urdf": "man_visual.urdf",
             "movable": True
         },
         {

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { URDFJoint } from 'urdf-loader';
+import { URDFJoint } from 'libs/urdf-loader/URDFLoader';
 import * as YAML from 'js-yaml';
 import { SceneService } from '../../services/scene.service';
 import { Object3D } from 'three';

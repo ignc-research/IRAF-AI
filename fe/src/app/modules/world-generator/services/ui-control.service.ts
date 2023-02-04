@@ -1,5 +1,5 @@
 import { HostListener, Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
-import { URDFLink } from 'urdf-loader';
+import { URDFLink } from 'libs/urdf-loader/URDFLoader';
 
 import { Robot, SceneService } from './scene.service';
 

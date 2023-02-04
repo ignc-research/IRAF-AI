@@ -27,7 +27,6 @@
     "rxjs": "~7.5.0",
     "three": "~0.142.0",
     "tslib": "^2.3.0",
-    "urdf-loader": "^0.10.4",
     "zone.js": "~0.12.0"
   },
   "devDependencies": {

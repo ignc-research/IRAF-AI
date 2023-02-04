@@ -1,6 +1,6 @@
 import { NgtVector3, Ref } from '@angular-three/core';
 import { Component, Input } from '@angular/core';
-import { URDFLink } from 'urdf-loader';
+import { URDFLink } from 'libs/urdf-loader/URDFLoader';
 import { Sensor } from '../../services/scene.service';
 
 @Component({

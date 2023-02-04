@@ -23,7 +23,7 @@
             <div class="category-header" mat-subheader>Obstacles</div>
             <div class="item" *ngFor="let obstacle of sceneService.obstacles">
                 <a mat-list-item (click)="uiService.selectedObject = obstacle" [activated]="uiService.selectedObject == obstacle">
-                    <mat-icon matListItemIcon>folder</mat-icon>
+                    <mat-icon matListItemIcon>view_in_ar</mat-icon>
                     <span matListItemTitle>{{obstacle.name}}</span>
                 </a>
             </div>
