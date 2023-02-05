@@ -7,6 +7,8 @@ export class SceneNode {
 
     public params?: Parameters;
 
+    public parent: SceneNode | null = null;
+
     public children: SceneNode[];
 
     public ref: Ref<THREE.Object3D> = new Ref<THREE.Object3D>();
@@ -15,6 +17,18 @@ export class SceneNode {
         this.name = obj.name ?? '';
         this.params = obj.params;
         this.children = obj.children ?? [];
+    }
+
+    removeChild(child: SceneNode) {
+        const idx = this.children.indexOf(child);
+        if (idx > -1) {
+            this.children.splice(idx, 1);
+        }
+    }
+
+    addChild(child: SceneNode) {
+        child.parent = this;
+        this.children.push(child);
     }
 
     invalidateRef() {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { SceneService } from '../../../../services/scene.service';
-import { UiControlService } from '../../../../services/ui-control.service';
+import { SceneService } from '../../../../../services/scene.service';
+import { UiControlService } from '../../../../../services/ui-control.service';
 
 @Component({
   selector: 'app-robot-popover',

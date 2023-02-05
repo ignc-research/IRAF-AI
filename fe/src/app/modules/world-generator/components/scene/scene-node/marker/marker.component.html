@@ -1,0 +1,10 @@
+<ngt-mesh *ngIf="marker && marker.parent"
+    [appendTo]="marker.parent.ref"
+    [ref]="marker.ref"
+    [position]="marker.position"
+    [rotation]="marker.rotation"
+    [scale]="marker.scale"
+    >
+<ngt-sphere-geometry></ngt-sphere-geometry>
+<ngt-mesh-standard-material [color]="'green'"></ngt-mesh-standard-material>
+</ngt-mesh>

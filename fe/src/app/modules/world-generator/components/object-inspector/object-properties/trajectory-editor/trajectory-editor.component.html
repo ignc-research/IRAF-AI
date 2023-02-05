@@ -1,0 +1,11 @@
+<div *ngIf="sceneNode.params">
+    <ng-container *ngFor="let params of sceneNode.params | keyvalue">
+        <div class="trajectory" *ngIf="params.value.type == 'trajectory'">
+            <div>trajectory</div>
+            <div class="info-row">
+                <span>{{params.key}} ({{$any(params.value.value)?.length ?? 0}})</span>
+                <button mat-raised-button (click)="sceneService.addTrajectoryPoint(sceneNode, params.key)">Add Point</button>
+            </div>
+        </div>
+    </ng-container>
+</div>

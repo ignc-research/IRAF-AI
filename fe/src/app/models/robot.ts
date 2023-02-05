@@ -1,4 +1,5 @@
 import { URDFLink } from "libs/urdf-loader/URDFLoader";
+import { Marker } from "./marker";
 import { Parameters } from "./parameters";
 import { ISceneObject, IUrdfSceneObject, SceneObject } from "./scene-object";
 import { SceneObjectType } from "./scene-object-type";
@@ -6,6 +7,7 @@ import { SceneObjectType } from "./scene-object-type";
 // ToDo: hier fehlt noch so einiges (Absprache mit Benno)
 export class Robot extends SceneObject implements IUrdfSceneObject, IRobot {
     type: string;
+    goalMarker!: Marker;
 
     get sensors(): Sensor[] {
         return this.children.filter(x => x instanceof Sensor) as Sensor[];
@@ -18,6 +20,8 @@ export class Robot extends SceneObject implements IUrdfSceneObject, IRobot {
     constructor(obj: IRobot) {
         super(obj);
         this.type = obj.type;
+        this.goalMarker = new Marker({name: 'goal'});
+        this.addChild(this.goalMarker);
     }
 }
 

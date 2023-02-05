@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { GroupNode } from 'src/app/models/group';
+import { Marker } from 'src/app/models/marker';
 import { Obstacle } from 'src/app/models/obstacle';
 import { Robot, Sensor } from 'src/app/models/robot';
 import { SceneNode } from 'src/app/models/scene-node';
@@ -23,6 +25,12 @@ export class TreeViewItemComponent {
     }
     if (this.sceneNode instanceof Obstacle) {
       return "view_in_ar";
+    }
+    if (this.sceneNode instanceof GroupNode) {
+      return "widgets";
+    }
+    if (this.sceneNode instanceof Marker) {
+      return "pin_drop";
     }
     return "question_mark";
   }

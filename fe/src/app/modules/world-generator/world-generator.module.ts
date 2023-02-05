@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { WorldGeneratorRoutingModule } from './world-generator-routing.module';
 import { WorldGeneratorComponent } from './world-generator.component';
 import { NgtCanvasModule } from '@angular-three/core';
-import { RobotComponent } from './components/scene/robot/robot.component';
+import { RobotComponent } from './components/scene/scene-node/robot/robot.component';
 import { InformationComponent } from './components/information/information.component';
 import { ToolbarTopComponent } from './components/toolbar-top/toolbar-top.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -33,10 +33,10 @@ import { TransformModeSelectorComponent } from './components/toolbar-top/transfo
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { TransformControlsComponent } from './components/transform-controls/transform-controls.component';
 import { ZoomControlsComponent } from './components/toolbar-top/zoom-controls/zoom-controls.component';
-import { RobotPopoverComponent } from './components/scene/robot/robot-popover/robot-popover.component';
-import { SensorComponent } from './components/scene/sensor/sensor.component';
+import { RobotPopoverComponent } from './components/scene/scene-node/robot/robot-popover/robot-popover.component';
+import { SensorComponent } from './components/scene/scene-node/sensor/sensor.component';
 import { ObstacleSelectorComponent } from './components/toolbar-top/obstacle-selector/obstacle-selector.component';
-import { ObstacleComponent } from './components/scene/obstacle/obstacle.component';
+import { ObstacleComponent } from './components/scene/scene-node/obstacle/obstacle.component';
 import { TreeViewComponent } from './components/tree-view/tree-view.component';
 import { MatListModule } from '@angular/material/list';
 import { EnvironmentInspectorComponent } from './components/object-inspector/environment-inspector/environment-inspector.component';
@@ -49,6 +49,10 @@ import { ObjectPropertiesComponent } from './components/object-inspector/object-
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SceneComponent } from './components/scene/scene.component';
 import { TreeViewItemComponent } from './components/tree-view/tree-view-item/tree-view-item.component';
+import { TrajectoryEditorComponent } from './components/object-inspector/object-properties/trajectory-editor/trajectory-editor.component';
+import { SceneNodeComponent } from './components/scene/scene-node/scene-node.component';
+import { GroupNodeComponent } from './components/scene/scene-node/group-node/group-node.component';
+import { MarkerComponent } from './components/scene/scene-node/marker/marker.component';
 
 @NgModule({
   
@@ -77,7 +81,11 @@ import { TreeViewItemComponent } from './components/tree-view/tree-view-item/tre
     ParameterInputComponent,
     ObjectPropertiesComponent,
     SceneComponent,
-    TreeViewItemComponent
+    TreeViewItemComponent,
+    TrajectoryEditorComponent,
+    SceneNodeComponent,
+    GroupNodeComponent,
+    MarkerComponent
   ],
   imports: [
     CommonModule,

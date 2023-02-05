@@ -1,5 +1,6 @@
 import { Component, Input, NgZone } from '@angular/core';
 import { Parameters } from 'src/app/models/parameters';
+import { SceneNode } from 'src/app/models/scene-node';
 import { SceneObject } from 'src/app/models/scene-object';
 import { SceneService } from '../../../services/scene.service';
 import { UiControlService } from '../../../services/ui-control.service';
@@ -11,16 +12,16 @@ import { UiControlService } from '../../../services/ui-control.service';
 })
 export class ObjectPropertiesComponent {
   @Input()
-  object!: SceneObject;
+  node!: SceneNode;
 
   constructor(private sceneService: SceneService, private uiService: UiControlService, private zone: NgZone) {
 
   }
 
-  updateObject() {
-    if (this.uiService.selectedObject == this.object) {
+  updateNode() {
+    if (this.uiService.selectedObject == this.node) {
       this.uiService.selectNode(null);
     }
-    this.sceneService.updateSceneObject(this.object);
+    this.sceneService.updateSceneNode(this.node);
   }
 }

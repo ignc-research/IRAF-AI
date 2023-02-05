@@ -1,9 +1,12 @@
-<mat-card *ngIf="object && object.params">
+<mat-card *ngIf="node && node.params">
     <mat-card-header>
       <mat-card-subtitle>Properties</mat-card-subtitle>
     </mat-card-header>
     <div class="section">
-        <app-parameter-editor [parameters]="object.params" [columns]="1"></app-parameter-editor>
+        <app-parameter-editor [parameters]="node.params" [columns]="1"></app-parameter-editor>
     </div>
-    <button mat-button (click)="updateObject()">Update Object</button>
+    <div class="section">
+      <app-trajectory-editor [sceneNode]="node"></app-trajectory-editor>
+    </div>
+    <button mat-button (click)="updateNode()">Update</button>
 </mat-card>

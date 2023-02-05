@@ -6,14 +6,12 @@ export interface IObstacle extends ISceneObject {
     type: string;
     urdf: string;
     urdfs?: string[];
-    movable: boolean;
 }
 
 export class Obstacle extends SceneObject implements IObstacle, IUrdfSceneObject {
     type: string;
     urdf: string;
     urdfs?: string[] | undefined;
-    movable: boolean;
 
     get urdfUrl() {
         if (this.params) {
@@ -30,7 +28,6 @@ export class Obstacle extends SceneObject implements IObstacle, IUrdfSceneObject
         this.type = obj.type;
         this.urdf = obj.urdf;
         this.urdfs = obj.urdfs;
-        this.movable = obj.movable;
     }
 }
 

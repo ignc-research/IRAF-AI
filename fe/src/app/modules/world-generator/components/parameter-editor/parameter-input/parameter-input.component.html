@@ -1,8 +1,7 @@
 <div class="wrapper">
-    <mat-form-field *ngIf="parameter.type != 'bool'">
+    <mat-form-field *ngIf="parameter.type != 'bool' && parameter.type != 'trajectory'">
         <mat-label>{{label}}</mat-label>
         <input [(ngModel)]="parameter.value" *ngIf="parameter.type == 'string'" matInput type="text">
-
         <input [(ngModel)]="parameter.value" *ngIf="parameter.type == 'float'" matInput type="number" step=".01">
         <input [(ngModel)]="parameter.value" *ngIf="parameter.type == 'int'" matInput type="number">
     </mat-form-field>

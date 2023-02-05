@@ -2,8 +2,8 @@ import { NgtEvent } from '@angular-three/core';
 import { Component, Input } from '@angular/core';
 import { ThreeUtils } from 'src/app/helpers/three-utils';
 import { URDFRobot } from 'libs/urdf-loader/URDFLoader';
-import { SceneService } from '../../../services/scene.service';
-import { UiControlService } from '../../../services/ui-control.service';
+import { SceneService } from '../../../../services/scene.service';
+import { UiControlService } from '../../../../services/ui-control.service';
 import { Obstacle } from 'src/app/models/obstacle';
 import { AdvancedUrdfLoader } from 'src/app/helpers/advanced-urdf-loader';
 

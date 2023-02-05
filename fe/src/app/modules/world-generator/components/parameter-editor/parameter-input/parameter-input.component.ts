@@ -1,3 +1,4 @@
+import { NgtVector3 } from '@angular-three/core';
 import { Component, Input } from '@angular/core';
 import { Parameter } from 'src/app/models/parameters';
 

@@ -10,6 +10,10 @@ import { UiControlService } from '../../services/ui-control.service';
 })
 export class ObjectInspectorComponent {
 
+  get node() {
+    return this.uiService.selectedNode;
+  }
+
   get object() {
     return this.uiService.selectedObject;
   }

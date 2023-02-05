@@ -1,7 +1,7 @@
 <div class="inspector">
     <div class="content">
         <div>
-            <app-environment-inspector *ngIf="!object">
+            <app-environment-inspector *ngIf="!node">
             </app-environment-inspector>
         </div>
         <div class="section" *ngIf="object">
@@ -16,8 +16,8 @@
         <div *ngIf="object">
             <app-transform-input [object]="object"></app-transform-input>
         </div>
-        <div *ngIf="object">
-            <app-object-properties [object]="object"></app-object-properties>
+        <div *ngIf="node">
+            <app-object-properties [node]="node"></app-object-properties>
         </div>
     </div>
 </div>

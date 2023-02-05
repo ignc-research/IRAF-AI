@@ -46,6 +46,7 @@ export class UiControlService implements OnDestroy {
 
   findThreeObj = (obj: THREE.Object3D, sceneObjs: SceneNode[]): SceneNode | null => {
     const findObj = sceneObjs.find(x => ThreeUtils.isChildOf(obj, x.ref.value));
+    console.log("findob", findObj)
     if (findObj && findObj.ref.value != obj && findObj.children.length > 0) {
       const childObj = this.findThreeObj(obj, findObj.children);
       return childObj ?? findObj;
@@ -55,7 +56,8 @@ export class UiControlService implements OnDestroy {
   }
 
   onClick = (object: THREE.Object3D) => {
-    this.selectedNode = this.findThreeObj(object, this.sceneService.objects);
+    this.selectedNode = this.findThreeObj(object, this.sceneService.nodes);
+    console.log(this.selectedNode, object)
   }
 
   onMiss = () => {

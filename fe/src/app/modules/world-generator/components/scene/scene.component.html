@@ -5,10 +5,7 @@
     <ngt-axes-helper [scale]="1"></ngt-axes-helper>
 
     <ngt-group (click)="objectClick($event)" (pointermissed)="objectMiss($event)">
-        <app-robot *ngFor="let robot of sceneService.robots" [robot]="robot"></app-robot>
-
-        <app-obstacle *ngFor="let obstacle of sceneService.obstacles" [obstacle]="obstacle"></app-obstacle>
-    
+        <app-scene-node *ngFor="let node of sceneService.nodes" [sceneNode]="node"></app-scene-node>
         <app-transform-controls [controlledObject]="uiService.selectedObject"></app-transform-controls>
     </ngt-group>
   

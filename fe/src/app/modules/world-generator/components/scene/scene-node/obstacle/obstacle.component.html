@@ -1,4 +1,5 @@
-<ngt-primitive *ngIf="obstacleObj"
+<ngt-primitive *ngIf="obstacleObj && obstacle.parent"
+[appendTo]="obstacle.parent.ref"
 [position]="obstacle.position"
 [rotation]="obstacle.rotation"
 [scale]="obstacle.scale"

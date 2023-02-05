@@ -1,16 +1,9 @@
 <div class="container">
     <div class="wrapper">
         <mat-nav-list>
-            <div class="category-header" mat-subheader>Robots</div>
-            <div class="item" *ngFor="let robot of sceneService.robots">
-                <app-tree-view-item [sceneNode]="robot"></app-tree-view-item>
-            </div>
-        </mat-nav-list>
-
-        <mat-nav-list class="obstacle-list">
-            <div class="category-header" mat-subheader>Obstacles</div>
-            <div class="item" *ngFor="let obstacle of sceneService.obstacles">
-                <app-tree-view-item [sceneNode]="obstacle"></app-tree-view-item>
+            <div class="category-header" mat-subheader>Scene</div>
+            <div class="item" *ngFor="let node of sceneService.nodes">
+                <app-tree-view-item [sceneNode]="node"></app-tree-view-item>
             </div>
         </mat-nav-list>
     </div>
