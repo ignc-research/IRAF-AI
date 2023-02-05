@@ -19,7 +19,7 @@ export class ObjectPropertiesComponent {
 
   updateObject() {
     if (this.uiService.selectedObject == this.object) {
-      this.uiService.selectedObject = null;
+      this.uiService.selectNode(null);
     }
     this.sceneService.updateSceneObject(this.object);
   }

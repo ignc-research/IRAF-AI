@@ -1,5 +1,7 @@
 import { NgtCameraOptions, NgtSceneOptions } from '@angular-three/core';
 import { Component, NgZone } from '@angular/core';
+import { SceneNode } from 'src/app/models/scene-node';
+import { SceneObject } from 'src/app/models/scene-object';
 import { SceneService } from '../../services/scene.service';
 import { UiControlService } from '../../services/ui-control.service';
 
@@ -18,13 +20,12 @@ export class SceneComponent {
   }
 
   constructor(public sceneService: SceneService, private zone: NgZone, public uiService: UiControlService) {
-    this.uiService.selectedObject = null;
+    this.uiService.onMiss();
     this.sceneService.invalidateRefs();
   }
 
   objectClick(event: any) {
-    const intersectionObj = event.object;
-    this.uiService.onClick(intersectionObj);
+    this.uiService.onClick(event.intersections[0]?.object);
   }
 
   objectMiss(event: any) {

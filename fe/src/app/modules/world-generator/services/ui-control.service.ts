@@ -2,6 +2,7 @@ import { HostListener, Injectable, OnDestroy, Renderer2, RendererFactory2 } from
 import { URDFLink } from 'libs/urdf-loader/URDFLoader';
 import { ThreeUtils } from 'src/app/helpers/three-utils';
 import { Robot } from 'src/app/models/robot';
+import { SceneNode } from 'src/app/models/scene-node';
 import { SceneObject } from 'src/app/models/scene-object';
 
 import { SceneService } from './scene.service';
@@ -11,8 +12,22 @@ import { SceneService } from './scene.service';
 })
 export class UiControlService implements OnDestroy {
   private destroyKeyListener: () => void;
+  private _selectedNode: SceneNode | null = null;
 
-  selectedObject: SceneObject | null = null;
+  private set selectedNode(node: SceneNode | null) {
+    this._selectedNode = node;
+  }
+
+  get selectedNode() {
+    return this._selectedNode;
+  }
+
+  get selectedObject() {
+    if (this.selectedNode instanceof SceneObject) {
+      return this.selectedNode as SceneObject;
+    }
+    return null;
+  }
 
   robotPopover: RobotPopover | null = null;
 
@@ -25,21 +40,26 @@ export class UiControlService implements OnDestroy {
     this.destroyKeyListener = renderer.listen('document', 'keydown', this.handleKeyboardEvent);
   }
 
-  findThreeObj = (obj: THREE.Object3D, sceneObjs: SceneObject[]) => sceneObjs.find(x => ThreeUtils.isChildOf(obj, x.ref.value));
+  selectNode(node: SceneNode | null) {
+    this._selectedNode = node;
+  }
+
+  findThreeObj = (obj: THREE.Object3D, sceneObjs: SceneNode[]): SceneNode | null => {
+    const findObj = sceneObjs.find(x => ThreeUtils.isChildOf(obj, x.ref.value));
+    if (findObj && findObj.ref.value != obj && findObj.children.length > 0) {
+      const childObj = this.findThreeObj(obj, findObj.children);
+      return childObj ?? findObj;
+    }
+
+    return findObj ?? null;
+  }
 
   onClick = (object: THREE.Object3D) => {
-    const obj = this.findThreeObj(object, this.sceneService.obstacles) ??
-      this.findThreeObj(object, this.sceneService.robots) ??
-      this.sceneService.robots.map(x => this.findThreeObj(object, x.sensors)).find(x => !!x);
-      if (obj) {
-        this.selectedObject = obj;
-        return;
-      }
-      console.log("Did not find scene object", object);
+    this.selectedNode = this.findThreeObj(object, this.sceneService.objects);
   }
 
   onMiss = () => {
-    this.selectedObject = null;
+    this.selectedNode = null;
     this.robotPopover = null;
   }
 
@@ -60,8 +80,8 @@ export class UiControlService implements OnDestroy {
         break;
       case 'delete':
         if (this.selectedObject) {
-          this.sceneService.deleteSceneObject(this.selectedObject);
-          this.selectedObject = null;
+          this.sceneService.deleteSceneNode(this.selectedObject);
+          this.selectedNode = null;
         }
         break;
     }

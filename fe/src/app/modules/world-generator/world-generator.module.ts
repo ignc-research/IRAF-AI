@@ -48,6 +48,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ObjectPropertiesComponent } from './components/object-inspector/object-properties/object-properties.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SceneComponent } from './components/scene/scene.component';
+import { TreeViewItemComponent } from './components/tree-view/tree-view-item/tree-view-item.component';
 
 @NgModule({
   
@@ -75,7 +76,8 @@ import { SceneComponent } from './components/scene/scene.component';
     ParameterEditorComponent,
     ParameterInputComponent,
     ObjectPropertiesComponent,
-    SceneComponent
+    SceneComponent,
+    TreeViewItemComponent
   ],
   imports: [
     CommonModule,

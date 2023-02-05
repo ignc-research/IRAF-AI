@@ -1,5 +1,5 @@
 import { NgtVector3, Ref } from '@angular-three/core';
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { URDFLink, URDFRobot } from 'libs/urdf-loader/URDFLoader';
 import { Robot, Sensor } from 'src/app/models/robot';
 import { SceneObjectType } from 'src/app/models/scene-object-type';
@@ -10,7 +10,7 @@ import { UiControlService } from '../../../services/ui-control.service';
   templateUrl: './sensor.component.html',
   styleUrls: ['./sensor.component.scss']
 })
-export class SensorComponent implements OnInit {
+export class SensorComponent {
   @Input()
   sensor!: Sensor;
 
@@ -18,11 +18,7 @@ export class SensorComponent implements OnInit {
   robot!: Robot;
 
   constructor(private uiService: UiControlService) {
-    
-  }
-  
-  ngOnInit(): void {
-    this.uiService.selectedObject = this.sensor;
+    setTimeout(() => this.uiService.selectNode(this.sensor), 0);
   }
 
   get link() {

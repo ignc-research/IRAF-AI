@@ -22,7 +22,7 @@ export class ObstacleComponent {
     if (value && value != this._obstacle) {
       new AdvancedUrdfLoader().loadUrdf(value.urdfUrl).then(x => {
         this.obstacleObj = x;
-        this.uiService.selectedObject = this.obstacle;
+        this.uiService.selectNode(this.obstacle);
       });
     }
     this._obstacle = value;
@@ -34,15 +34,5 @@ export class ObstacleComponent {
 
   constructor(private uiService: UiControlService) {
     
-  }
-
-
-
-  onClick(ev: NgtEvent<MouseEvent>) {
-    const intersection = ev.intersections[0];
-
-    if(intersection && ThreeUtils.isChildOf(intersection.object, this.obstacle.ref.value)) {
-      this.uiService.selectedObject = this.obstacle;
-    }
   }
 }

@@ -13,7 +13,7 @@
     margin: 0px 0px 8px 0px !important;
 }
 
-.subheader {
+::ng-deep .subheader {
     margin: 0px !important;
 }
 
@@ -36,9 +36,6 @@
     margin-top: 16px;
 }
 
-.sensor-list {
-    margin-left: 48px;
-}
 
 // mat-list-item {
 //     border-bottom: 1px solid gray;

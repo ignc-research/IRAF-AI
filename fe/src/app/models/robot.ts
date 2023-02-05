@@ -6,7 +6,10 @@ import { SceneObjectType } from "./scene-object-type";
 // ToDo: hier fehlt noch so einiges (Absprache mit Benno)
 export class Robot extends SceneObject implements IUrdfSceneObject, IRobot {
     type: string;
-    sensors: Sensor[];
+
+    get sensors(): Sensor[] {
+        return this.children.filter(x => x instanceof Sensor) as Sensor[];
+    }
 
     get urdfUrl(): string {
         return this.type;
@@ -14,14 +17,7 @@ export class Robot extends SceneObject implements IUrdfSceneObject, IRobot {
 
     constructor(obj: IRobot) {
         super(obj);
-
         this.type = obj.type;
-        this.sensors = obj.sensors ?? [];
-    }
-
-    override invalidateRef(): void {
-        super.invalidateRef();
-        this.sensors.forEach(x => x.invalidateRef());
     }
 }
 
@@ -44,5 +40,4 @@ export interface ISensor extends ISceneObject {
 
 export interface IRobot extends ISceneObject {
     type: string;
-    sensors?: Sensor[];
 }

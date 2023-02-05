@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { StringUtils } from 'src/app/helpers/string-utils';
 import { IObstacle, Obstacle } from 'src/app/models/obstacle';
 import { Robot, Sensor } from 'src/app/models/robot';
+import { SceneNode } from 'src/app/models/scene-node';
 import { SceneObject } from 'src/app/models/scene-object';
 import { SceneObjectType } from 'src/app/models/scene-object-type';
 
@@ -12,9 +13,15 @@ import * as THREE from 'three';
 })
 export class SceneService {
 
-  obstacles: Obstacle[] = [];
+  objects: SceneObject[] = [];
 
-  robots: Robot[] = [];
+  get robots() {
+    return this.objects.filter(x => x instanceof Robot) as Robot[];
+  }
+
+  get obstacles() {
+    return this.objects.filter(x => x instanceof Obstacle) as Obstacle[];
+  }
 
   constructor() { }
 
@@ -24,55 +31,49 @@ export class SceneService {
                                                                   
   async addObstacle(obstacle: IObstacle) {
     obstacle.name = StringUtils.getFileNameWithoutExt(obstacle.urdf);
-    this.obstacles.push(new Obstacle(obstacle));
+    this.objects.push(new Obstacle(obstacle));
   }
 
   async addRobot(urdfPath: string) {
-    this.robots.push(new Robot({ type: urdfPath, name: StringUtils.getFileNameWithoutExt(urdfPath) }));
+    this.objects.push(new Robot({ type: urdfPath, name: StringUtils.getFileNameWithoutExt(urdfPath) }));
   }
 
   addSensor(robot: Robot, link: string) {
     const sensor = new Sensor({ type: 'LiDAR', name: 'LiDAR', link });
     sensor.scale.set(.1, .1, .1);
     sensor.position.set(0, 0, 1);
-    robot.sensors.push(sensor);
+    robot.children.push(sensor);
   }
 
 
   invalidateRefs() {
-    this.obstacles.forEach(x => x.invalidateRef());
-    this.robots.forEach(x => x.invalidateRef());
+    this.objects.forEach(x => x.invalidateRef());
   }
 
   async updateSceneObject(object: SceneObject) {
     if (object instanceof Obstacle) {
-      this.obstacles.splice(this.obstacles.indexOf(object), 1);
-      this.obstacles.push(new Obstacle(object));
+      this.objects.splice(this.objects.indexOf(object), 1);
+      this.objects.push(new Obstacle(object));
     }
     else if (object instanceof Robot) {
-      this.robots.splice(this.robots.indexOf(object), 1);
-      this.robots.push(new Robot(object));
+      this.objects.splice(this.objects.indexOf(object), 1);
+      this.objects.push(new Robot(object));
     }
     else if (object instanceof Sensor) {
-      this.robots.forEach(x => {
-        x.sensors.splice(x.sensors.indexOf(object), 1);
-        x.sensors.push(new Sensor(object));
+      this.objects.forEach(x => {
+        x.children.splice(x.children.indexOf(object), 1);
+        x.children.push(new Sensor(object));
       })
     }
   }
 
-  async deleteSceneObject(object: SceneObject) {
-    if (object instanceof Obstacle) {
-      this.obstacles = this.obstacles.filter(x => x != object);
+  async deleteSceneNode(object: SceneNode, from: SceneNode[]=this.objects) {
+    const findIdx = from.indexOf(object);
+    if (findIdx > -1) {
+      from.splice(findIdx, 1);
+      return;
     }
-    else if (object instanceof Robot) {
-      this.robots = this.robots.filter(x => x != object);
-    }
-    else if (object instanceof Sensor) {
-      this.robots.forEach(x => {
-        x.sensors = x.sensors.filter(y => y != object);
-      })
-    }
+    from.forEach(x => this.deleteSceneNode(object, x.children));
   }
  
 }

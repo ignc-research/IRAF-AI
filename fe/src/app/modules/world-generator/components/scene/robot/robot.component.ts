@@ -27,7 +27,7 @@ export class RobotComponent {
     if (value && value != this._robot) {
       new AdvancedUrdfLoader().loadUrdf(value.urdfUrl).then(x => {
         this.robotObj = x;
-        this.uiService.selectedObject = value;
+        this.uiService.selectNode(value);
       });
     }
     console.log(value.position, value.ref.value?.position);
@@ -69,25 +69,6 @@ export class RobotComponent {
 
   searchParentJoint = (obj: Object3D) => this.findObjOfType(obj, "URDFJoint");
 
-  onRobotClick(ev: NgtEvent<MouseEvent>) {
-    const intersection = ev.intersections[0]?.object;
-    if (!intersection) {
-      return;
-    }
-    if (!ThreeUtils.isChildOf(intersection, this.robot.ref.value)) {
-      return;
-    }
-
-    for (let i = 0; i < this.robot.sensors.length; i++) {
-      if(this.robot.sensors[i].ref.value == intersection) {
-        this.uiService.selectedObject = this.robot.sensors[i];
-        return;
-      }
-    }
-   
-    this.uiService.selectedObject = this.robot;
-  }
-
   onRobotRightClick(ev: NgtEvent<MouseEvent>) {
     const intersection = ev.intersections[0];
     if(!intersection) return;
@@ -105,6 +86,7 @@ export class RobotComponent {
     const intersection = ev.intersections[0];
     if(!intersection) return;
     this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
+    if (!this.currentJoint) return;
     this.currentJointValue = this.currentJoint.jointValue[0];
     this.currentJoint.setJointValue(this.currentJointValue.valueOf() + 0.001 * ev.nativeEvent.deltaY);
   }

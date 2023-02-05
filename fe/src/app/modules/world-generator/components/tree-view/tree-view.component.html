@@ -3,29 +3,14 @@
         <mat-nav-list>
             <div class="category-header" mat-subheader>Robots</div>
             <div class="item" *ngFor="let robot of sceneService.robots">
-                <a mat-list-item (click)="uiService.selectedObject = robot" [activated]="uiService.selectedObject == robot">
-                    <mat-icon matListItemIcon>precision_manufacturing</mat-icon>
-                    <span matListItemTitle>{{robot.name}}</span>
-                </a>
-                <mat-nav-list class="sensor-list" *ngIf="robot.sensors.length > 0">
-                    <div class="subheader" mat-subheader>Sensors</div>
-                    <div *ngFor="let sensor of robot.sensors">
-                        <a mat-list-item (click)="uiService.selectedObject = sensor" [activated]="uiService.selectedObject == sensor">
-                            <mat-icon matListItemIcon>sensors</mat-icon>
-                            <span matListItemTitle>{{sensor.name }}</span>
-                        </a>
-                    </div>
-                </mat-nav-list>
+                <app-tree-view-item [sceneNode]="robot"></app-tree-view-item>
             </div>
         </mat-nav-list>
 
         <mat-nav-list class="obstacle-list">
             <div class="category-header" mat-subheader>Obstacles</div>
             <div class="item" *ngFor="let obstacle of sceneService.obstacles">
-                <a mat-list-item (click)="uiService.selectedObject = obstacle" [activated]="uiService.selectedObject == obstacle">
-                    <mat-icon matListItemIcon>view_in_ar</mat-icon>
-                    <span matListItemTitle>{{obstacle.name}}</span>
-                </a>
+                <app-tree-view-item [sceneNode]="obstacle"></app-tree-view-item>
             </div>
         </mat-nav-list>
     </div>
