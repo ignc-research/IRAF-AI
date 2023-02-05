@@ -4,20 +4,17 @@ import pybullet_data
 class ObstacleDefinitions:
     obstacle_definitions = [
         {
-            "name": "basic",
+            "type": "basic",
             "urdf": None,
             "urdfs": findUrdfs("**/*", WORKSPACE_PATH)  + findUrdfs("**/*", pybullet_data.getDataPath()),
-            "movable": True
         },
         {
-            "name": "human",
+            "type": "human",
             "urdf": "man_visual.urdf",
-            "movable": True
         },
         {
-            "name": "shelf",
+            "type": "shelf",
             "urdf": "shelf.urdf",
-            "movable": True,
             "params": {
                 "rows": {
                     "type": "int",
@@ -38,11 +35,14 @@ class ObstacleDefinitions:
                 "wall_thickness": {
                     "type": "float",
                     "value": .1
+                },
+                "move": {
+                    "type": "trajectory"
                 }
             }
         },
         {
-            "name": "maze",
+            "type": "maze",
             "urdf": "maze.urdf",
             "movable": True,
             "params": {
@@ -81,6 +81,9 @@ class ObstacleDefinitions:
                 "connector_height": {
                     "type": "float",
                     "value": .25
+                },
+                "move": {
+                    "type": "trajectory"
                 }
             }
         }
