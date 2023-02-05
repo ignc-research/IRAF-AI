@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { filter, map, Observable } from 'rxjs';
 import { URDFRobot } from 'libs/urdf-loader/URDFLoader';
-import { SceneService } from '../../services/scene.service';
 import { UiControlService } from '../../services/ui-control.service';
 
 @Component({
@@ -10,12 +9,9 @@ import { UiControlService } from '../../services/ui-control.service';
   styleUrls: ['./object-inspector.component.scss']
 })
 export class ObjectInspectorComponent {
-  get userData() {
-    return this.uiService.selectedObject?.userData ?? {};
-  }
 
-  get robot() {
-    return this.uiService.selectedObject as URDFRobot;
+  get object() {
+    return this.uiService.selectedObject;
   }
 
   constructor(public uiService: UiControlService){

@@ -3,16 +3,16 @@
         <mat-nav-list>
             <div class="category-header" mat-subheader>Robots</div>
             <div class="item" *ngFor="let robot of sceneService.robots">
-                <a mat-list-item (click)="uiService.selectedObject = robot.robot" [activated]="uiService.selectedObject == robot.robot">
+                <a mat-list-item (click)="uiService.selectedObject = robot" [activated]="uiService.selectedObject == robot">
                     <mat-icon matListItemIcon>precision_manufacturing</mat-icon>
-                    <span matListItemTitle>{{robot.robot.name}}</span>
+                    <span matListItemTitle>{{robot.name}}</span>
                 </a>
                 <mat-nav-list class="sensor-list" *ngIf="robot.sensors.length > 0">
                     <div class="subheader" mat-subheader>Sensors</div>
                     <div *ngFor="let sensor of robot.sensors">
-                        <a mat-list-item (click)="uiService.selectedObject = sensor.sensor" [activated]="uiService.selectedObject == sensor.sensor">
+                        <a mat-list-item (click)="uiService.selectedObject = sensor" [activated]="uiService.selectedObject == sensor">
                             <mat-icon matListItemIcon>sensors</mat-icon>
-                            <span matListItemTitle>{{sensor.sensor.name }}</span>
+                            <span matListItemTitle>{{sensor.name }}</span>
                         </a>
                     </div>
                 </mat-nav-list>

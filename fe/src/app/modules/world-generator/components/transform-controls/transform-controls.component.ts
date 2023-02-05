@@ -1,6 +1,8 @@
+import { Ref } from '@angular-three/core';
 import { NgtSobaTransformControls } from '@angular-three/soba/controls';
 import { AfterViewInit, ApplicationRef, Component, Input, NgZone, ViewChild } from '@angular/core';
 import { Subscription, filter } from 'rxjs';
+import { SceneObject } from 'src/app/models/scene-object';
 import { SceneService } from '../../services/scene.service';
 import { UiControlService } from '../../services/ui-control.service';
 
@@ -11,7 +13,7 @@ import { UiControlService } from '../../services/ui-control.service';
 })
 export class TransformControlsComponent {
   @Input()
-  controlledObject!: THREE.Object3D | null;
+  controlledObject!: SceneObject | null;
 
   constructor(public uiService: UiControlService,
     private zone: NgZone) { }
@@ -19,7 +21,7 @@ export class TransformControlsComponent {
   onControlsChange = (ev: any) => {
     const targetObj = ev.target.object;
 
-    if (!targetObj) {
+    if (!targetObj || !this.controlledObject) {
       return;
     }
 
@@ -34,6 +36,11 @@ export class TransformControlsComponent {
         targetObj.scale.set(targetObj.scale.z, targetObj.scale.z, targetObj.scale.z);
       }
     }
+    // Update internal state
+    this.controlledObject.position = targetObj.position;
+    this.controlledObject.rotation = targetObj.rotation;
+    this.controlledObject.scale = targetObj.scale;
+    
     this.zone.run(() => null);
   }
 }

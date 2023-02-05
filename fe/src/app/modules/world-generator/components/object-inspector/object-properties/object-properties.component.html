@@ -1,0 +1,9 @@
+<mat-card *ngIf="object && object.params">
+    <mat-card-header>
+      <mat-card-subtitle>Properties</mat-card-subtitle>
+    </mat-card-header>
+    <div class="section">
+        <app-parameter-editor [parameters]="object.params" [columns]="1"></app-parameter-editor>
+    </div>
+    <button mat-button (click)="updateObject()">Update Object</button>
+</mat-card>

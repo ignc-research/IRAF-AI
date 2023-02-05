@@ -22,7 +22,9 @@ export class ObstacleSelectorComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.sceneService.addObstacle(result);
+      if (result) {
+        this.sceneService.addObstacle(result);
+      }
     });
   }
 }

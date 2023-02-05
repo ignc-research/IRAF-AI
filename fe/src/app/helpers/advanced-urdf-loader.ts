@@ -34,7 +34,6 @@ export class AdvancedUrdfLoader {
         const manager = new LoadingManager();
         const loader = new URDFLoader( manager );
     
-        console.log()
         loader.packages = `${environment.apiUrl}/${urdfPath.substring(0, urdfPath.lastIndexOf('/'))}`;
         loader.loadMeshCb = async (url, manager, onLoad) => {
           try {
@@ -46,7 +45,7 @@ export class AdvancedUrdfLoader {
           }
 
         }
-
+        console.log(environment.apiUrl)
           loader.load(
             environment.apiUrl + urdfPath,
             robot => resolve(robot),

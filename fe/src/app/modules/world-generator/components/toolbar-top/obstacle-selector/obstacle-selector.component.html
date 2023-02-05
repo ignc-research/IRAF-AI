@@ -8,6 +8,11 @@
 <button *ngIf="selectedObstacle" mat-icon-button aria-label="Add" (click)="addObstacle()">
   <mat-icon>add</mat-icon>
 </button> -->
-<button mat-raised-button (click)="openDialog()">
-  <mat-icon>view_in_ar</mat-icon>  
-</button>
+<!-- <button mat-flat-button (click)="openDialog()">
+
+</button> -->
+<mat-button-toggle-group (click)="openDialog()">
+  <mat-button-toggle>
+    <mat-icon>view_in_ar</mat-icon>  
+  </mat-button-toggle>
+</mat-button-toggle-group>

@@ -7,8 +7,8 @@
         display: flex;
         flex: 1;
         min-height: 0;
-        ngt-canvas {
-            height: 100%;
+        app-scene {
+            width: 100%;
         }
     }
 }

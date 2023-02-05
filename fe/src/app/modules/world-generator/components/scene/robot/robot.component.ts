@@ -3,10 +3,13 @@ import { NgtEvent, NgtRenderState, NgtVector3 } from '@angular-three/core';
 import { Color, Mesh, Object3D } from 'three';
 // import URDFLoader, { URDFJoint, URDFLink, URDFRobot } from 'libs/urdf-loader/URDFLoader';
 import { LoadingManager } from 'three';
-import { Robot, SceneService } from '../../services/scene.service';
-import { UiControlService } from '../../services/ui-control.service';
+import { SceneService } from '../../../services/scene.service';
+import { UiControlService } from '../../../services/ui-control.service';
 import { ThreeUtils } from 'src/app/helpers/three-utils';
-import { URDFJoint, URDFLink } from 'libs/urdf-loader/URDFLoader';
+import { URDFJoint, URDFLink, URDFRobot } from 'libs/urdf-loader/URDFLoader';
+import { Robot } from 'src/app/models/robot';
+import { SceneObjectType } from 'src/app/models/scene-object-type';
+import { AdvancedUrdfLoader } from 'src/app/helpers/advanced-urdf-loader';
 
 
 @Component({
@@ -16,21 +19,24 @@ import { URDFJoint, URDFLink } from 'libs/urdf-loader/URDFLoader';
 
 
 export class RobotComponent {
+  robotObj: URDFRobot | null = null;
   _robot!: Robot;
 
   @Input()
   set robot(value: Robot) {
-    if (value) {
-      this._robot = value;
+    if (value && value != this._robot) {
+      new AdvancedUrdfLoader().loadUrdf(value.urdfUrl).then(x => {
+        this.robotObj = x;
+        this.uiService.selectedObject = value;
+      });
     }
+    console.log(value.position, value.ref.value?.position);
+    this._robot = value;
   }
 
   get robot() {
     return this._robot;
   }
-
-  @Input() position?: NgtVector3;
-
 
   hovered = false;
   active = false;
@@ -59,7 +65,7 @@ export class RobotComponent {
     return searchObj;
   }
 
-  searchParentLink = (obj: Object3D) => this.findObjOfType(obj, "URDFLink") ?? this.robot.robot;
+  searchParentLink = (obj: Object3D) => this.findObjOfType(obj, "URDFLink") ?? this.robot.ref.value;
 
   searchParentJoint = (obj: Object3D) => this.findObjOfType(obj, "URDFJoint");
 
@@ -68,16 +74,18 @@ export class RobotComponent {
     if (!intersection) {
       return;
     }
-    if (!ThreeUtils.isChildOf(intersection, this.robot.robot)) {
+    if (!ThreeUtils.isChildOf(intersection, this.robot.ref.value)) {
       return;
     }
 
-    if(intersection.userData['type'] == "Sensor") {
-      this.uiService.selectedObject = intersection;
-      return;
+    for (let i = 0; i < this.robot.sensors.length; i++) {
+      if(this.robot.sensors[i].ref.value == intersection) {
+        this.uiService.selectedObject = this.robot.sensors[i];
+        return;
+      }
     }
-    
-    this.uiService.selectedObject = this.robot.robot;
+   
+    this.uiService.selectedObject = this.robot;
   }
 
   onRobotRightClick(ev: NgtEvent<MouseEvent>) {

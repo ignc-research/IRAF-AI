@@ -11,22 +11,6 @@ import { UiControlService } from './services/ui-control.service';
 })
 
 export class WorldGeneratorComponent {
-  camera: NgtCameraOptions = {
 
-  }
-
-  scene: NgtSceneOptions = {
-    up: [0, 0, 1]
-  }
-
-  constructor(public sceneService: SceneService, private zone: NgZone, public uiService: UiControlService) {
- 
-  }
-
-  
-
-    pointerMissed = (ev: any) => {
-      this.zone.run(() => this.uiService.onMiss());
-    }
   
 }

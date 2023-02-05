@@ -1,0 +1,12 @@
+<ngt-primitive *ngIf="robotObj"
+(pointerover)="pointerOver($event)" 
+(pointerout)="pointerOut($event)" 
+(contextmenu)="onRobotRightClick($event)"
+(wheel)="onWheel($event)"
+[position]="robot.position"
+[rotation]="robot.rotation"
+[scale]="robot.scale"
+[object]="robotObj"
+[ref]="robot.ref">
+    <app-sensor *ngFor="let sensor of robot.sensors" [robot]="robot" [sensor]="sensor"></app-sensor>
+</ngt-primitive>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { SceneService } from '../../../services/scene.service';
-import { UiControlService } from '../../../services/ui-control.service';
+import { SceneService } from '../../../../services/scene.service';
+import { UiControlService } from '../../../../services/ui-control.service';
 
 @Component({
   selector: 'app-robot-popover',
@@ -14,7 +14,7 @@ export class RobotPopoverComponent {
 
   addSensor() {
     if (this.uiService.robotPopover) {
-      this.sceneService.addSensor(this.uiService.robotPopover.robot, this.uiService.robotPopover.selectedLink);
+      this.sceneService.addSensor(this.uiService.robotPopover.robot, this.uiService.robotPopover.selectedLink.name);
       this.uiService.robotPopover = null;
     }
   }

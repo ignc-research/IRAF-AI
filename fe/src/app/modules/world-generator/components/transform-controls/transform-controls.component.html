@@ -1,6 +1,6 @@
 <ngt-soba-transform-controls *ngIf="controlledObject"
 [mode]="uiService.transformControlMode"
-[object]="controlledObject" #controls
+[object]="controlledObject.ref" #controls
 (change)="onControlsChange($event)"
 >
     

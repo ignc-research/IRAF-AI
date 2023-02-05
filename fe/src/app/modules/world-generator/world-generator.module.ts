@@ -3,17 +3,15 @@ import { CommonModule } from '@angular/common';
 import { WorldGeneratorRoutingModule } from './world-generator-routing.module';
 import { WorldGeneratorComponent } from './world-generator.component';
 import { NgtCanvasModule } from '@angular-three/core';
-import { RobotComponent } from './components/robot/robot.component';
+import { RobotComponent } from './components/scene/robot/robot.component';
 import { InformationComponent } from './components/information/information.component';
-import { PopoverComponent } from './components/popover/popover.component';
-import { UserDataComponent } from './components/object-inspector/user-data/user-data.component';
-import { HttpClientModule } from '@angular/common/http';
 import { ToolbarTopComponent } from './components/toolbar-top/toolbar-top.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ObjectInspectorComponent } from './components/object-inspector/object-inspector.component';
 import { NgtMeshModule } from '@angular-three/core/meshes';
 import { NgtSobaOrbitControlsModule, NgtSobaTransformControlsModule } from '@angular-three/soba/controls';
 import { NgtPrimitiveModule } from '@angular-three/core/primitive';
+import { NgtGroup } from '@angular-three/core/group';
 import { UrdfPreviewComponent } from './components/urdf-preview/urdf-preview.component';
 import { UrdfPreviewCanvasComponent } from './components/urdf-preview/urdf-preview-canvas/urdf-preview-canvas.component';
 import { UrdfPreviewDialogComponent } from './components/urdf-preview/urdf-preview-dialog/urdf-preview-dialog.component';
@@ -35,10 +33,10 @@ import { TransformModeSelectorComponent } from './components/toolbar-top/transfo
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { TransformControlsComponent } from './components/transform-controls/transform-controls.component';
 import { ZoomControlsComponent } from './components/toolbar-top/zoom-controls/zoom-controls.component';
-import { RobotPopoverComponent } from './components/robot/robot-popover/robot-popover.component';
-import { SensorComponent } from './components/sensor/sensor.component';
+import { RobotPopoverComponent } from './components/scene/robot/robot-popover/robot-popover.component';
+import { SensorComponent } from './components/scene/sensor/sensor.component';
 import { ObstacleSelectorComponent } from './components/toolbar-top/obstacle-selector/obstacle-selector.component';
-import { ObstacleComponent } from './components/obstacle/obstacle.component';
+import { ObstacleComponent } from './components/scene/obstacle/obstacle.component';
 import { TreeViewComponent } from './components/tree-view/tree-view.component';
 import { MatListModule } from '@angular/material/list';
 import { EnvironmentInspectorComponent } from './components/object-inspector/environment-inspector/environment-inspector.component';
@@ -47,6 +45,9 @@ import { ParameterEditorComponent } from './components/parameter-editor/paramete
 import { ParameterInputComponent } from './components/parameter-editor/parameter-input/parameter-input.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ObjectPropertiesComponent } from './components/object-inspector/object-properties/object-properties.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { SceneComponent } from './components/scene/scene.component';
 
 @NgModule({
   
@@ -56,8 +57,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ToolbarTopComponent,
     RobotSelectorComponent,
     InformationComponent,
-    UserDataComponent,
-    PopoverComponent,
     UrdfPreviewComponent,
     UrdfPreviewCanvasComponent,
     UrdfPreviewDialogComponent,
@@ -75,6 +74,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ObstacleDialogComponent,
     ParameterEditorComponent,
     ParameterInputComponent,
+    ObjectPropertiesComponent,
+    SceneComponent
   ],
   imports: [
     CommonModule,
@@ -82,6 +83,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     WorldGeneratorRoutingModule,
 
     // Material Design
+    MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCheckboxModule,
@@ -99,6 +101,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     NgtAxesHelperModule,
     NgtAmbientLightModule,
     NgtMeshModule,
+    NgtGroup,
     NgtMeshStandardMaterialModule,
     NgtPointLightModule,
     NgtPrimitiveModule,
