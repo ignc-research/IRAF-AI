@@ -92,32 +92,7 @@ export class RobotComponent {
   }
 
 
-  pointerOver(ev: NgtEvent<PointerEvent>) {
-    const intersection = ev.intersections[0];
-    
-    if(!intersection){
-      return;
-    };
 
-    this.hoverObject = ev.object;
-
-    if ( (this.hoverObject instanceof Mesh) ) {
-      try {
-        this.colorSave = (<any> this.hoverObject).material.color.clone();
-        (<any> this.hoverObject).material.color.r += 0.1;
-        (<any> this.hoverObject).material.color.g += 0.1;
-        (<any> this.hoverObject).material.color.b += 0.1;
-      } catch (error) {
-      }
-
-      
-    }
-  }
-
-  
-  pointerOut(ev: NgtEvent<PointerEvent>) {
-    (<any> ev.object).material.color = this.colorSave;
-  }
 
   constructor(public sceneService: SceneService, private uiService: UiControlService) {
 

@@ -1,3 +1,3 @@
-<ngt-group *ngIf="group.parent" [appendTo]="group.parent.ref" [ref]="group.ref"></ngt-group>
+<ngt-group [name]="group.name" *ngIf="group.parent" [appendTo]="group.parent.ref" [ref]="group.ref"></ngt-group>
 <!-- ngIfs for root vs child nodes -->
-<ngt-group *ngIf="!group.parent" [ref]="group.ref"></ngt-group>
+<ngt-group [name]="group.name" *ngIf="!group.parent" [ref]="group.ref"></ngt-group>

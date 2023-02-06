@@ -39,7 +39,6 @@ import { ObstacleSelectorComponent } from './components/toolbar-top/obstacle-sel
 import { ObstacleComponent } from './components/scene/scene-node/obstacle/obstacle.component';
 import { TreeViewComponent } from './components/tree-view/tree-view.component';
 import { MatListModule } from '@angular/material/list';
-import { EnvironmentInspectorComponent } from './components/object-inspector/environment-inspector/environment-inspector.component';
 import { ObstacleDialogComponent } from './components/toolbar-top/obstacle-selector/obstacle-dialog/obstacle-dialog.component';
 import { ParameterEditorComponent } from './components/parameter-editor/parameter-editor.component';
 import { ParameterInputComponent } from './components/parameter-editor/parameter-input/parameter-input.component';
@@ -53,6 +52,7 @@ import { TrajectoryEditorComponent } from './components/object-inspector/object-
 import { SceneNodeComponent } from './components/scene/scene-node/scene-node.component';
 import { GroupNodeComponent } from './components/scene/scene-node/group-node/group-node.component';
 import { MarkerComponent } from './components/scene/scene-node/marker/marker.component';
+import { ConfigSelectorComponent } from './components/toolbar-top/config-selector/config-selector.component';
 
 @NgModule({
   
@@ -75,7 +75,6 @@ import { MarkerComponent } from './components/scene/scene-node/marker/marker.com
     ObstacleSelectorComponent,
     ObstacleComponent,
     TreeViewComponent,
-    EnvironmentInspectorComponent,
     ObstacleDialogComponent,
     ParameterEditorComponent,
     ParameterInputComponent,
@@ -85,7 +84,8 @@ import { MarkerComponent } from './components/scene/scene-node/marker/marker.com
     TrajectoryEditorComponent,
     SceneNodeComponent,
     GroupNodeComponent,
-    MarkerComponent
+    MarkerComponent,
+    ConfigSelectorComponent
   ],
   imports: [
     CommonModule,

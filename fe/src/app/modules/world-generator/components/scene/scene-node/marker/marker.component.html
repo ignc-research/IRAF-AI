@@ -1,4 +1,4 @@
-<ngt-mesh *ngIf="marker && marker.parent"
+<ngt-mesh *ngIf="marker && marker.parent && marker.parent.ref.value"
     [appendTo]="marker.parent.ref"
     [ref]="marker.ref"
     [position]="marker.position"

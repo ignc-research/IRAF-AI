@@ -1,0 +1,4 @@
+<input type="file" (change)="onFileSelected($event)" #file hidden>
+<button mat-button (click)="file.click()"  accept=".yml,.yaml">
+    Select Config
+</button>

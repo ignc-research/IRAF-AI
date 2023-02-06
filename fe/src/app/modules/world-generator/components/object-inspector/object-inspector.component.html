@@ -1,14 +1,10 @@
 <div class="inspector">
     <div class="content">
-        <div>
-            <app-environment-inspector *ngIf="!node">
-            </app-environment-inspector>
-        </div>
-        <div class="section" *ngIf="object">
+        <div class="section" *ngIf="node">
             <div class="row">
                 <mat-form-field>
                     <mat-label>Name</mat-label>
-                    <input [(ngModel)]="object.name" matInput type="text">
+                    <input [(ngModel)]="node.name" [readonly]="node.readonly" matInput type="text">
                 </mat-form-field>
             </div>
         </div>

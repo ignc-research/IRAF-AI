@@ -1,7 +1,8 @@
-import { NgtCameraOptions, NgtSceneOptions } from '@angular-three/core';
+import { NgtCameraOptions, NgtEvent, NgtSceneOptions } from '@angular-three/core';
 import { Component, NgZone } from '@angular/core';
 import { SceneNode } from 'src/app/models/scene-node';
 import { SceneObject } from 'src/app/models/scene-object';
+import * as THREE from 'three';
 import { SceneService } from '../../services/scene.service';
 import { UiControlService } from '../../services/ui-control.service';
 
@@ -11,6 +12,9 @@ import { UiControlService } from '../../services/ui-control.service';
   styleUrls: ['./scene.component.scss']
 })
 export class SceneComponent {
+  private colorSave: THREE.Color | null = null;
+  private hoverObject!: THREE.Object3D;
+
   camera: NgtCameraOptions = {
     up: [0, 0, 1]
   }
@@ -30,5 +34,31 @@ export class SceneComponent {
 
   objectMiss(event: any) {
     this.uiService.onMiss();
+  }
+
+  pointerOver(ev: NgtEvent<PointerEvent>) {
+    const intersection = ev.intersections[0];
+    
+    if(!intersection){
+      return;
+    };
+
+    this.hoverObject = ev.object;
+
+    if ( (this.hoverObject instanceof THREE.Mesh) ) {
+      try {
+        this.colorSave = (<any> this.hoverObject).material.color.clone();
+        (<any> this.hoverObject).material.color.r += 0.1;
+        (<any> this.hoverObject).material.color.g += 0.1;
+        (<any> this.hoverObject).material.color.b += 0.1;
+      } catch (error) {
+      }
+
+      
+    }
+  }
+
+  pointerOut(ev: NgtEvent<PointerEvent>) {
+    (<any> ev.object).material.color = this.colorSave;
   }
 }

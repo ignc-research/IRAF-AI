@@ -21,7 +21,7 @@ export class TransformControlsComponent {
   onControlsChange = (ev: any) => {
     const targetObj = ev.target.object;
 
-    if (!targetObj || !this.controlledObject) {
+    if (!targetObj || !this.controlledObject || targetObj != this.controlledObject.ref.value) {
       return;
     }
 

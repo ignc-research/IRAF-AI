@@ -4,8 +4,8 @@
     <ngt-point-light [position]="-10"></ngt-point-light>
     <ngt-axes-helper [scale]="1"></ngt-axes-helper>
 
-    <ngt-group (click)="objectClick($event)" (pointermissed)="objectMiss($event)">
-        <app-scene-node *ngFor="let node of sceneService.nodes" [sceneNode]="node"></app-scene-node>
+    <ngt-group (click)="objectClick($event)" (pointermissed)="objectMiss($event)" (pointerover)="pointerOver($event)" (pointerout)="pointerOut($event)" >
+        <app-scene-node [sceneNode]="sceneService.rootNode"></app-scene-node>
         <app-transform-controls [controlledObject]="uiService.selectedObject"></app-transform-controls>
     </ngt-group>
   

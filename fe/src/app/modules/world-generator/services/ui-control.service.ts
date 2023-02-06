@@ -44,11 +44,15 @@ export class UiControlService implements OnDestroy {
     this._selectedNode = node;
   }
 
-  findThreeObj = (obj: THREE.Object3D, sceneObjs: SceneNode[]): SceneNode | null => {
-    const findObj = sceneObjs.find(x => ThreeUtils.isChildOf(obj, x.ref.value));
-    console.log("findob", findObj)
+  findThreeObj = (obj: THREE.Object3D, node: SceneNode): SceneNode | null => {
+    if (node.ref.value == obj) {
+      return node;
+    }
+    console.log(obj, node)
+
+    const findObj = node.children.find(x => ThreeUtils.isChildOf(obj, x.ref.value));
     if (findObj && findObj.ref.value != obj && findObj.children.length > 0) {
-      const childObj = this.findThreeObj(obj, findObj.children);
+      const childObj = this.findThreeObj(obj, findObj);
       return childObj ?? findObj;
     }
 
@@ -56,12 +60,11 @@ export class UiControlService implements OnDestroy {
   }
 
   onClick = (object: THREE.Object3D) => {
-    this.selectedNode = this.findThreeObj(object, this.sceneService.nodes);
-    console.log(this.selectedNode, object)
+    this.selectedNode = this.findThreeObj(object, this.sceneService.rootNode);
   }
 
   onMiss = () => {
-    this.selectedNode = null;
+    this.selectedNode = this.sceneService.rootNode;
     this.robotPopover = null;
   }
 
@@ -81,8 +84,8 @@ export class UiControlService implements OnDestroy {
         this.transformControlMode = 'scale';
         break;
       case 'delete':
-        if (this.selectedObject) {
-          this.sceneService.deleteSceneNode(this.selectedObject);
+        if (this.selectedNode) {
+          this.sceneService.deleteSceneNode(this.selectedNode);
           this.selectedNode = null;
         }
         break;

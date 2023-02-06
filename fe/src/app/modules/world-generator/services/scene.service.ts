@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { ConfigUtils } from 'src/app/helpers/config-utils';
 import { StringUtils } from 'src/app/helpers/string-utils';
-import { GroupNode } from 'src/app/models/group';
+import { GroupNode, GroupType } from 'src/app/models/group';
 import { Marker } from 'src/app/models/marker';
 import { IObstacle, Obstacle } from 'src/app/models/obstacle';
 import { Robot, Sensor } from 'src/app/models/robot';
@@ -12,32 +13,45 @@ import * as THREE from 'three';
   providedIn: 'root'
 })
 export class SceneService {
-  private robots: GroupNode = new GroupNode({name: 'Robots'});
-  private obstacles: GroupNode = new GroupNode({name: 'Obstacles'});
+  rootNode: SceneNode;
 
-  nodes: SceneNode[];
+  get obstacleGroup() {
+    return this.findRecursive((item: SceneNode) => item instanceof GroupNode && item.type == GroupType.Obstacles)
+  }
 
-  constructor() { 
-    this.nodes = [this.robots, this.obstacles];
+  get robotGroup() {
+    return this.findRecursive((item) => item instanceof GroupNode && item.type == GroupType.Robots)
+  }
+
+  constructor() {
+    this.rootNode = ConfigUtils.parseConfig();
   }
 
   getLastIndex = (objs: THREE.Object3D[], prefix: string) => (objs.filter(x => x.name.startsWith(prefix))
                                                                   .map(x => +(x.name.split('_').at(-1) ?? 0))
                                                                   .sort((a, b) => b - a)[0] ?? 0)
-                                                                  
+
+  findRecursive(condition: (item: SceneNode) => boolean, item: SceneNode=this.rootNode): SceneNode | null {
+    if (condition(item)) {
+      return item;
+    }
+    return item.children.find(x => this.findRecursive(condition, x)) ?? null;
+  }
+
   async addObstacle(obstacle: IObstacle) {
     obstacle.name = StringUtils.getFileNameWithoutExt(obstacle.urdf);
-    this.obstacles.addChild(new Obstacle(obstacle));
+    console.log(this.obstacleGroup);
+    this.obstacleGroup?.addChild(new Obstacle(obstacle));
   }
 
   async addRobot(urdfPath: string) {
-    this.robots.addChild(new Robot({ type: urdfPath, name: StringUtils.getFileNameWithoutExt(urdfPath) }));
+    this.robotGroup?.addChild(new Robot({ type: urdfPath, name: StringUtils.getFileNameWithoutExt(urdfPath) }));
   }
 
   addTrajectoryPoint(object: SceneNode, name: string) {
     let trj = object.children.find(x => x instanceof GroupNode && x.name == name) as GroupNode;
     if (!trj) {
-      trj = new GroupNode({ name });
+      trj = new GroupNode({ name, type: GroupType.Trajectory });
       object.addChild(trj);
     }
     trj.addChild(new Marker({ name: trj.children.length.toString(), scale: new THREE.Vector3(.1,.1,.1) }));
@@ -52,7 +66,7 @@ export class SceneService {
 
 
   invalidateRefs() {
-    this.nodes.forEach(x => x.invalidateRef());
+    this.rootNode.invalidateRef();
   }
 
   // For refreshing a scene object, currently only used for obstacles with dynamic urdfs
@@ -68,13 +82,11 @@ export class SceneService {
   }
 
   async deleteSceneNode(object: SceneNode) {
-    if (object.parent) {
+    if (object.parent && !object.readonly) {
       object.parent.removeChild(object);
     } 
   }
 }
 
 
-
-
-export type UserData = { [key: string]: any }
+export type Constructor<T> = new (...args: any[]) => T; 

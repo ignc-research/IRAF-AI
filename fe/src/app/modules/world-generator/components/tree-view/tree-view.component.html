@@ -2,9 +2,7 @@
     <div class="wrapper">
         <mat-nav-list>
             <div class="category-header" mat-subheader>Scene</div>
-            <div class="item" *ngFor="let node of sceneService.nodes">
-                <app-tree-view-item [sceneNode]="node"></app-tree-view-item>
-            </div>
+            <app-tree-view-item [sceneNode]="sceneService.rootNode"></app-tree-view-item>
         </mat-nav-list>
     </div>
 </div>

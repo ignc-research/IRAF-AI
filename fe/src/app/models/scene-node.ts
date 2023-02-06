@@ -5,6 +5,8 @@ import { Parameters } from "./parameters";
 export class SceneNode {
     public name: string;
 
+    public readonly: boolean;
+
     public params?: Parameters;
 
     public parent: SceneNode | null = null;
@@ -15,6 +17,7 @@ export class SceneNode {
 
     constructor(obj: ISceneNode) {
         this.name = obj.name ?? '';
+        this.readonly = obj.readonly ?? false;
         this.params = obj.params;
         this.children = obj.children ?? [];
     }
@@ -39,6 +42,7 @@ export class SceneNode {
 
 export interface ISceneNode {
     name?: string;
+    readonly?: boolean;
     children?: SceneNode[];
     params?: Parameters;
 }
