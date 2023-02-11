@@ -18,6 +18,5 @@ export enum GroupType {
     Default,
     Environment,
     Robots,
-    Obstacles,
-    Trajectory
+    Obstacles
 }

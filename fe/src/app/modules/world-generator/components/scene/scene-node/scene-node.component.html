@@ -4,4 +4,5 @@
 <app-obstacle *ngIf="obstacle" [obstacle]="$any(sceneNode)"></app-obstacle>
 <app-group-node *ngIf="group" [group]="$any(sceneNode)"></app-group-node>
 <app-marker *ngIf="marker" [marker]="$any(sceneNode)"></app-marker>
+<app-trajectory *ngIf="trajectory" [trajectory]="$any(sceneNode)"></app-trajectory>
 <app-scene-node *ngFor="let node of sceneNode.children" [sceneNode]="node"></app-scene-node>

@@ -5,6 +5,7 @@ import { Obstacle } from 'src/app/models/obstacle';
 import { Robot, Sensor } from 'src/app/models/robot';
 import { SceneNode } from 'src/app/models/scene-node';
 import { SceneObject } from 'src/app/models/scene-object';
+import { Trajectory } from 'src/app/models/trajectory';
 
 @Component({
   selector: 'app-scene-node',
@@ -33,5 +34,9 @@ export class SceneNodeComponent {
   
   get marker() {
     return this.sceneNode instanceof Marker;
+  }
+
+  get trajectory() {
+    return this.sceneNode instanceof Trajectory;
   }
 }

@@ -16,7 +16,7 @@ import { UrdfPreviewComponent } from './components/urdf-preview/urdf-preview.com
 import { UrdfPreviewCanvasComponent } from './components/urdf-preview/urdf-preview-canvas/urdf-preview-canvas.component';
 import { UrdfPreviewDialogComponent } from './components/urdf-preview/urdf-preview-dialog/urdf-preview-dialog.component';
 import { RobotSelectorComponent } from './components/toolbar-top/robot-selector/robot-selector.component';
-import { NgtMeshStandardMaterialModule } from '@angular-three/core/materials';
+import { NgtLineBasicMaterialModule, NgtMeshStandardMaterialModule } from '@angular-three/core/materials';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { NgtAxesHelperModule } from '@angular-three/core/helpers';
@@ -25,7 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
-import { NgtSphereGeometryModule } from '@angular-three/core/geometries';
+import { NgtBufferGeometryModule, NgtSphereGeometryModule } from '@angular-three/core/geometries';
 import { MatInputModule } from '@angular/material/input';
 import { TransformInputComponent } from './components/object-inspector/transform-input/transform-input.component';
 import { MatCardModule } from '@angular/material/card';
@@ -53,6 +53,7 @@ import { SceneNodeComponent } from './components/scene/scene-node/scene-node.com
 import { GroupNodeComponent } from './components/scene/scene-node/group-node/group-node.component';
 import { MarkerComponent } from './components/scene/scene-node/marker/marker.component';
 import { ConfigSelectorComponent } from './components/toolbar-top/config-selector/config-selector.component';
+import { TrajectoryComponent } from './components/scene/scene-node/trajectory/trajectory.component';
 
 @NgModule({
   
@@ -85,7 +86,8 @@ import { ConfigSelectorComponent } from './components/toolbar-top/config-selecto
     SceneNodeComponent,
     GroupNodeComponent,
     MarkerComponent,
-    ConfigSelectorComponent
+    ConfigSelectorComponent,
+    TrajectoryComponent
   ],
   imports: [
     CommonModule,
@@ -112,6 +114,8 @@ import { ConfigSelectorComponent } from './components/toolbar-top/config-selecto
     NgtAmbientLightModule,
     NgtMeshModule,
     NgtGroup,
+    NgtLineBasicMaterialModule,
+    NgtBufferGeometryModule,
     NgtMeshStandardMaterialModule,
     NgtPointLightModule,
     NgtPrimitiveModule,

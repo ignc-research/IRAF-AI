@@ -6,6 +6,7 @@ import { Marker } from 'src/app/models/marker';
 import { IObstacle, Obstacle } from 'src/app/models/obstacle';
 import { Robot, Sensor } from 'src/app/models/robot';
 import { SceneNode } from 'src/app/models/scene-node';
+import { Trajectory } from 'src/app/models/trajectory';
 
 import * as THREE from 'three';
 
@@ -49,9 +50,9 @@ export class SceneService {
   }
 
   addTrajectoryPoint(object: SceneNode, name: string) {
-    let trj = object.children.find(x => x instanceof GroupNode && x.name == name) as GroupNode;
+    let trj = object.children.find(x => x instanceof Trajectory && x.name == name) as Trajectory;
     if (!trj) {
-      trj = new GroupNode({ name, type: GroupType.Trajectory });
+      trj = new Trajectory({ name });
       object.addChild(trj);
     }
     trj.addChild(new Marker({ name: trj.children.length.toString(), scale: new THREE.Vector3(.1,.1,.1) }));
