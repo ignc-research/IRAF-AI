@@ -16,7 +16,7 @@ import { UrdfPreviewComponent } from './components/urdf-preview/urdf-preview.com
 import { UrdfPreviewCanvasComponent } from './components/urdf-preview/urdf-preview-canvas/urdf-preview-canvas.component';
 import { UrdfPreviewDialogComponent } from './components/urdf-preview/urdf-preview-dialog/urdf-preview-dialog.component';
 import { RobotSelectorComponent } from './components/toolbar-top/robot-selector/robot-selector.component';
-import { NgtLineBasicMaterialModule, NgtMeshStandardMaterialModule } from '@angular-three/core/materials';
+import { NgtLineBasicMaterialModule, NgtMeshPhongMaterial, NgtMeshStandardMaterialModule } from '@angular-three/core/materials';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { NgtAxesHelperModule } from '@angular-three/core/helpers';
@@ -117,6 +117,7 @@ import { TrajectoryComponent } from './components/scene/scene-node/trajectory/tr
     NgtLineBasicMaterialModule,
     NgtBufferGeometryModule,
     NgtMeshStandardMaterialModule,
+    NgtMeshPhongMaterial,
     NgtPointLightModule,
     NgtPrimitiveModule,
     NgtSphereGeometryModule,

@@ -45,10 +45,11 @@ export class UiControlService implements OnDestroy {
   }
 
   findThreeObj = (obj: THREE.Object3D, node: SceneNode): SceneNode | null => {
+    console.log(node.name, node.ref.value.uuid, obj.uuid)
     if (node.ref.value == obj) {
       return node;
     }
-    console.log(obj, node)
+
 
     const findObj = node.children.find(x => ThreeUtils.isChildOf(obj, x.ref.value));
     if (findObj && findObj.ref.value != obj && findObj.children.length > 0) {

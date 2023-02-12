@@ -83,7 +83,7 @@ export class SceneService {
   }
 
   async deleteSceneNode(object: SceneNode) {
-    if (object.parent && !object.readonly) {
+    if (object.parent && (!object.readonly || object instanceof Trajectory)) {
       object.parent.removeChild(object);
     } 
   }

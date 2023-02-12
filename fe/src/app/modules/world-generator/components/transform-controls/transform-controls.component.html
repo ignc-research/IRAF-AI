@@ -1,4 +1,4 @@
-<ngt-soba-transform-controls *ngIf="controlledObject"
+<ngt-soba-transform-controls *ngIf="controlledObject && controlledObject.ref.value"
 [mode]="uiService.transformControlMode"
 [object]="controlledObject.ref" #controls
 (change)="onControlsChange($event)"

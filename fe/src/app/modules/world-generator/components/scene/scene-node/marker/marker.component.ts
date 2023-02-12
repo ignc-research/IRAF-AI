@@ -12,6 +12,6 @@ export class MarkerComponent {
   marker!: Marker;
 
   constructor(private uiService: UiControlService) {
-
+    setTimeout(() => this.uiService.selectNode(this.marker), 0);
   }
 }
