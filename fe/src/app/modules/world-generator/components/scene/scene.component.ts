@@ -24,6 +24,8 @@ export class SceneComponent {
     up: [0, 0, 1]
   }
 
+  minPolarAngle = Math.PI / 2 - .1;
+
   rootRef: Ref<THREE.Object3D> = new Ref<THREE.Object3D>();
 
   constructor(public sceneService: SceneService, private zone: NgZone, public uiService: UiControlService) {
@@ -32,7 +34,6 @@ export class SceneComponent {
   }
 
   objectClick(event: any) {
-    console.log(event.intersections)
     this.uiService.onClick(event.intersections[0]?.object);
   }
 

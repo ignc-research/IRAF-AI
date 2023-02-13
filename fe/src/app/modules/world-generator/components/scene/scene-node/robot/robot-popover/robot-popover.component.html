@@ -4,6 +4,6 @@
         <mat-card-title>{{uiService.robotPopover.selectedLink.name}}</mat-card-title>
     </mat-card-header>
     <div>
-        <button mat-button (click)="addSensor()">Add Sensor</button>
+        <button *ngFor="let sensor of generatorService.sensors" mat-button (click)="addSensor(sensor)">Add {{sensor.type}}</button>
     </div>
 </mat-card>

@@ -22,6 +22,13 @@ export class Robot extends SceneObject implements IUrdfSceneObject, IRobot {
         this.type = obj.type;
         this.goalMarker = new Marker({name: 'goal'});
         this.addChild(this.goalMarker);
+
+        this.params = {
+            "cols": {
+                type: "int",
+                value: 8
+            },
+        }
     }
 }
 

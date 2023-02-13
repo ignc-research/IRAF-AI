@@ -9,5 +9,10 @@
         <app-transform-controls [controlledObject]="uiService.selectedObject"></app-transform-controls>
     </ngt-group>
   
-    <ngt-soba-orbit-controls [makeDefault]="true" [enableZoom]="uiService.enableZoom"></ngt-soba-orbit-controls>
+    <ngt-mesh receiveShadow>
+        <ngt-plane-geometry [args]="[1000, 1000]"></ngt-plane-geometry>
+        <ngt-mesh-phong-material color="#171717" [transparent]="true" [opacity]="0.4"></ngt-mesh-phong-material>
+    </ngt-mesh>
+
+    <ngt-soba-orbit-controls [makeDefault]="true" [maxPolarAngle]="minPolarAngle" [enableZoom]="uiService.enableZoom"></ngt-soba-orbit-controls>
 </ngt-canvas>

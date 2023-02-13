@@ -25,7 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
-import { NgtBufferGeometryModule, NgtSphereGeometryModule } from '@angular-three/core/geometries';
+import { NgtBufferGeometryModule, NgtPlaneGeometryModule, NgtSphereGeometryModule } from '@angular-three/core/geometries';
 import { MatInputModule } from '@angular/material/input';
 import { TransformInputComponent } from './components/object-inspector/transform-input/transform-input.component';
 import { MatCardModule } from '@angular/material/card';
@@ -119,6 +119,7 @@ import { TrajectoryComponent } from './components/scene/scene-node/trajectory/tr
     NgtMeshStandardMaterialModule,
     NgtMeshPhongMaterial,
     NgtPointLightModule,
+    NgtPlaneGeometryModule,
     NgtPrimitiveModule,
     NgtSphereGeometryModule,
     NgtSpotLightModule,

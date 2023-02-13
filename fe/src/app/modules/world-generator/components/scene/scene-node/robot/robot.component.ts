@@ -30,7 +30,6 @@ export class RobotComponent {
         this.uiService.selectNode(value);
       });
     }
-    console.log(value.position, value.ref.value?.position);
     this._robot = value;
   }
 
@@ -83,6 +82,7 @@ export class RobotComponent {
   }
 
   onWheel(ev: NgtEvent<WheelEvent>) {
+    this.uiService.enableZoom = false;
     const intersection = ev.intersections[0];
     if(!intersection) return;
     this.currentJoint = this.searchParentJoint(intersection.object) as URDFJoint;
@@ -91,7 +91,9 @@ export class RobotComponent {
     this.currentJoint.setJointValue(this.currentJointValue.valueOf() + 0.001 * ev.nativeEvent.deltaY);
   }
 
-
+  pointerLeave() {
+    this.uiService.enableZoom = true;
+  }
 
 
   constructor(public sceneService: SceneService, private uiService: UiControlService) {

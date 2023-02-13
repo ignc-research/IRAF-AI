@@ -4,7 +4,7 @@ import { StringUtils } from 'src/app/helpers/string-utils';
 import { GroupNode, GroupType } from 'src/app/models/group';
 import { Marker } from 'src/app/models/marker';
 import { IObstacle, Obstacle } from 'src/app/models/obstacle';
-import { Robot, Sensor } from 'src/app/models/robot';
+import { ISensor, Robot, Sensor } from 'src/app/models/robot';
 import { SceneNode } from 'src/app/models/scene-node';
 import { Trajectory } from 'src/app/models/trajectory';
 
@@ -58,10 +58,10 @@ export class SceneService {
     trj.addChild(new Marker({ name: trj.children.length.toString(), scale: new THREE.Vector3(.1,.1,.1) }));
   }
 
-  addSensor(robot: Robot, link: string) {
-    const sensor = new Sensor({ type: 'LiDAR', name: 'LiDAR', link });
+  addSensor(robot: Robot, sensorDef: ISensor) {
+    const sensor = new Sensor({ ...sensorDef, name: sensorDef.type });
     sensor.scale.set(.1, .1, .1);
-    sensor.position.set(0, 0, 1);
+    sensor.position.set(0, 0, .2);
     robot.addChild(sensor);
   }
 

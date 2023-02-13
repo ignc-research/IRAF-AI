@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ISensor } from 'src/app/models/robot';
+import { GeneratorApiService } from 'src/app/modules/world-generator/services/generator.api.service';
 import { SceneService } from '../../../../../services/scene.service';
 import { UiControlService } from '../../../../../services/ui-control.service';
 
@@ -8,13 +10,15 @@ import { UiControlService } from '../../../../../services/ui-control.service';
   styleUrls: ['./robot-popover.component.scss']
 })
 export class RobotPopoverComponent {
-  constructor(public uiService: UiControlService, public sceneService: SceneService) {
+
+  constructor(public uiService: UiControlService, public sceneService: SceneService, public generatorService: GeneratorApiService) {
 
   }
 
-  addSensor() {
+  addSensor(sensor: ISensor) {
     if (this.uiService.robotPopover) {
-      this.sceneService.addSensor(this.uiService.robotPopover.robot, this.uiService.robotPopover.selectedLink.name);
+      sensor.link = this.uiService.robotPopover.selectedLink.name;
+      this.sceneService.addSensor(this.uiService.robotPopover.robot, sensor);
       this.uiService.robotPopover = null;
     }
   }
