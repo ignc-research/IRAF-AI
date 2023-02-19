@@ -34,6 +34,10 @@ def get_custom_obstacle_urdf(type, path):
 def get_obstacles():
     return ObstacleDefinitions().obstacle_definitions
 
+@app.route("/robots")
+def get_robots():
+    return 
+
 @app.route("/urdf/robot")
 def get_robot_urdfs():
     return findUrdfs("**/*", ROBOTS_PATH)
