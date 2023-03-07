@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Category, PlotService } from '../plot.service';
+import { Category, PlotDataService } from '../plot-data.service';
 
 @Component({
   selector: 'app-color-picker',
@@ -10,7 +10,7 @@ export class ColorPickerComponent {
   @Input()
   category!: Category;
 
-  constructor(protected plotService: PlotService) {}
+  constructor(protected plotService: PlotDataService) {}
 
   changeColor (eventTarget: any, type: string): void {
     const inputColor = eventTarget.value;

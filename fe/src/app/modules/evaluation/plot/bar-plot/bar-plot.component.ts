@@ -1,7 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PlotlyDataLayoutConfig } from 'plotly.js';
-import { Subscription } from 'rxjs';
-import { Category, PlotService } from '../plot.service';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import { Category, PlotDataService } from '../plot-data.service';
+import {PlotService} from "../plot.service";
 
 @Component({
   selector: 'app-bar-plot',
@@ -9,47 +10,51 @@ import { Category, PlotService } from '../plot.service';
   styleUrls: ['./bar-plot.component.scss']
 })
 export class BarPlotComponent implements OnInit, OnDestroy {
-  private categoryChangeSub: Subscription;
+  private subscriptions: Subscription[] = [];
+  private titleSub: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   @Input()
-  experiments: string[] = [];
+ experiments: string[] = [];
+  //experiments: string = '';
+  plot: any = {
+    layout: {
+      autosize: true,
+      //title: this.experiments,
+      title: '',
+      showlegend: false
+    },
+    data: []
+  }
 
-  plot: any;
+  constructor(protected plotService: PlotDataService, private plotUiService: PlotService) {
+    this.subscriptions.push(this.plotService.categoryChanged.subscribe(this.onServiceCategoryChange));
+    this.subscriptions.push(this.titleSub.subscribe(x => this.plot.layout.title = x));
 
-  constructor(protected plotService: PlotService) {
-    this.categoryChangeSub = this.plotService.categoryChanged.subscribe(this.onServiceCategoryChange);
   }
   ngOnDestroy(): void {
-    this.categoryChangeSub.unsubscribe();
+    this.subscriptions.forEach(x => x.unsubscribe());
+    this.plotUiService.deregisterTitleSub(this.titleSub);
   }
 
   ngOnInit(): void {
+    this.plotUiService.registerTitleSub(this.titleSub);
     this.loadBarPlot();
   }
 
   async loadBarPlot() {
     const experiments = await Promise.all(this.experiments.map(async(x) => await this.plotService.loadExperiment(x)));
-    
-    const newPlot: PlotlyDataLayoutConfig = {
-      layout: {
-        autosize: true,
-        title: this.experiments.join(', '),
-        showlegend: false
-      },
-      data: this.plotService.categories.map(cat => {
-        return {
-          type: 'bar',
-          x: experiments.map(x => x.name),
-          y: experiments.map(y => y.data.find(x => x.category.name == cat.name)?.avgPathLength ?? 0),
-          name: cat.name,
-          marker: {
-            color: cat.color
-          }
+    this.titleSub.next(this.experiments.join(', '));
+    this.plot.data = this.plotService.categories.map(cat => {
+      return {
+        type: 'bar',
+        x: experiments.map(x => x.name),
+        y: experiments.map(y => y.data.find(x => x.category.name == cat.name)?.avgPathLength ?? 0),
+        name: cat.name,
+        marker: {
+          color: cat.color
         }
-      })
-    };
-    this.plot = newPlot;
-
+      }
+    });
   }
 
   onServiceCategoryChange = (category: Category) => {

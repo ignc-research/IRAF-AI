@@ -14,8 +14,18 @@
 
 
   <div class="legend">
+    <hr class="my-hr">
     <div class="titleChange">
-      <input (change)="titleChange($event)" />
+
+      <select [(ngModel)]="selectedTitleSub" class="titleChange-inpox">
+
+        <option *ngFor="let sub of plotUiService.titleSubjects; let i = index" [ngValue]="sub">
+          Plot {{i + 1}}
+        </option>
+      </select>
+      <input [value]="selectedTitleSub?.value" (change)="titleChange($event)"/>
+    <!--  https://plotly.com/javascript/radar-chart/ -->
+
     </div>
     <div class="legend-item" *ngFor="let category of plotService.categories">
       <input type="checkbox" checked (change)="toggleAverage($event.target, category.name)" />

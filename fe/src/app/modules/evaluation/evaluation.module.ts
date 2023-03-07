@@ -9,6 +9,8 @@ import { PlotlyModule } from 'angular-plotly.js';
 import { TrajectoryPlotComponent } from './plot/trajectory-plot/trajectory-plot.component';
 import { BarPlotComponent } from './plot/bar-plot/bar-plot.component';
 import { ColorPickerComponent } from './plot/color-picker/color-picker.component';
+import {FormsModule} from "@angular/forms";
+
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -16,11 +18,12 @@ PlotlyModule.plotlyjs = PlotlyJS;
     EvaluationComponent,
     TrajectoryPlotComponent,
     BarPlotComponent,
-    ColorPickerComponent
+    ColorPickerComponent,
   ],
   imports: [
     CommonModule,
     EvaluationRoutingModule,
+    FormsModule,
     PlotlyModule
   ]
 })

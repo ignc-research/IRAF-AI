@@ -1,8 +1,12 @@
 .plots {
     height: 100%;
-    width: 100%;
+    width: 40%;
     display: flex;
     &>* {
         flex: 1;
     }
+}
+.plots {
+  flex-direction: column;
+  justify-content: center;
 }

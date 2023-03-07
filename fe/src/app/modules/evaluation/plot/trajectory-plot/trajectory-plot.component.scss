@@ -4,7 +4,7 @@
 }
 
 .legend {
-  width: 250px;
+  width: 250rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -13,12 +13,30 @@
 .legend-item {
   display: flex;
   & > * {
-    padding-left: 8px;
+    padding-left: 9px;
   }
 }
 
 plotly-plot {
   flex: 1;
   height: 100%;
+  //margin-top: 8rem;
+
 }
+/*
+
+.titleChange p{
+  margin: -20px 0 9px;
+
+}
+
+
+.my-hr {
+  height: 100rem;
+  border-style: solid;
+  border-color: red;
+}
+*/
+
+
 

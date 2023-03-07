@@ -1,7 +1,8 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Category, PlotService} from "../plot.service";
+import {Category, PlotDataService} from "../plot-data.service";
 import {PlotlyDataLayoutConfig} from "plotly.js-dist-min";
-import { Subscription } from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {PlotService} from "../plot.service";
 
 @Component({
   selector: 'app-trajectory-plot',
@@ -9,36 +10,43 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./trajectory-plot.component.scss']
 })
 export class TrajectoryPlotComponent implements OnInit, OnDestroy {
-  private colorChangeSubscription: Subscription;
+  private subscriptions: Subscription[] = [];
+  private titleSub: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  public selectedTitleSub?: BehaviorSubject<string>;
 
   @Input()
   experimentName: string = '';
 
-  plot!: any;
+  plot: any = {
+    layout: {
+      autosize: true,
+      title: this.experimentName,
+      showlegend: false
+    },
+    data: [] as any[]
+  };
 
-  constructor(protected plotService: PlotService) {
-    this.colorChangeSubscription = this.plotService.categoryChanged.subscribe(x => this.onServiceCategoryChange(x));
+  constructor(protected plotService: PlotDataService, public plotUiService: PlotService) {
+    this.subscriptions.push(this.plotService.categoryChanged.subscribe(x => this.onServiceCategoryChange(x)));
+    this.subscriptions.push(this.titleSub.subscribe(x => this.plot.layout.title = x));
   }
 
   ngOnInit(): void {
     this.loadTrajectoryPlot();
+    this.plotUiService.registerTitleSub(this.titleSub);
   }
 
   ngOnDestroy(): void {
-    this.colorChangeSubscription.unsubscribe();
+    this.subscriptions.forEach(x => x.unsubscribe());
+    this.plotUiService.deregisterTitleSub(this.titleSub);
   }
 
   async loadTrajectoryPlot() {
-    const newPlot: PlotlyDataLayoutConfig = {
-      layout: {
-        autosize: true,
-        title: this.experimentName,
-        showlegend: false
-      },
-      data: [] as any[]
-    };
+    this.plot.data = [];
 
     const experiment = await this.plotService.loadExperiment(this.experimentName);
+    this.titleSub.next(this.experimentName);
     experiment.data.forEach(robotData => {
       robotData.trajectories.forEach((trj, i) => {
         const newTrj = {
@@ -54,7 +62,7 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
             dash: 'dashdot',
           },
         };
-        newPlot.data.push(newTrj as any);
+        this.plot.data.push(newTrj as any);
       });
 
       const newAvgTrj = {
@@ -68,20 +76,17 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
           width: 10,
         }
       };
-      newPlot.data.push(newAvgTrj as any);
+      this.plot.data.push(newAvgTrj as any);
     });
-
-    this.plot = newPlot;
   }
-
-
 
   titleChange = (ev: any) => {
     const newValue = ev.target.value;
-    this.plot.layout.title = newValue;
+    if (this.selectedTitleSub){
+      this.selectedTitleSub.next(newValue);
+    }
+    // this.plotUiService.titleSubjects.forEach(x => x.next(newValue));
   }
-
-
 
   toggleAverage(eventTarget: any, type: string) {
     const isVisible = eventTarget.checked;
