@@ -1,8 +1,8 @@
 from flask import Flask, request, send_from_directory, send_file, Response
 from flask_cors import CORS
-from models.obstacle_definitions import ObstacleDefinitions
-from ir_drl.shared.maze_generator import MazeGenerator
-from ir_drl.shared.shelf_generator import ShelfGenerator
+from models.obstacle_definitions import obstacle_definitions
+from ir_drl.modular_drl_env.shared.maze_generator import MazeGenerator
+from ir_drl.modular_drl_env.shared.shelf_generator import ShelfGenerator
 from helpers.fs_util import *
 import os
 import glob
@@ -32,7 +32,7 @@ def get_custom_obstacle_urdf(type, path):
 
 @app.route("/obstacle")
 def get_obstacles():
-    return ObstacleDefinitions().obstacle_definitions
+    return obstacle_definitions
 
 @app.route("/robots")
 def get_robots():
