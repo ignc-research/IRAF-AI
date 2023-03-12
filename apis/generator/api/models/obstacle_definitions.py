@@ -7,10 +7,20 @@ obstacle_definitions = [
         "type": "basic",
         "urdf": None,
         "urdfs": findUrdfs("**/*", WORKSPACE_PATH)  + findUrdfs("**/*", pybullet_data.getDataPath()),
+        "params": {
+            "move": {
+                "type": "trajectory"
+            }
+        }
     },
     {
-        "type": "kuka",
-        "urdf": "man_visual.urdf"
+        "type": "human",
+        "urdf": "man_visual.urdf",
+        "params": {
+            "move": {
+                "type": "trajectory"
+            }
+        }
     },
     {
         "type": "shelf",
@@ -35,6 +45,10 @@ obstacle_definitions = [
             "wall_thickness": {
                 "type": "float",
                 "value": .1
+            },
+            "vel": {
+              "type": "float",
+              "value": 10
             },
             "move": {
                 "type": "trajectory"

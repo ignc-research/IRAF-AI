@@ -1,6 +1,10 @@
 from flask import Flask, request, send_from_directory, send_file, Response
 from flask_cors import CORS
 from models.obstacle_definitions import obstacle_definitions
+from models.robot_definitions import robot_definitions
+from models.sensor_definitions import sensor_definitions
+from models.goal_definitions import goal_definitions
+from models.env_definition import env_definition
 from ir_drl.modular_drl_env.shared.maze_generator import MazeGenerator
 from ir_drl.modular_drl_env.shared.shelf_generator import ShelfGenerator
 from helpers.fs_util import *
@@ -34,9 +38,21 @@ def get_custom_obstacle_urdf(type, path):
 def get_obstacles():
     return obstacle_definitions
 
-@app.route("/robots")
+@app.route("/robot")
 def get_robots():
-    return 
+    return robot_definitions
+
+@app.route("/environment")
+def get_environment():
+    return env_definition
+
+@app.route("/sensor")
+def get_sensors():
+    return sensor_definitions
+
+@app.route("/goal")
+def get_goals():
+    return goal_definitions
 
 @app.route("/urdf/robot")
 def get_robot_urdfs():
