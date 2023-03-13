@@ -8,3 +8,17 @@
         margin-bottom: -1.25em;
     }
 }
+
+.item-group {
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin-right: 16px;
+    height: 100%;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+}

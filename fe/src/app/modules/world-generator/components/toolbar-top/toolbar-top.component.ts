@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { SceneService } from '../../services/scene.service';
 import { RobotSelectorComponent } from './robot-selector/robot-selector.component';
 
 @Component({
@@ -10,6 +11,6 @@ import { RobotSelectorComponent } from './robot-selector/robot-selector.componen
   styleUrls: ['./toolbar-top.component.scss']
 })
 export class ToolbarTopComponent {
-
+  constructor(public sceneService: SceneService) {}
  
 }

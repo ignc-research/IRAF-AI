@@ -1,4 +1,5 @@
 import { URDFLink } from "libs/urdf-loader/URDFLoader";
+import { Goal } from "./goal";
 import { Marker } from "./marker";
 import { Parameters } from "./parameters";
 import { ISceneObject, IUrdfSceneObject, SceneObject } from "./scene-object";
@@ -7,6 +8,7 @@ import { SceneObjectType } from "./scene-object-type";
 // ToDo: hier fehlt noch so einiges (Absprache mit Benno)
 export class Robot extends SceneObject implements IUrdfSceneObject, IRobot {
     type: string;
+    urdf: string;
     goalMarker!: Marker;
 
     get sensors(): Sensor[] {
@@ -14,21 +16,13 @@ export class Robot extends SceneObject implements IUrdfSceneObject, IRobot {
     }
 
     get urdfUrl(): string {
-        return this.type;
+      return `/urdf/robot/${this.urdf}`;
     }
 
     constructor(obj: IRobot) {
         super(obj);
         this.type = obj.type;
-        this.goalMarker = new Marker({name: 'goal'});
-        this.addChild(this.goalMarker);
-
-        this.params = {
-            "cols": {
-                type: "int",
-                value: 8
-            },
-        }
+        this.urdf = obj.urdf;
     }
 }
 
@@ -51,4 +45,5 @@ export interface ISensor extends ISceneObject {
 
 export interface IRobot extends ISceneObject {
     type: string;
+    urdf: string;
 }

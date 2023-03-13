@@ -1,9 +1,14 @@
 <div class="wrapper">
-    <mat-form-field *ngIf="parameter.type != 'bool' && parameter.type != 'trajectory'">
+  <div *ngIf="parameter.type != 'group'">
+    <mat-form-field *ngIf="parameter.type == 'string' || parameter.type == 'float' || parameter.type == 'int'">
         <mat-label>{{label}}</mat-label>
         <input [(ngModel)]="parameter.value" *ngIf="parameter.type == 'string'" matInput type="text">
         <input [(ngModel)]="parameter.value" *ngIf="parameter.type == 'float'" matInput type="number" step=".01">
         <input [(ngModel)]="parameter.value" *ngIf="parameter.type == 'int'" matInput type="number">
     </mat-form-field>
     <mat-checkbox *ngIf="parameter.type == 'bool'" [(ngModel)]="parameter.value">{{label}}</mat-checkbox>
+  </div>
+  <div class="group" *ngIf="parameter.type == 'group' && parameter.children">
+    <app-parameter-editor [title]="label" [columns]="1" [parameters]="parameter.children"></app-parameter-editor>
+  </div>
 </div>

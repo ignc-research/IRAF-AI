@@ -1,6 +1,7 @@
 import { HostListener, Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { URDFLink } from 'libs/urdf-loader/URDFLoader';
 import { ThreeUtils } from 'src/app/helpers/three-utils';
+import { GroupNode } from 'src/app/models/group';
 import { Robot } from 'src/app/models/robot';
 import { SceneNode } from 'src/app/models/scene-node';
 import { SceneObject } from 'src/app/models/scene-object';
@@ -45,11 +46,10 @@ export class UiControlService implements OnDestroy {
   }
 
   findThreeObj = (obj: THREE.Object3D, node: SceneNode): SceneNode | null => {
-    console.log(node.name, node.ref.value.uuid, obj.uuid)
+    console.log(node.name, node.ref.value?.uuid, obj?.uuid)
     if (node.ref.value == obj) {
       return node;
     }
-
 
     const findObj = node.children.find(x => ThreeUtils.isChildOf(obj, x.ref.value));
     if (findObj && findObj.ref.value != obj && findObj.children.length > 0) {
@@ -61,11 +61,11 @@ export class UiControlService implements OnDestroy {
   }
 
   onClick = (object: THREE.Object3D) => {
-    this.selectedNode = this.findThreeObj(object, this.sceneService.rootNode);
+    this.selectedNode = this.findThreeObj(object, this.sceneService.rootNode!);
   }
 
   onMiss = () => {
-    this.selectedNode = this.sceneService.rootNode;
+    this.selectedNode = this.sceneService.rootNode!;
     this.robotPopover = null;
   }
 

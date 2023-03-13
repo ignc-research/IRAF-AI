@@ -1,10 +1,13 @@
 
 <div class="container" style="height: 100%; width: 100%;">
   <app-toolbar-top></app-toolbar-top>
-  <div class="horizontal-container">
+  <div class="horizontal-container" *ngIf="sceneService.rootNode">
     <app-object-inspector></app-object-inspector>
     <app-scene></app-scene>
     <app-tree-view></app-tree-view>
+  </div>
+  <div *ngIf="!sceneService.rootNode">
+    Please select a config or create a new one
   </div>
 </div>
 <app-robot-popover></app-robot-popover>

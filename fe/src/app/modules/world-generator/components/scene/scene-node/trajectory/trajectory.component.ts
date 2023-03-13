@@ -9,7 +9,7 @@ import * as THREE from 'three';
   styleUrls: ['./trajectory.component.scss']
 })
 export class TrajectoryComponent {
-  private material = new THREE.LineBasicMaterial({color: 0x0000ff, linewidth: 20})
+  private material = new THREE.LineBasicMaterial({color: 0x0000ff, linewidth: 1})
   private bufferGeom = new THREE.BufferGeometry();
   private _line = new THREE.Line(this.bufferGeom, this.material);
 

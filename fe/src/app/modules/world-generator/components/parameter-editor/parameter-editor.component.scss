@@ -10,3 +10,10 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+.title {
+  display: flex;
+  padding-left: 8px;
+  justify-content: space-between;
+  align-items: center;
+}

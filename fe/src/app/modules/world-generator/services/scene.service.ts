@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-import { ConfigUtils } from 'src/app/helpers/config-utils';
 import { StringUtils } from 'src/app/helpers/string-utils';
+import { Goal, IGoal } from 'src/app/models/goal';
 import { GroupNode, GroupType } from 'src/app/models/group';
 import { Marker } from 'src/app/models/marker';
 import { IObstacle, Obstacle } from 'src/app/models/obstacle';
-import { ISensor, Robot, Sensor } from 'src/app/models/robot';
+import { IRobot, ISensor, Robot, Sensor } from 'src/app/models/robot';
 import { SceneNode } from 'src/app/models/scene-node';
 import { Trajectory } from 'src/app/models/trajectory';
-
 import * as THREE from 'three';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class SceneService {
-  rootNode: SceneNode;
+  rootNode?: SceneNode;
 
   get obstacleGroup() {
     return this.findRecursive((item: SceneNode) => item instanceof GroupNode && item.type == GroupType.Obstacles)
@@ -25,14 +25,13 @@ export class SceneService {
   }
 
   constructor() {
-    this.rootNode = ConfigUtils.parseConfig();
   }
 
   getLastIndex = (objs: THREE.Object3D[], prefix: string) => (objs.filter(x => x.name.startsWith(prefix))
                                                                   .map(x => +(x.name.split('_').at(-1) ?? 0))
                                                                   .sort((a, b) => b - a)[0] ?? 0)
 
-  findRecursive(condition: (item: SceneNode) => boolean, item: SceneNode=this.rootNode): SceneNode | null {
+  findRecursive(condition: (item: SceneNode) => boolean, item: SceneNode=this.rootNode!): SceneNode | null {
     if (condition(item)) {
       return item;
     }
@@ -45,8 +44,8 @@ export class SceneService {
     this.obstacleGroup?.addChild(new Obstacle(obstacle));
   }
 
-  async addRobot(urdfPath: string) {
-    this.robotGroup?.addChild(new Robot({ type: urdfPath, name: StringUtils.getFileNameWithoutExt(urdfPath) }));
+  async addRobot(robot: IRobot) {
+    this.robotGroup?.addChild(new Robot(robot));
   }
 
   addTrajectoryPoint(object: SceneNode, name: string) {
@@ -65,9 +64,13 @@ export class SceneService {
     robot.addChild(sensor);
   }
 
+  addGoal(robot: Robot, goalDef: IGoal) {
+    robot.children.filter(x => x instanceof Goal).forEach(x => robot.removeChild(x));
+    robot.addChild(new Goal(goalDef));
+  }
 
   invalidateRefs() {
-    this.rootNode.invalidateRef();
+    this.rootNode?.invalidateRef();
   }
 
   // For refreshing a scene object, currently only used for obstacles with dynamic urdfs

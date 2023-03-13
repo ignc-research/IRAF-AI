@@ -5,13 +5,13 @@
     <ngt-axes-helper [scale]="1"></ngt-axes-helper>
 
     <ngt-group (click)="objectClick($event)" (pointermissed)="objectMiss($event)" (pointerover)="pointerOver($event)" (pointerout)="pointerOut($event)" >
-        <app-scene-node [sceneNode]="sceneService.rootNode"></app-scene-node>
+        <app-scene-node [sceneNode]="sceneService.rootNode!"></app-scene-node>
         <app-transform-controls [controlledObject]="uiService.selectedObject"></app-transform-controls>
     </ngt-group>
   
     <ngt-mesh receiveShadow>
         <ngt-plane-geometry [args]="[1000, 1000]"></ngt-plane-geometry>
-        <ngt-mesh-phong-material color="#171717" [transparent]="true" [opacity]="0.4"></ngt-mesh-phong-material>
+        <ngt-mesh-phong-material color="#333"></ngt-mesh-phong-material>
     </ngt-mesh>
 
     <ngt-soba-orbit-controls [makeDefault]="true" [maxPolarAngle]="minPolarAngle" [enableZoom]="uiService.enableZoom"></ngt-soba-orbit-controls>

@@ -1,9 +1,6 @@
 <mat-card *ngIf="node && node.params">
-    <mat-card-header>
-      <mat-card-subtitle>Properties</mat-card-subtitle>
-    </mat-card-header>
     <div class="section">
-        <app-parameter-editor [parameters]="node.params" [columns]="1"></app-parameter-editor>
+        <app-parameter-editor title="Parameters" [parameters]="node.params" [columns]="1"></app-parameter-editor>
     </div>
     <div class="section">
       <app-trajectory-editor [sceneNode]="node"></app-trajectory-editor>

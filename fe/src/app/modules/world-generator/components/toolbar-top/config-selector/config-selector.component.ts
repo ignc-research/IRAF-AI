@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { ConfigUtils } from 'src/app/helpers/config-utils';
+
+import { ConfigService } from '../../../services/config.service';
+import { SceneService } from '../../../services/scene.service';
 
 @Component({
   selector: 'app-config-selector',
@@ -8,6 +10,14 @@ import { ConfigUtils } from 'src/app/helpers/config-utils';
 })
 export class ConfigSelectorComponent {
 
+  constructor(private configService: ConfigService) {
+    
+  }
+
+  createNewConfig() {
+    this.configService.parseConfig();
+  }
+
   onFileSelected(event: Event) {
     if (event.target instanceof HTMLInputElement) {
         const file = event.target.files![0];
@@ -15,7 +25,7 @@ export class ConfigSelectorComponent {
         reader.onload = async () => {
             if (typeof reader.result === 'string') {
                 let fileContent = reader.result;
-                ConfigUtils.parseConfig(fileContent);
+                this.configService.parseConfig(fileContent);
             }
         };
         reader.readAsText(file);

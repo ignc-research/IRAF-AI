@@ -1,10 +1,10 @@
 <mat-form-field appearance="fill">
     <mat-label>Robots</mat-label>
     <mat-select [(ngModel)]="selectedRobot">
-      <mat-option *ngFor="let robot of generatorApi.robotUrdfs" [value]="robot">{{getFileName(robot)}}</mat-option>
+      <mat-option *ngFor="let robot of generatorApi.robots" [value]="robot">{{robot.type}}</mat-option>
     </mat-select>
 </mat-form-field>
-<app-urdf-preview *ngIf="selectedRobot" [urdfPath]="selectedRobot"></app-urdf-preview>
+<!-- <app-urdf-preview *ngIf="selectedRobot" [urdfPath]="selectedRobot.urdf"></app-urdf-preview> -->
 <button *ngIf="selectedRobot" mat-icon-button aria-label="Add" (click)="addRobot()">
   <mat-icon>add</mat-icon>
 </button>

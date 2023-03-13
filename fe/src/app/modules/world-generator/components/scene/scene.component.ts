@@ -30,11 +30,12 @@ export class SceneComponent {
 
   constructor(public sceneService: SceneService, private zone: NgZone, public uiService: UiControlService) {
     this.uiService.onMiss();
+    
     this.sceneService.invalidateRefs();
   }
 
   objectClick(event: any) {
-    this.uiService.onClick(event.intersections[0]?.object);
+    this.uiService.onClick(event.intersections.filter((x: any) => !(x.object instanceof THREE.Line))[0]?.object);
   }
 
   objectMiss(event: any) {
@@ -47,20 +48,20 @@ export class SceneComponent {
     if(!intersection){
       return;
     };
+    // ToDo: causing visual artifacts
+    // this.hoverObject = ev.object;
 
-    this.hoverObject = ev.object;
-
-    if ( (this.hoverObject instanceof THREE.Mesh && this.hoverObject.material instanceof MeshPhongMaterial) ) {
-      try {
-        this.colorSave = (<any> this.hoverObject).material.color.clone();
-        (<any> this.hoverObject).material.color.r += 0.1;
-        (<any> this.hoverObject).material.color.g += 0.1;
-        (<any> this.hoverObject).material.color.b += 0.1;
-      } catch (error) {
-      }
+    // if ( (this.hoverObject instanceof THREE.Mesh && this.hoverObject.material instanceof MeshPhongMaterial) ) {
+    //   try {
+    //     this.colorSave = (<any> this.hoverObject).material.color.clone();
+    //     (<any> this.hoverObject).material.color.r += 0.1;
+    //     (<any> this.hoverObject).material.color.g += 0.1;
+    //     (<any> this.hoverObject).material.color.b += 0.1;
+    //   } catch (error) {
+    //   }
 
       
-    }
+    // }
   }
 
   pointerOut(ev: NgtEvent<PointerEvent>) {

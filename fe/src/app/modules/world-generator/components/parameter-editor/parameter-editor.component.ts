@@ -11,7 +11,13 @@ export class ParameterEditorComponent {
   parameters!: Parameters;
 
   @Input()
+  title?: string;
+
+  @Input()
   columns: number = 4;
+
+  @Input()
+  expanded = true;
 
   get width() {
     return (1.0 / this.columns) * 100 + '%';
