@@ -14,7 +14,7 @@ export class BarPlotComponent implements OnInit, OnDestroy {
   private titleSub: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   @Input()
-  experiments: Experiment[];
+  experiments: string[] = [];
   //experiments: string = '';
   plot: any = {
     layout: {

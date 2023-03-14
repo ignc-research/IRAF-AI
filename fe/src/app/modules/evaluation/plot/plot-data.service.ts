@@ -255,13 +255,13 @@ export class PlotDataService {
 
   }
     
-  mapRemoteData = (data: d3.DSVRowArray<string>) => {
-    return {
-      x: data.map(x => x[data.columns[1]] as any),
-      y: data.map(x => x[data.columns[2]] as any),
-      z: data.map(x => x[data.columns[3]] as any)
-    }
-  }
+  // mapRemoteData = (data: d3.DSVRowArray<string>) => {
+  //   return {
+  //     x: data.map(x => x[data.columns[1]] as any),
+  //     y: data.map(x => x[data.columns[2]] as any),
+  //     z: data.map(x => x[data.columns[3]] as any)
+  //   }
+  // }
 
   loadExperiment(file: string): Promise<Experiment> {
     return new Promise((resolve, reject) => {
@@ -330,7 +330,6 @@ export class PlotDataService {
             experimentData.reward_ur5_1.push(+row['reward_ur5_1']! || 0);
             experimentData.distance_ur5_1.push(+row['distance_ur5_1']! || 0);
             experimentData.distance_threshold_ur5_1.push(+row['distance_threshold_ur5_1']! || 0);
-            experimentData.avgTrajectory = (this.getAverageXyz(this.mapRemoteData(experimentData.distance_ur5_1)));
           });
       
           experiment.data.push(experimentData);
@@ -383,22 +382,22 @@ export class PlotDataService {
 //   return newExperiment;
 // }
 
-  getAvgTrajectory(trajectories: Data[]) {
-    const avgTrajectory: any = {
-      x: [],
-      y: [],
-      z: []
-    };
-    for (let i = 0; i < trajectories[0].x.length; i++) {
-      const x = trajectories.map(x => x.x[i]);
-      const y = trajectories.map(x => x.y[i]);
-      const z = trajectories.map(x => x.z[i]);
-      avgTrajectory.x.push(this.getAvg(x));
-      avgTrajectory.y.push(this.getAvg(y));
-      avgTrajectory.z.push(this.getAvg(z));
-    }
-    return avgTrajectory;
-  }
+  // getAvgTrajectory(trajectories: Data[]) {
+  //   const avgTrajectory: any = {
+  //     x: [],
+  //     y: [],
+  //     z: []
+  //   };
+  //   for (let i = 0; i < trajectories[0].x.length; i++) {
+  //     const x = trajectories.map(x => x.x[i]);
+  //     const y = trajectories.map(x => x.y[i]);
+  //     const z = trajectories.map(x => x.z[i]);
+  //     avgTrajectory.x.push(this.getAvg(x));
+  //     avgTrajectory.y.push(this.getAvg(y));
+  //     avgTrajectory.z.push(this.getAvg(z));
+  //   }
+  //   return avgTrajectory;
+  // }
 
 
   getAvgPathLength(trajectories: Data[]) {

@@ -45,7 +45,7 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
   async loadTrajectoryPlot() {
     this.plot.data = [];
 
-    const experiment = await this.plotService.getExperiment();
+    const experiment = await this.plotService.loadExperiment(this.experimentName);
     this.titleSub.next(this.experimentName);
     experiment.data.forEach(robotData => {
       robotData.trajectories.forEach((trj, i) => {
