@@ -1,1 +1,41 @@
-<h1>TEST bla</h1>
+<!--
+<plotly-plot [data]="graph.data" [layout]="graph.layout"
+             [useResizeHandler]="true" [style]="{position: 'relative', width: '20%', height: '20%'}">
+</plotly-plot>`
+
+<plotly-plot [data]="graph.data" [layout]="graph.layout"
+               [useResizeHandler]="true" [style]="{position: 'relative',width: '20%', height: '20%'}">
+</plotly-plot>`-->
+
+<!-- 3D Beipsiel-->
+<!--
+<plotly-plot [data]="graph3d.data" [layout]="graph3d.layout"
+             [useResizeHandler]="true" [style]="{position: 'relative', width: '35%', height: '35%'}">
+</plotly-plot>`
+-->
+<div class="plots">
+  <app-trajectory-plot [experimentName]="'lowerleft'"></app-trajectory-plot>
+  <app-bar-plot [experiments]="['lowerleft', 'lowerright']"></app-bar-plot>
+
+
+</div>
+
+<!--<app-plot [types]="['RRT', 'DRL', 'prm','NC-RRT']" foldername="lowerright" ></app-plot>
+<app-plot [types]="['RRT', 'DRL', 'prm','NC-RRT']" foldername="upperleft" ></app-plot>
+<app-plot [types]="['RRT', 'DRL', 'prm','NC-RRT']" foldername="upperright" ></app-plot>-->
+
+<!--  <p [ngStyle]="{'color': red}">Dieser Text hat eine dynamische Farbe</p>-->
+
+<!-- <button (click)="changeColor('blue')">blue</button>
+<button (click)="changeColor('red')">red</button>
+<button (click)="changeColor('black')">black</button>
+<button (click)="changeColor('lightblue')">lightblue</button> -->
+<!--
+
+<div *ngFor="files as file" >
+  <plotly-plot [data]="graph.data" [layout]="graph.layout"
+               [useResizeHandler]="true" [style]="{position: 'relative', width: '40%', height: '40%'}">
+  </plotly-plot>`
+</div>
+
+-->

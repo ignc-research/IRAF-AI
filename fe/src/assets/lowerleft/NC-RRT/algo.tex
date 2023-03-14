@@ -1,0 +1,68 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Welcome to Overleaf --- just edit your LaTeX on the left,
+% and we'll compile it for you on the right. If you open the
+% 'Share' menu, you can invite other users to edit at the same
+% time. See www.overleaf.com/learn for more info. Enjoy!
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+\begin{document}
+
+Algorithm \ref{alg:birrt} presents a modified version of the Bidirectional RRT algorithm (Bi-RRT, also known as RRT-ConCon). Bi-RRT modifies the standard RRT algorithm by adding another RRT that grows from the goal configuration with both trees being expanded at the same rate. After every attempt to connect a new configuration to the current tree the algorithm will try to also connect that configuration to other tree. Once this succeeds, a path and therefore a solution is found. The version presented here introduces a few improvements:
+\begin{itemize}
+    \item When sampling, a goal bias is used such that a certain share of connect attempts will be made not towards a randomly sampled configuration but towards the root of the other tree.
+    \item Instead of giving each tree the same amount of expansion attempts, the algorithm keeps track of the ratio between (immediate) collisions and total connection attempts (variables $colA/B, tA/B$ in algorithm \ref{alg:birrt}). The tree that has a higher ratio is the one that will be swapped in or be allowed to stay. This allows the tree with a more complex environment (as indicated by more collisions in its vicinity) to accumulate more computation time.
+    \item Following the improvements described by Wang et al. (2020, \cite{first}), the algorithm uses a radius (variables $rA/B$) to constrict the range for random samples. The radius is initially set to the distance between the start and goal configuration. If the tree successfully connects to a new configuration, the distance between it and the other tree's root is used instead. If a connect attempt results in immediate collision, the radius is increased by a multiple of the step size $\epsilon$.
+    \item Implementing another suggestion by Wang et al., the algorithm keeps track of a so called control variable (variables $cA/B$). Each new configuration in the tree receives a tracking value of 0, which is incremented each time a new configuration is added in the branch below it. This effectively causes nodes within the tree to have high tracking values whereas nodes on the boundary have low values. When a tree tries to connect a newly sampled configuration, it will only consider nodes that have a tracking value lower than the control value, which is initially set to 1. If the tree collides immediately in a connect attempt, that value is increased. If it succeeds, the value is reset to 1.
+\end{itemize}
+
+\begin{algorithm}
+\caption{\texttt{Bi-RRTcon-mod}}\label{alg:birrt}
+\begin{algorithmic}
+\Require $q_{\textit{start}} , q_{\textit{goal}}, max, goal\_bias$, \epsilon\\ \\
+\State $T_A, T_B$ empty RRTs
+\State initialize $T_A$ with $q_{\textit{start}}$, $T_B$ with $q_{\textit{goal}}$
+\State $colA, tA, colB, tB \gets 0$
+\State $cA, cB \gets 1$
+\State $rA \gets$ Cartesian distance between $q_{\textit{start}}$ and $q_{\textit{goal}}$
+\State $rB \gets rA$
+\State $it \gets 0$
+\While{$it < max$}
+\If{$\texttt{random()} > goal\_bias$}
+    \Do
+        \State $q_{\textit{sample}} \gets \texttt{sample()}$
+    \doWhile{Cartesian distance between $q_{\textit{sample}}$ and $T_B.root > rA$}
+\Else
+    \State $q_{\textit{sample}} \gets T_B.root$
+\EndIf
+\State \texttt{connect}($q_{\textit{sample}}$, $T_A$, $\epsilon$, $cA$)
+\State $tA \gets tA + 1$
+\If{\texttt{connect} hit an obstacle within one $\epsilon$}
+    \State $rA \gets rA + \epsilon \cdot 10$
+    \State $colA \gets colA + 1$
+    \State $cA \gets 3$
+\ElsIf{\texttt{connect} connected or went at least one $\epsilon$ towards $q_{\textit{sample}}$}
+    \State $rA \gets$ Cartesian distance between $q_{\textit{connected}}$ and $T_B.root$
+    \State $cA \gets 1$
+    \State \texttt{connect}($q_{\textit{connected}}$, $T_B$, $\epsilon$, $cB$)
+    \If{\texttt{connect} connected $q_{\textit{connected}}$}
+        \State \Return path from $T_A.root$ to $T_B.root$
+    \EndIf
+\EndIf
+\If{$\frac{colB}{tB} > \frac{colA}{tA}$}
+    \State swap every variable with index $A$ with its equivalent with index $B$
+\EndIf
+\State $it \gets it + 1$
+\EndWhile
+\State \Return None
+\end{algorithmic}
+\end{algorithm}
+
+\bibliographystyle{plain}
+\bibliography{citations}
+
+\end{document}

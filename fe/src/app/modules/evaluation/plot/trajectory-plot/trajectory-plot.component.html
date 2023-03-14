@@ -1,0 +1,55 @@
+<div class="plot-container">
+  <!-- 3D DRL-->
+  <h1 *ngIf="!plot">
+    Loading...
+  </h1>
+
+  <plotly-plot *ngIf="plot"
+               [data]="plot.data"
+               [layout]="plot.layout"
+               [useResizeHandler]="true"
+               [style]="{ position: 'relative', width: '100%', height: '100%'}">
+  </plotly-plot>
+
+
+
+  <div class="legend">
+    <hr class="my-hr">
+    <div class="titleChange">
+
+      <select [(ngModel)]="selectedTitleSub" class="titleChange-inpox">
+
+        <option *ngFor="let sub of plotUiService.titleSubjects; let i = index" [ngValue]="sub">
+          Plot {{i + 1}}
+        </option>
+      </select>
+      <input [value]="selectedTitleSub?.value" (change)="titleChange($event)"/>
+    <!--  https://plotly.com/javascript/radar-chart/ -->
+
+    </div>
+    <div class="legend-item" *ngFor="let category of plotService.categories">
+      <input type="checkbox" checked (change)="toggleAverage($event.target, category.name)" />
+      <select (change)="changeLineType($event.target, category.name)">
+        <option value="none">
+          None
+        </option>
+        <option value="solid">
+          Solid
+        </option>
+        <option value="dashdot" selected>
+          Dash-Dot
+        </option>
+        <option value="dash">
+          Dash
+        </option>
+        <option value="dot">
+          Dot
+        </option>
+      </select>
+
+      <app-color-picker [category]="category"></app-color-picker>
+      <span>{{category.name}}</span>
+      <!--  <input type="color" (change)="changeColor($event.target, 'avg_' + type)" /> -->
+    </div>
+  </div>
+</div>
