@@ -1,4 +1,5 @@
 import { URDFLink } from "libs/urdf-loader/URDFLoader";
+import * as THREE from "three";
 import { Goal } from "./goal";
 import { Marker } from "./marker";
 import { Parameters } from "./parameters";
@@ -32,9 +33,11 @@ export class Sensor extends SceneObject implements ISensor {
 
     constructor(obj: ISensor) {
         super(obj);
-
+        
         this.type = obj.type;
         this.link = obj.link;
+        this.scale = new THREE.Vector3(.1,.1,.1);
+        this.position = obj.position ?? new THREE.Vector3(0,0,1);
     }
 }
 

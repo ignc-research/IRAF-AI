@@ -97,6 +97,11 @@ export class ConfigService {
       if (sensorDef && sensorDef.params) {
         sensorDef.params = this.getParams(sensorDef.params, sensorNode.config);
         sensorDef.name = sensorNode.type;
+        sensorDef.link = sensorNode.config.link;
+        sensorDef.position = this.getThreeVec3(sensorNode.config.position);
+        sensorDef.rotation = this.getThreeEuler(
+          sensorNode.config.rotation
+        );
 
         sensors.push(new Sensor(sensorDef));
       } else {
@@ -171,13 +176,25 @@ export class ConfigService {
     return trajectories;
   }
 
+  getFilename = (path: string) => path.split(".")[0] ?? ''; 
+
   parseObstacles(configObstacles: ConfigObstacleNode[]) {
     const obstacles: Obstacle[] = [];
 
     configObstacles.forEach((obstacleNode) => {
-      const obstacleDef = structuredClone(
-        this.apiService.obstacles.find((x) => x.type == obstacleNode.type)
-      );
+      let obstacleDef = structuredClone(this.apiService.obstacles.find((x) => x.type == obstacleNode.type));
+      if (!obstacleDef) {
+        // Find urdf obstacle by searching urdfs
+        this.apiService.obstacles.forEach(obstacle => {
+          const findUrdf = obstacle.urdfs?.find(x => this.getFilename(x) == obstacleNode.type);
+          if (findUrdf) {
+            obstacleDef = structuredClone(obstacle);
+            obstacleDef.urdf = findUrdf;
+            console.log(obstacleDef, obstacleNode)
+          }
+        });
+      }
+    
       if (obstacleDef && obstacleDef.params) {
         obstacleDef.params = this.getParams(
           obstacleDef.params,
@@ -187,7 +204,7 @@ export class ConfigService {
         obstacleDef.position = this.getThreeVec3(obstacleNode.position);
         obstacleDef.rotation = this.getThreeEuler(obstacleNode.rotation);
         const obstacle = new Obstacle(obstacleDef);
-        this.parseTrajectories(obstacleDef.params, obstacleNode.params).forEach(
+        this.parseTrajectories(obstacleDef.params, obstacleNode.params ?? {}).forEach(
           (x) => obstacle.addChild(x)
         );
         obstacles.push(obstacle);

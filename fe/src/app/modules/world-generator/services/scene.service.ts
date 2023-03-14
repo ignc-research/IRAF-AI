@@ -59,8 +59,6 @@ export class SceneService {
 
   addSensor(robot: Robot, sensorDef: ISensor) {
     const sensor = new Sensor({ ...sensorDef, name: sensorDef.type });
-    sensor.scale.set(.1, .1, .1);
-    sensor.position.set(0, 0, .2);
     robot.addChild(sensor);
   }
 
