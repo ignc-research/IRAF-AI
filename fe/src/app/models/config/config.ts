@@ -1,4 +1,4 @@
-import { ConfigEnvNode } from './config-env-node';
+import { ConfigEnvNode } from "./config-env-node";
 
 export type Config = {
   env: ConfigEnvNode;

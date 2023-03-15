@@ -29,6 +29,11 @@ export class ConfigSelectorComponent {
             }
         };
         reader.readAsText(file);
+        event.target.value = null!;
     }
+  }
+
+  exportConfig() {
+    this.configService.exportConfig();
   }
 }
