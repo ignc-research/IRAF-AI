@@ -10,7 +10,7 @@ import { SceneService } from '../../../services/scene.service';
 })
 export class ConfigSelectorComponent {
 
-  constructor(private configService: ConfigService) {
+  constructor(private configService: ConfigService, public sceneService: SceneService) {
     
   }
 
