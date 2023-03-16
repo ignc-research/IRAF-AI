@@ -6,16 +6,18 @@
           <app-trajectory-plot
             *ngIf="plot.type === 'trajectory'"
             [experimentName]="firstExperiment"
-          ></app-trajectory-plot>
+            [dataColumn]="plot.dataColumn">
+          </app-trajectory-plot>
           <app-bar-plot
             *ngIf="plot.type === 'bar'"
             [experiments]="[firstExperiment]"
+            [dataColumn]="plot.dataColumn"
           ></app-bar-plot>
           <app-line-plot
             *ngIf="plot.type === 'line'"
             [experimentName]="firstExperiment"
+            [dataColumn]="plot.dataColumn"
           ></app-line-plot>
-
           <button class="close-btn" (click)="removePlot(i)">x</button>
         </div>
       </ng-container>
@@ -29,7 +31,11 @@
       <option value="">-- Select a plot --</option>
       <option value="trajectory">Trajectory Plot</option>
       <option value="bar">Bar Plot</option>
-      <option value="line">Line Plot</option> <!-- Add this line -->
+      <option value="line">Line Plot</option>
+    </select>
+    <select [(ngModel)]="selectedDataColumn">
+      <option value="">-- Select a data column --</option>
+      <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
     </select>
     <button (click)="addPlot()">Add Plot</button>
   </div>

@@ -60,7 +60,11 @@ export class PlotDataService {
     return data;
   }
   
-  
+  getDataColumns(): string[] {
+    return this.experiments.length > 0
+      ? Object.keys(this.experiments[0].data[0]?.data ?? {})
+      : [];
+  }
 
   processData(preprocessedData: any[]): void {
     const experiment: Experiment = {

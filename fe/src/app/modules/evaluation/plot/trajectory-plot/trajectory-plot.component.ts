@@ -18,6 +18,9 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
   @Input()
   experimentName: string = '';
 
+  @Input() dataColumn: string = '';
+
+
   plot: any = {
     layout: {
       autosize: true,
@@ -50,51 +53,70 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
     experiment.data.forEach((episodeData) => {
       if (!episodeData) return;
   
+      const data = episodeData.data[this.dataColumn];
+  
+      if (!data) return;
+  
+      const trace = this.createTrace(data, episodeData.episode);
+  
+      if (trace) {
+        traces.push(trace);
+      }
+    });
+  
+    this.plot.data = traces;
+  }
+
+  createTrace(data: any, episode: number): any {
+    // You can extend this function to handle different types of data.
+    // For example, if the data is an array of arrays with three elements (3D positions),
+    // create a scatter3d trace.
+
+    if (Array.isArray(data) && data.length > 0 && Array.isArray(data[0]) && data[0].length === 3) {
       const x: number[] = [];
       const y: number[] = [];
       const z: number[] = [];
-  
-      let linkPositions;
-  
-      for (const key in episodeData.data) {
-        const data = episodeData.data[key];
-        if (
-          Array.isArray(data) &&
-          data.length > 0 &&
-          Array.isArray(data[0]) &&
-          data[0].length === 3
-        ) {
-          linkPositions = data;
-          break;
-        }
-      }
-  
-      if (!linkPositions) return;
-  
-      linkPositions.forEach((position: number[] | number, index) => {
+
+      data.forEach((position: number[] | number, index) => {
         if (Array.isArray(position) && position.length === 3) {
           x.push(position[0]);
           y.push(position[1]);
           z.push(position[2]);
         }
       });
-    
-      const trace = {
+
+      return {
         x,
         y,
         z,
         mode: 'lines',
         type: 'scatter3d',
         line: {
-          color: this.colorService.getColor(episodeData.episode),
+          color: this.colorService.getColor(episode),
         },
       };
-  
-      traces.push(trace);
-    });
-  
-    this.plot.data = traces;
+    }
+    // Handling 1D data (array of numbers)
+    if (Array.isArray(data) && data.length > 0 && typeof data[0] === "number") {
+      const x: number[] = [];
+      const y: number[] = [];
+
+      data.forEach((value: number, index: number) => {
+        x.push(index);
+        y.push(value);
+      });
+
+      return {
+        x,
+        y,
+        mode: 'lines',
+        type: 'scatter',
+        line: {
+          color: this.colorService.getColor(episode),
+        },
+      };
+    }
+
+    return null;
   }
-  
-  
 }

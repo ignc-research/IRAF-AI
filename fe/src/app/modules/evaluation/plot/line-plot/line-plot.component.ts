@@ -12,6 +12,8 @@ export class LinePlotComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   @Input() experimentName: string = ''; // Add a default value here
+  @Input() dataColumn: string = '';
+
 
   plot: any = {
     layout: {},
@@ -76,7 +78,7 @@ export class LinePlotComponent implements OnInit, OnDestroy {
     const trace: Data = {
       x: Object.keys(avgData).map((episode) => `Episode ${episode}`),
       y: Object.values(avgData),
-      type: 'scatter',
+      type: 'scatter3d',
       mode: 'lines+markers',
       marker: { color: 'red' },
     };

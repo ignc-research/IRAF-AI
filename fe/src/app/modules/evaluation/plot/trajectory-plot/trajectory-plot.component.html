@@ -1,14 +1,7 @@
-<div class="plot-container">
-  <!-- 3D DRL-->
-  <h1 *ngIf="!plot">
-    Loading...
-  </h1>
-
-  <plotly-plot *ngIf="plot"
-               [data]="plot.data"
-               [layout]="plot.layout"
-               [useResizeHandler]="true"
-               [style]="{ position: 'relative', width: '100%', height: '100%'}"
-               class="plotly-plot-container">
-  </plotly-plot>
-</div>
+<plotly-plot
+  [data]="plot.data"
+  [layout]="plot.layout"
+  [config]="{ displayModeBar: false }"
+  [useResizeHandler]="true"
+  [style]="{ width: '100%', height: '100%' }"
+></plotly-plot>

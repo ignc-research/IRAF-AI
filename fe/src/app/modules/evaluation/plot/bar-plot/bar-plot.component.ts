@@ -24,6 +24,9 @@ export class BarPlotComponent implements OnInit, OnDestroy {
     data: []
   }
 
+  @Input() dataColumn: string = '';
+
+
   constructor(private plotDataService: PlotDataService, private colorService: ColorService) {}
 
   ngOnInit(): void {
