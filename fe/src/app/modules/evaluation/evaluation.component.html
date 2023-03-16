@@ -1,41 +1,36 @@
-<!--
-<plotly-plot [data]="graph.data" [layout]="graph.layout"
-             [useResizeHandler]="true" [style]="{position: 'relative', width: '20%', height: '20%'}">
-</plotly-plot>`
+<div class="container">
+  <div class="plots">
+    <ng-container *ngIf="firstExperiment; else noExperiments">
+      <ng-container *ngFor="let plot of addedPlots; let i = index">
+        <div class="plot-wrapper">
+          <app-trajectory-plot
+            *ngIf="plot.type === 'trajectory'"
+            [experimentName]="firstExperiment"
+          ></app-trajectory-plot>
+          <app-bar-plot
+            *ngIf="plot.type === 'bar'"
+            [experiments]="[firstExperiment]"
+          ></app-bar-plot>
+          <app-line-plot
+            *ngIf="plot.type === 'line'"
+            [experimentName]="firstExperiment"
+          ></app-line-plot>
 
-<plotly-plot [data]="graph.data" [layout]="graph.layout"
-               [useResizeHandler]="true" [style]="{position: 'relative',width: '20%', height: '20%'}">
-</plotly-plot>`-->
-
-<!-- 3D Beipsiel-->
-<!--
-<plotly-plot [data]="graph3d.data" [layout]="graph3d.layout"
-             [useResizeHandler]="true" [style]="{position: 'relative', width: '35%', height: '35%'}">
-</plotly-plot>`
--->
-<div class="plots">
-  <app-trajectory-plot [experimentName]="'lowerleft'"></app-trajectory-plot>
-  <app-bar-plot [experiments]="['lowerleft', 'lowerright']"></app-bar-plot>
-
-
+          <button class="close-btn" (click)="removePlot(i)">x</button>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-template #noExperiments>
+      <p>No experiments available.</p>
+    </ng-template>
+  </div>
+  <div class="plot-controls">
+    <select [(ngModel)]="selectedPlot">
+      <option value="">-- Select a plot --</option>
+      <option value="trajectory">Trajectory Plot</option>
+      <option value="bar">Bar Plot</option>
+      <option value="line">Line Plot</option> <!-- Add this line -->
+    </select>
+    <button (click)="addPlot()">Add Plot</button>
+  </div>
 </div>
-
-<!--<app-plot [types]="['RRT', 'DRL', 'prm','NC-RRT']" foldername="lowerright" ></app-plot>
-<app-plot [types]="['RRT', 'DRL', 'prm','NC-RRT']" foldername="upperleft" ></app-plot>
-<app-plot [types]="['RRT', 'DRL', 'prm','NC-RRT']" foldername="upperright" ></app-plot>-->
-
-<!--  <p [ngStyle]="{'color': red}">Dieser Text hat eine dynamische Farbe</p>-->
-
-<!-- <button (click)="changeColor('blue')">blue</button>
-<button (click)="changeColor('red')">red</button>
-<button (click)="changeColor('black')">black</button>
-<button (click)="changeColor('lightblue')">lightblue</button> -->
-<!--
-
-<div *ngFor="files as file" >
-  <plotly-plot [data]="graph.data" [layout]="graph.layout"
-               [useResizeHandler]="true" [style]="{position: 'relative', width: '40%', height: '40%'}">
-  </plotly-plot>`
-</div>
-
--->

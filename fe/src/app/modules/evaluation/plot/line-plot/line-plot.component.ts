@@ -1,42 +1,37 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { PlotDataService, Experiment } from '../plot-data.service';
-import { ColorService } from '../color.service';
-
+import { Data, Layout, Config } from 'plotly.js';
 
 @Component({
-  selector: 'app-bar-plot',
-  templateUrl: './bar-plot.component.html',
-  styleUrls: ['./bar-plot.component.scss']
+  selector: 'app-line-plot',
+  templateUrl: './line-plot.component.html',
+  styleUrls: ['./line-plot.component.scss'],
 })
-export class BarPlotComponent implements OnInit, OnDestroy {
+export class LinePlotComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
-  private titleSub: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  @Input()
-  experiments: string[] = [];
+  @Input() experimentName: string = ''; // Add a default value here
+
   plot: any = {
-    layout: {
-      autosize: true,
-      title: '',
-      showlegend: false
-    },
-    data: []
-  }
+    layout: {},
+    data: [],
+    config: {},
+  };
 
-  constructor(private plotDataService: PlotDataService, private colorService: ColorService) {}
+  constructor(private plotDataService: PlotDataService) {}
 
   ngOnInit(): void {
-    this.createBarPlot();
+    this.createLinePlot();
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
+    this.subscriptions.forEach((x) => x.unsubscribe());
   }
 
-  createBarPlot(): void {
+  createLinePlot(): void {
     const experiment = this.plotDataService.experiments.find(
-      (exp) => this.experiments.includes(exp.name)
+      (exp) => exp.name === this.experimentName
     );
 
     if (!experiment) return;
@@ -78,13 +73,12 @@ export class BarPlotComponent implements OnInit, OnDestroy {
       avgData[episodeData.episode] = avgDist;
     });
 
-    const trace = {
+    const trace: Data = {
       x: Object.keys(avgData).map((episode) => `Episode ${episode}`),
       y: Object.values(avgData),
-      type: 'bar',
-      marker: {
-        color: Object.keys(avgData).map((episode) => this.colorService.getColor(parseInt(episode))),
-      },
+      type: 'scatter',
+      mode: 'lines+markers',
+      marker: { color: 'red' },
     };
 
     this.plot.data = [trace];

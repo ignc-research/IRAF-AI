@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import {Data} from "plotly.js-dist-min";
 import * as d3 from "d3";
 import {BehaviorSubject, Subject} from "rxjs";
@@ -8,6 +8,8 @@ import {BehaviorSubject, Subject} from "rxjs";
 })
 export class PlotDataService {
 
+  onDataReady: EventEmitter<void> = new EventEmitter();
+  
   experiments: Experiment[] = [];
 
   constructor() {
@@ -20,9 +22,16 @@ export class PlotDataService {
       // Preprocess and process the loaded data
       const preprocessedData = this.preprocessData(parsedData);
       this.processData(preprocessedData);
-      
+
       console.log("Experiments:", this.experiments);
+
+      // Add this line to emit the event when data is ready
+      this.onDataReady.emit();
     });
+  }
+
+  getExperimentNames(): string[] {
+    return this.experiments.map((exp) => exp.name);
   }
 
   preprocessData(parsedData: d3.DSVRowArray<string>): any[] {
@@ -109,7 +118,7 @@ export class PlotDataService {
 }
 
 // Define the necessary types
-type Experiment = {
+export type Experiment = {
   name: string;
   data: ExperimentData[];
   episodes: { [episode: number]: ExperimentData };
