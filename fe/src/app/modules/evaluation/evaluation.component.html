@@ -38,5 +38,8 @@
       <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
     </select>
     <button (click)="addPlot()">Add Plot</button>
+    <!-- Add this button inside the plot-controls div -->
+    <button (click)="openDataTable()">Show Data Table</button>
+
   </div>
 </div>
