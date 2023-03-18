@@ -46,7 +46,7 @@
       <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
     </select>
     <div *ngIf="selectedPlot === 'custom'" class="custom-plot-definition">
-      <label for="customPlotCode">Custom Plot Definition:</label>
+      <label for="customPlotCode">Custom Plot Definition: <a href="https://plotly.com/javascript/" style="text-decoration: none;" target="_blank">Plotly Example Plots</a></label>
       <textarea [(ngModel)]="customPlotCode" id="customPlotCode" rows="4" cols="50"></textarea>
     </div>
     <button (click)="addPlot()">Add Plot</button>

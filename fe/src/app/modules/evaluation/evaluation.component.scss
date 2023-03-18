@@ -2,21 +2,24 @@
   display: flex;
   height: 100%;
   justify-content: space-between;
-  padding-right: 2%; // Add this line
   box-sizing: border-box; // Add this line
 }
 
 
 .plots {
   flex: 1;
-  width: 70%; // Add this line
-  max-width: 70%;
+  width: 80%;
+  max-width: 90%;
+  height: 70vh;
   padding: 1rem;
   box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
 }
 
 .plot-wrapper {
-  display: flex; // Add this line
+  display: inline-block;
   position: relative;
   margin-bottom: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -36,6 +39,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  height: 600px;
 }
 
 select {
@@ -68,8 +72,8 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 15px;
-  right: 0; // Change from -5px to 0
+  top: 50px;
+  right: 10px; // Change from -5px to 0
   background-color: #FFA9A9;
   border: none;
   border-radius: 4px;
@@ -78,14 +82,11 @@ button {
   font-size: 16px;
   color: #ffffff;
   width: 40px;
-  height: 25px;
-  transform: translateX(50%) translateY(-50%);
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  height: 40px;
   z-index: 1; // Change from -1 to 1
 }
 
 .close-btn:hover {
-  transform: translateX(70%) translateY(-50%);
   background-color: #FF5656;
 }
 
@@ -96,6 +97,7 @@ button {
 
 textarea {
   width: 100%;
+  height: 350px;
   resize: vertical; // Allows resizing the textarea vertically
   padding: 0.5rem;
   border-radius: 4px;

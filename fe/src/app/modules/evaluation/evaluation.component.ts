@@ -56,7 +56,7 @@ export class EvaluationComponent implements OnInit {
     if (this.selectedPlot) {
       if (this.selectedPlot === 'custom') {
         console.log('Adding custom plot:', this.selectedDataColumn, this.customPlotCode);
-        this.addedPlots.push({ type: 'custom', dataColumn: "", code: this.customPlotCode });
+        this.addedPlots.push({ type: 'custom', dataColumn: "", code: this.customPlotCode +  " return { data: data, layout: layout };" });
       } else if (this.selectedDataColumn) {
         console.log('Adding plot:', this.selectedDataColumn);
         this.addedPlots.push({ type: this.selectedPlot, dataColumn: this.selectedDataColumn });
@@ -72,15 +72,37 @@ export class EvaluationComponent implements OnInit {
 
   private setDefaultCustomPlotCode(): void {
     this.customPlotCode = `
-      const trace = {
-        x: dataContext['${this.dataColumns[7]}'],
-        y: dataContext['${this.dataColumns[8]}'],
-        mode: 'markers',
-        type: 'line'
+      var data = [
+        {
+          type: "isosurface",
+          x: [0,0,0,0,1,1,1,1],
+          y: [0,1,0,1,0,1,0,1],
+          z: [1,1,0,0,1,1,0,0],
+          value: [1,2,3,4,5,6,7,8],
+          isomin: 2,
+          isomax: 6,
+          colorscale: "Reds"
+        }
+      ];
+      
+      var layout = {
+        margin: {t:0, l:0, b:0},
+        scene: {
+          camera: {
+            eye: {
+              x: 1.88,
+              y: -2.12,
+              z: 0.96
+            }
+          }
+        }
       };
-      return { data: [trace], layout: {} };
+      
     `;
   }
+
+  
+  
 
   openDataTable(): void {
     if (this.firstExperiment) {
