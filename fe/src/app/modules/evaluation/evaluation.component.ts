@@ -64,6 +64,7 @@ export class EvaluationComponent implements OnInit {
     }
   }
   
+  
 
   removePlot(index: number): void {
     this.addedPlots.splice(index, 1);
@@ -96,17 +97,6 @@ export class EvaluationComponent implements OnInit {
         });
       }
     }
-  }
-
-  updateCustomPlotCode(): void {
-    this.addedPlots.forEach((plot, index) => {
-      if (plot.type === 'custom') {
-        this.addedPlots[index] = {
-          ...plot,
-          code: this.customPlotCode,
-        };
-      }
-    });
   }
   
 }
