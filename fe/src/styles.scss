@@ -3,3 +3,38 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+/* Dark mode styles */
+body.dark-mode {
+    background-color: #333;
+    color: #ffffff;
+  }
+  
+  body.dark-mode .plot-controls {
+    background-color: #444;
+  }
+  
+  body.dark-mode select {
+    background-color: #555;
+    color: #ffffff;
+  }
+  
+  body.dark-mode textarea {
+    background-color: #555;
+    color: #ffffff;
+  }
+  
+  body.dark-mode button {
+    background-color: #3a9eff;
+  }
+  
+  body.dark-mode button:hover {
+    background-color: #0073cc;
+  }
+  
+  body.dark-mode .close-btn {
+    background-color: #ff6b6b;
+  }
+  
+  body.dark-mode .close-btn:hover {
+    background-color: #ff3030;
+  }

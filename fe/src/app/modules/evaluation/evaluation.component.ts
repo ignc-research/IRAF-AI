@@ -3,6 +3,8 @@ import { PlotDataService, Experiment } from './plot/plot-data.service';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { DataTableComponent } from './plot/data-table/data-table.component';
+import { Renderer2, RendererFactory2 } from '@angular/core';
+
 
 @Component({
   selector: 'app-evaluation',
@@ -17,9 +19,12 @@ export class EvaluationComponent implements OnInit {
   addedPlots: { type: string; dataColumn: string; code?: string }[] = [];
   private dataReadySubscription: Subscription | undefined;
   customPlotCode: string = '';
+  private renderer?: Renderer2;
 
-  constructor(private plotDataService: PlotDataService, public dialog: MatDialog) {
+
+  constructor(private plotDataService: PlotDataService, public dialog: MatDialog, rendererFactory: RendererFactory2) {
     this.selectedPlot = 'custom';
+    this.renderer = rendererFactory.createRenderer(null, null);
 
   }
 
@@ -101,8 +106,16 @@ export class EvaluationComponent implements OnInit {
     `;
   }
 
-  
-  
+  toggleDarkMode(): void {
+    const body = document.body;
+    if (this.renderer != undefined) {
+      if (body.classList.contains('dark-mode')) {
+        this.renderer.removeClass(body, 'dark-mode');
+      } else {
+        this.renderer.addClass(body, 'dark-mode');
+      }
+    }
+  }
 
   openDataTable(): void {
     if (this.firstExperiment) {
