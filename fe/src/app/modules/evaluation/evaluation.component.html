@@ -18,6 +18,13 @@
             [experimentName]="firstExperiment"
             [dataColumn]="plot.dataColumn"
           ></app-line-plot>
+          <app-custom-plot
+            *ngIf="plot.type === 'custom'"
+            [experimentName]="firstExperiment"
+            [customPlotCode]="plot.code"
+            [elementId]="'custom-plot-' + i">
+          </app-custom-plot>
+
           <button class="close-btn" (click)="removePlot(i)">x</button>
         </div>
       </ng-container>
@@ -32,11 +39,16 @@
       <option value="trajectory">Trajectory Plot</option>
       <option value="bar">Bar Plot</option>
       <option value="line">Line Plot</option>
+      <option value="custom">Custom Plot</option>
     </select>
-    <select [(ngModel)]="selectedDataColumn">
+    <select [(ngModel)]="selectedDataColumn" [disabled]="!selectedPlot || selectedPlot === 'custom'">
       <option value="">-- Select a data column --</option>
       <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
     </select>
+    <div *ngIf="selectedPlot === 'custom'" class="custom-plot-definition">
+      <label for="customPlotCode">Custom Plot Definition:</label>
+      <textarea [(ngModel)]="customPlotCode" id="customPlotCode" rows="4" cols="50" (keyup)="updateCustomPlotCode()"></textarea>
+    </div>
     <button (click)="addPlot()">Add Plot</button>
     <!-- Add this button inside the plot-controls div -->
     <button (click)="openDataTable()">Show Data Table</button>

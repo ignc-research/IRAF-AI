@@ -2,7 +2,7 @@
   display: flex;
   height: 100%;
   justify-content: space-between;
-  padding-right: 5%; // Add this line
+  padding-right: 2%; // Add this line
   box-sizing: border-box; // Add this line
 }
 
@@ -27,7 +27,7 @@
 }
 
 .plot-controls {
-  width: 250px;
+  width: 350px;
   padding: 1rem;
   margin-left: 1rem;
   background-color: #ffffff;
@@ -94,10 +94,18 @@ button {
   z-index: -2;
 }
 
+textarea {
+  width: 100%;
+  resize: vertical; // Allows resizing the textarea vertically
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #c4c4c4;
+  font-size: 12px;
+  background-color: #f8f9fa;
+  box-sizing: border-box; // Ensures the width includes padding and border
+}
 
-
-
-
-
-
-
+.custom-plot-definition {
+  max-width: 100%;
+  box-sizing: border-box;
+}

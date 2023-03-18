@@ -14,16 +14,20 @@ export class EvaluationComponent implements OnInit {
   selectedPlot: string | undefined;
   selectedDataColumn: string = '';
   dataColumns: string[] = [];
-  addedPlots: { type: string; dataColumn: string }[] = [];
+  addedPlots: { type: string; dataColumn: string; code?: string }[] = [];
   private dataReadySubscription: Subscription | undefined;
+  customPlotCode: string = '';
 
-  constructor(private plotDataService: PlotDataService, public dialog: MatDialog) {}
+  constructor(private plotDataService: PlotDataService, public dialog: MatDialog) {
+    this.selectedPlot = 'custom';
+
+  }
 
   ngOnInit(): void {
     this.dataReadySubscription = this.plotDataService.onDataReady.subscribe(() => {
       const experimentNames = this.plotDataService.getExperimentNames();
       this.firstExperiment = experimentNames.length > 0 ? experimentNames[0] : undefined;
-
+  
       if (this.firstExperiment) {
         const experiment: Experiment | undefined = this.plotDataService.experiments.find(
           (exp) => exp.name === this.firstExperiment
@@ -32,11 +36,15 @@ export class EvaluationComponent implements OnInit {
           const episodeData = experiment.data[0];
           if (episodeData) {
             this.dataColumns = Object.keys(episodeData.data);
+            if (this.dataColumns.length > 0) {
+              this.setDefaultCustomPlotCode();
+            }
           }
         }
       }
     });
   }
+  
 
   ngOnDestroy(): void {
     if (this.dataReadySubscription) {
@@ -45,14 +53,32 @@ export class EvaluationComponent implements OnInit {
   }
 
   addPlot(): void {
-    if (this.selectedPlot && this.selectedDataColumn) {
-      console.log('Adding plot:', this.selectedDataColumn);
-      this.addedPlots.push({ type: this.selectedPlot, dataColumn: this.selectedDataColumn });
+    if (this.selectedPlot) {
+      if (this.selectedPlot === 'custom') {
+        console.log('Adding custom plot:', this.selectedDataColumn, this.customPlotCode);
+        this.addedPlots.push({ type: 'custom', dataColumn: "", code: this.customPlotCode });
+      } else if (this.selectedDataColumn) {
+        console.log('Adding plot:', this.selectedDataColumn);
+        this.addedPlots.push({ type: this.selectedPlot, dataColumn: this.selectedDataColumn });
+      }
     }
   }
+  
 
   removePlot(index: number): void {
     this.addedPlots.splice(index, 1);
+  }
+
+  private setDefaultCustomPlotCode(): void {
+    this.customPlotCode = `
+      const trace = {
+        x: dataContext['${this.dataColumns[7]}'],
+        y: dataContext['${this.dataColumns[8]}'],
+        mode: 'markers',
+        type: 'line'
+      };
+      return { data: [trace], layout: {} };
+    `;
   }
 
   openDataTable(): void {
@@ -71,4 +97,16 @@ export class EvaluationComponent implements OnInit {
       }
     }
   }
+
+  updateCustomPlotCode(): void {
+    this.addedPlots.forEach((plot, index) => {
+      if (plot.type === 'custom') {
+        this.addedPlots[index] = {
+          ...plot,
+          code: this.customPlotCode,
+        };
+      }
+    });
+  }
+  
 }
