@@ -12,6 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { SideMenuItemComponent } from './components/side-menu/side-menu-item/side-menu-item.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

@@ -40,12 +40,12 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
       try {
         // Prepare data context
         const dataContext: { [key: string]: any[] } = {};
-        const episodeData = this.experiment.data[0];
-        if (episodeData) {
-          for (const [key, values] of Object.entries(episodeData.data)) {
+        if (this.experiment) {
+          for (const [key, values] of Object.entries(this.experiment.data)) {
             dataContext[key] = values;
           }
         }
+        
 
         // Create a function from the user's custom plot code
         const customPlotFunction = new Function(

@@ -6,6 +6,7 @@ import { DataTableComponent } from './plot/data-table/data-table.component';
 import { Renderer2, RendererFactory2 } from '@angular/core';
 
 
+
 @Component({
   selector: 'app-evaluation',
   templateUrl: './evaluation.component.html',
@@ -20,6 +21,8 @@ export class EvaluationComponent implements OnInit {
   private dataReadySubscription: Subscription | undefined;
   customPlotCode: string = '';
   private renderer?: Renderer2;
+  drawerOpen: boolean = true;
+
 
 
   constructor(private plotDataService: PlotDataService, public dialog: MatDialog, rendererFactory: RendererFactory2) {
@@ -38,9 +41,8 @@ export class EvaluationComponent implements OnInit {
           (exp) => exp.name === this.firstExperiment
         );
         if (experiment) {
-          const episodeData = experiment.data[0];
-          if (episodeData) {
-            this.dataColumns = Object.keys(episodeData.data);
+          if (experiment) {
+            this.dataColumns = Object.keys(experiment.data);
             if (this.dataColumns.length > 0) {
               this.setDefaultCustomPlotCode();
             }
@@ -68,8 +70,23 @@ export class EvaluationComponent implements OnInit {
       }
     }
   }
+
+  onFileInputChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
+      this.plotDataService.importCsvFile(file);
+    }
+  }
+  
+  getImportedCsvFileNames(): string[] {
+    return Object.keys(this.plotDataService.importedCsvFiles);
+  }
   
   
+  toggleDrawer(): void {
+    this.drawerOpen = !this.drawerOpen;
+  }
 
   removePlot(index: number): void {
     this.addedPlots.splice(index, 1);

@@ -46,7 +46,7 @@ export class BarPlotComponent implements OnInit, OnDestroy {
 
     const avgData: { [episode: number]: number } = {};
 
-    experiment.data.forEach((episodeData) => {
+    Object.values(experiment.episodes).forEach((episodeData: { data: { [key: string]: (number | number[])[] }; episode: number }) => {
       if (!episodeData) return;
 
       let linkPositions;

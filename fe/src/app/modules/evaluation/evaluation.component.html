@@ -1,31 +1,42 @@
 <div class="container">
-  <div class="plots">
+  <div class="plot-view">
     <ng-container *ngIf="firstExperiment; else noExperiments">
       <ng-container *ngFor="let plot of addedPlots; let i = index">
         <div class="plot-wrapper">
-          <app-trajectory-plot
-            *ngIf="plot.type === 'trajectory'"
-            [experimentName]="firstExperiment"
-            [dataColumn]="plot.dataColumn">
-          </app-trajectory-plot>
-          <app-bar-plot
-            *ngIf="plot.type === 'bar'"
-            [experiments]="[firstExperiment]"
-            [dataColumn]="plot.dataColumn"
-          ></app-bar-plot>
-          <app-line-plot
-            *ngIf="plot.type === 'line'"
-            [experimentName]="firstExperiment"
-            [dataColumn]="plot.dataColumn"
-          ></app-line-plot>
-          <app-custom-plot
+          <div>
+            <app-trajectory-plot
+              *ngIf="plot.type === 'trajectory'"
+              [experimentName]="firstExperiment"
+              [dataColumn]="plot.dataColumn">
+            </app-trajectory-plot>
+            <app-bar-plot
+              *ngIf="plot.type === 'bar'"
+              [experiments]="[firstExperiment]"
+              [dataColumn]="plot.dataColumn"
+            ></app-bar-plot>
+            <app-line-plot
+              *ngIf="plot.type === 'line'"
+              [experimentName]="firstExperiment"
+              [dataColumn]="plot.dataColumn"
+            ></app-line-plot>
+            <app-custom-plot
+              *ngIf="plot.type === 'custom'"
+              [experimentName]="firstExperiment"
+              [customPlotCode]="plot.code"
+              [elementId]="'custom-plot-' + i">
+            </app-custom-plot>
+          </div>
+          <textarea
             *ngIf="plot.type === 'custom'"
-            [experimentName]="firstExperiment"
-            [customPlotCode]="plot.code"
-            [elementId]="'custom-plot-' + i">
-          </app-custom-plot>
-
-          <button class="close-btn" (click)="removePlot(i)">x</button>
+            [(ngModel)]="plot.code"
+            [id]="'custom-plot-code-' + i"
+            rows="4"
+            cols="50"
+            class="plot-specific-code"
+          ></textarea>
+          <button class="close-btn" (click)="removePlot(i)">
+            x
+          </button>
         </div>
       </ng-container>
     </ng-container>
@@ -33,27 +44,39 @@
       <p>No experiments available.</p>
     </ng-template>
   </div>
-  <div class="plot-controls">
-    <select [(ngModel)]="selectedPlot">
-      <option value="">-- Select a plot --</option>
-      <option value="trajectory">Trajectory Plot</option>
-      <option value="bar">Bar Plot</option>
-      <option value="line">Line Plot</option>
-      <option value="custom">Custom Plot</option>
-    </select>
-    <select [(ngModel)]="selectedDataColumn" [disabled]="!selectedPlot || selectedPlot === 'custom'">
-      <option value="">-- Select a data column --</option>
-      <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
-    </select>
-    <div *ngIf="selectedPlot === 'custom'" class="custom-plot-definition">
-      <label for="customPlotCode">Custom Plot Definition: <a href="https://plotly.com/javascript/" style="text-decoration: none;" target="_blank">Plotly Example Plots</a></label>
-      <textarea [(ngModel)]="customPlotCode" id="customPlotCode" rows="4" cols="50"></textarea>
+  <div class="workspace">
+    <div class="plot-controls">
+      <select [(ngModel)]="selectedPlot">
+        <option value="">-- Select a plot --</option>
+        <option value="trajectory">Trajectory Plot</option>
+        <option value="bar">Bar Plot</option>
+        <option value="line">Line Plot</option>
+        <option value="custom">Custom Plot</option>
+      </select>
+      <select [(ngModel)]="selectedDataColumn" [disabled]="!selectedPlot || selectedPlot === 'custom'">
+        <option value="">-- Select a data column --</option>
+        <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
+      </select>
+      <div *ngIf="selectedPlot === 'custom'" class="custom-plot-definition">
+        <label for="customPlotCode">Custom Plot Definition: <a href="https://plotly.com/javascript/" style="text-decoration: none;" target="_blank">Plotly Example Plots</a></label>
+        <textarea [(ngModel)]="customPlotCode" id="customPlotCode" rows="4" cols="50"></textarea>
+      </div>
+      <button (click)="addPlot()">Add Plot</button>
+      <!-- Add this button inside the plot-controls div -->
+      <button (click)="openDataTable()">Show Data Table</button>
+      <button (click)="toggleDarkMode()">Toggle Dark Mode</button>
+
+      <div class="import-csv-section">
+        <label for="importCsvInput">Import CSV:</label>
+        <input type="file" id="importCsvInput" (change)="onFileInputChange($event)" accept=".csv" />
+        <div class="csv-list">
+          <h4>Imported CSV Files:</h4>
+          <ul>
+            <li *ngFor="let fileName of getImportedCsvFileNames()">{{ fileName }}</li>
+          </ul>
+        </div>
+      </div>
+      
     </div>
-    <button (click)="addPlot()">Add Plot</button>
-    <!-- Add this button inside the plot-controls div -->
-    <button (click)="openDataTable()">Show Data Table</button>
-    <button (click)="toggleDarkMode()">Toggle Dark Mode</button>
-
-
   </div>
 </div>

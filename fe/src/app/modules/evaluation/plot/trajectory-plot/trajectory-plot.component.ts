@@ -50,15 +50,17 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
   
     const traces: any[] = [];
   
-    experiment.data.forEach((episodeData) => {
+    Object.values(experiment.episodes).forEach((episodeData: { data: { [key: string]: (number | number[])[] }; episode: number }) => {
       if (!episodeData) return;
-  
-      const data = episodeData.data[this.dataColumn];
-  
-      if (!data) return;
-  
-      const trace = this.createTrace(data, episodeData.episode);
-  
+    
+      const data: { [key: string]: (number | number[])[] } = episodeData.data;
+    
+      const columnData = data[this.dataColumn];
+    
+      if (!columnData) return;
+    
+      const trace = this.createTrace(columnData, episodeData.episode);
+    
       if (trace) {
         traces.push(trace);
       }
@@ -66,6 +68,7 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
   
     this.plot.data = traces;
   }
+  
 
   createTrace(data: any, episode: number): any {
     // You can extend this function to handle different types of data.

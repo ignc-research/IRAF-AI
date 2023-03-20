@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-
 import { EvaluationRoutingModule } from './evaluation-routing.module';
 import { EvaluationComponent } from './evaluation.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 import * as PlotlyJS from 'plotly.js-dist-min';
 import { PlotlyModule } from 'angular-plotly.js';
@@ -30,6 +30,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
   ],
   imports: [
     CommonModule,
+    MatIconModule,
+    MatButtonModule,
     EvaluationRoutingModule,
     FormsModule,
     PlotlyModule,

@@ -21,15 +21,11 @@ export class DataTableComponent implements OnInit {
   pageSize: number = 50; // Adjust the number of rows per page
   totalPages: number = 1;
 
-  
-
-
   constructor(
     public dialogRef: MatDialogRef<DataTableComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataTableDialogData
   ) {
     this.experiment = data.experiment;
-    
   }
 
   ngOnInit(): void {
@@ -54,30 +50,31 @@ export class DataTableComponent implements OnInit {
   }
 
   private processData(): void {
-    if (this.experiment.data.length > 0) {
-      const firstEpisode = this.experiment.data[0];
-
+    const data = this.experiment.data;
+  
+    if (Object.keys(data).length > 0) {
       // Get the column names
-      this.dataColumns = ['episode', ...Object.keys(firstEpisode.data)];
-
+      this.dataColumns = Object.keys(data);
+  
       // Get the data rows
-      const allDataRows = this.experiment.data.flatMap((episode) => {
-        const timesteps = episode.data[this.dataColumns[1]].length; // Use the first data column to determine the number of timesteps
-        return Array.from({ length: timesteps }, (_, timestepIndex) => {
-          return [
-            episode.episode,
-            ...this.dataColumns.slice(1).map((columnName) => episode.data[columnName][timestepIndex]),
-          ];
-        });
+      const rowCount = data[this.dataColumns[0]].length;
+      const allDataRows = new Array(rowCount).fill(null).map((_, rowIndex) => {
+        return this.dataColumns.map((columnName) => data[columnName][rowIndex]);
       });
-
+  
+      // Transpose the data rows to switch rows and columns
+      const transposedDataRows = allDataRows[0].map((_, columnIndex) => {
+        return allDataRows.map((row) => row[columnIndex]);
+      });
+  
       // Calculate the total number of pages
-      this.totalPages = Math.ceil(allDataRows.length / this.pageSize);
-
+      this.totalPages = Math.ceil(rowCount / this.pageSize);
+  
       // Update table data for the current page
-      this.updateTableData(allDataRows, this.currentPage);
+      this.updateTableData(transposedDataRows, this.currentPage);
     }
   }
+  
 
   private updateTableData(allDataRows: any[][], page: number): void {
     const start = (page - 1) * this.pageSize;
@@ -103,7 +100,6 @@ export class DataTableComponent implements OnInit {
   animatePageInfo(): void {
     const pageInfoElement = this.pageInfo.nativeElement;
 
-    // Remove the animation class if it's already there
     pageInfoElement.classList.remove('fade-in');
 
     // Add the animation class back after a small delay
