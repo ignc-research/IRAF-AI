@@ -1,0 +1,13 @@
+.legend {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  & > * {
+    padding-left: 9px;
+  }
+}
