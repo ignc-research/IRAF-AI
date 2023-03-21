@@ -15,6 +15,7 @@ import { ColorPickerComponent } from './plot/color-picker/color-picker.component
 import {FormsModule} from "@angular/forms";
 import { DataTableComponent } from './plot/data-table/data-table.component';
 import { CustomPlotComponent } from './plot/custom-plot/custom-plot.component';
+import { MatTableModule } from '@angular/material/table';
 
 
 PlotlyModule.plotlyjs = PlotlyJS;
@@ -29,6 +30,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     CustomPlotComponent,
   ],
   imports: [
+    MatTableModule,
     CommonModule,
     MatIconModule,
     MatButtonModule,

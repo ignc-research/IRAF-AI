@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import { PlotDataService, Experiment } from '../plot-data.service';
 import * as Plotly from 'plotly.js-dist-min';
+import { Subject } from 'rxjs';
+
 
 @Component({
   selector: 'app-custom-plot',
@@ -12,6 +14,8 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() customPlotCode: string | undefined;
   @Input() elementId: string | undefined;
   @Input() uniqueKey: any;
+  @Input() globalVariableAdded: Subject<void> | undefined;
+
 
 
   private experiment: Experiment | undefined;
@@ -24,7 +28,15 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
         (exp) => exp.name === this.experimentName
       );
     }
+  
+    // Subscribe to globalVariableAdded and re-render the plot when a new variable is added
+    if (this.globalVariableAdded) {
+      this.globalVariableAdded.subscribe(() => {
+        this.renderCustomPlot();
+      });
+    }
   }
+  
 
   ngAfterViewInit(): void {
     this.renderCustomPlot();
@@ -36,7 +48,6 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
 
   private renderCustomPlot(): void {
     if (this.experiment && this.customPlotCode && this.elementId) {
-      console.log('renderCustomPlot:', this.experimentName, this.customPlotCode, this.elementId);
       try {
         // Prepare data context
         const dataContext: { [key: string]: any[] } = {};

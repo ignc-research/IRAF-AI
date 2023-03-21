@@ -61,7 +61,7 @@ export class PlotDataService {
           rowData[columnName] = cell
             .replace(/\s+\]/g, ']') // Fix faulty spaces before closing bracket
             .slice(1, -1)
-            .split(/\s*,\s*/) // Use a regex to split on commas with optional surrounding spaces
+            .split(/\s+/) // Use a regex to split on commas with optional surrounding spaces
             .map((value) => parseFloat(value));
         } else {
           rowData[columnName] = parseFloat(cell);

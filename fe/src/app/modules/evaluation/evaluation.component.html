@@ -45,38 +45,58 @@
     </ng-template>
   </div>
   <div class="workspace">
-    <div class="plot-controls">
-      <select [(ngModel)]="selectedPlot">
-        <option value="">-- Select a plot --</option>
-        <option value="trajectory">Trajectory Plot</option>
-        <option value="bar">Bar Plot</option>
-        <option value="line">Line Plot</option>
-        <option value="custom">Custom Plot</option>
-      </select>
-      <select [(ngModel)]="selectedDataColumn" [disabled]="!selectedPlot || selectedPlot === 'custom'">
-        <option value="">-- Select a data column --</option>
-        <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
-      </select>
-      <div *ngIf="selectedPlot === 'custom'" class="custom-plot-definition">
-        <label for="customPlotCode">Custom Plot Definition: <a href="https://plotly.com/javascript/" style="text-decoration: none;" target="_blank">Plotly Example Plots</a></label>
-        <textarea [(ngModel)]="customPlotCode" id="customPlotCode" rows="4" cols="50"></textarea>
-      </div>
-      <button (click)="addPlot()">Add Plot</button>
-      <!-- Add this button inside the plot-controls div -->
-      <button (click)="openDataTable()">Show Data Table</button>
-      <button (click)="toggleDarkMode()">Toggle Dark Mode</button>
-
-      <div class="import-csv-section">
-        <label for="importCsvInput">Import CSV:</label>
-        <input type="file" id="importCsvInput" (change)="onFileInputChange($event)" accept=".csv" />
-        <div class="csv-list">
-          <h4>Imported CSV Files:</h4>
-          <ul>
-            <li *ngFor="let fileName of getImportedCsvFileNames()">{{ fileName }}</li>
-          </ul>
+    <div class="left-controls">
+      <div class="plot-controls">
+        <select [(ngModel)]="selectedPlot">
+          <option value="">-- Select a plot --</option>
+          <option value="trajectory">Trajectory Plot</option>
+          <option value="bar">Bar Plot</option>
+          <option value="line">Line Plot</option>
+          <option value="custom">Custom Plot</option>
+        </select>
+        <select [(ngModel)]="selectedDataColumn" [disabled]="!selectedPlot || selectedPlot === 'custom'">
+          <option value="">-- Select a data column --</option>
+          <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
+        </select>
+        <div *ngIf="selectedPlot === 'custom'" class="custom-plot-definition">
+          <label for="customPlotCode">Custom Plot Definition: <a href="https://plotly.com/javascript/" style="text-decoration: none;" target="_blank">Plotly Example Plots</a></label>
+          <textarea [(ngModel)]="customPlotCode" id="customPlotCode" rows="4" cols="50"></textarea>
         </div>
+        <button (click)="addPlot()">Add Plot</button>
+        <!-- Add this button inside the plot-controls div -->
+        <button *ngFor="let experiment of getExperiments()" (click)="openDataTable(experiment)">
+          Show Data Table for {{ experiment.name }}
+        </button>
+        <button (click)="toggleDarkMode()">Toggle Dark Mode</button>
+
+        <div class="import-csv-section">
+          <label for="importCsvInput">Import CSV:</label>
+          <input type="file" id="importCsvInput" (change)="onFileInputChange($event)" accept=".csv" />
+          <div class="csv-list">
+            <h4>Imported CSV Files:</h4>
+            <ul>
+              <li *ngFor="let fileName of getImportedCsvFileNames()">{{ fileName }}</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="right-controls">
+      <div class="global-variables">
+        <h4>Current Variables:</h4>
+        <ul>
+          <li *ngFor="let variable of globalVariables | keyvalue">
+            {{ variable.key }} = {{ variable.value }}
+          </li>
+        </ul>
       </div>
       
+      <div class="variable-definition">
+        <label for="variableDefinition">Variable Definition:</label>
+        <textarea [(ngModel)]="variableDefinition" id="variableDefinition" rows="4" cols="50" attr.experiment="{{firstExperiment}}"></textarea>
+      </div>
+      <button (click)="addVariable()">Add Variable</button>
     </div>
   </div>
 </div>

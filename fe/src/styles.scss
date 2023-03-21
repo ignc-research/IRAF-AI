@@ -17,6 +17,21 @@ body.dark-mode {
     background-color: #555;
     color: #ffffff;
   }
+
+  body.dark-mode .container {
+    background-color: rgb(61, 61, 68);
+    color: #ffffff;
+  }
+
+  body.dark-mode #app-side-menu {
+    background-color: rgb(40, 40, 47);
+    color: #ffffff;
+  }
+
+  body.dark-mode .workspace {
+    background-color: #555;
+    color: #ffffff;
+  }
   
   body.dark-mode textarea {
     background-color: #555;

@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { PlotDataService, Experiment } from './plot/plot-data.service';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { DataTableComponent } from './plot/data-table/data-table.component';
 import { Renderer2, RendererFactory2 } from '@angular/core';
+import { Subject } from 'rxjs';
+
 
 
 
@@ -13,6 +15,10 @@ import { Renderer2, RendererFactory2 } from '@angular/core';
   styleUrls: ['./evaluation.component.scss'],
 })
 export class EvaluationComponent implements OnInit {
+
+  @Input() experiment: Experiment | undefined;
+
+  
   firstExperiment: string | undefined;
   selectedPlot: string | undefined;
   selectedDataColumn: string = '';
@@ -22,6 +28,10 @@ export class EvaluationComponent implements OnInit {
   customPlotCode: string = '';
   private renderer?: Renderer2;
   drawerOpen: boolean = true;
+  globalVariables: { [key: string]: any } = {};
+  variableDefinition: string = '';
+  globalVariableAdded: Subject<void> = new Subject<void>();
+
 
 
 
@@ -59,17 +69,68 @@ export class EvaluationComponent implements OnInit {
     }
   }
 
+  addVariable(): void {
+    try {
+      const dataContext = this.experiment ? this.experiment.data : {};
+      
+      const variableFunction = (context: any) => {
+        console.log('Evaluating variable:', eval(this.variableDefinition));
+        return eval(this.variableDefinition);
+      };
+      const result = variableFunction(dataContext);
+  
+      // Extract variable name from definition
+      const variableNameMatch = this.variableDefinition.match(/^(?:const|let|var)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)\s*=/);
+      if (variableNameMatch && variableNameMatch[1]) {
+        const variableName = variableNameMatch[1];
+        this.globalVariables[variableName] = result;
+  
+        // Add the variable to the window object (global namespace)
+        (window as any)[variableName] = result;
+      } else {
+        throw new Error("Variable name not found");
+      }
+  
+      this.variableDefinition = '';
+  
+      // Emit an event when a new global variable is added
+      this.globalVariableAdded.next();
+    } catch (error) {
+      console.error('Error evaluating variable:', error);
+      alert('Error evaluating variable: ' + error);
+    }
+  }
+  
+  
+  
+  
+  
+
   addPlot(): void {
     if (this.selectedPlot) {
       if (this.selectedPlot === 'custom') {
-        console.log('Adding custom plot:', this.selectedDataColumn, this.customPlotCode);
-        this.addedPlots.push({ type: 'custom', dataColumn: "", code: this.customPlotCode +  " return { data: data, layout: layout };" });
+        // Execute global variables
+        let globalVariablesCode = '';
+        for (const [variableName, variableValue] of Object.entries(this.globalVariables)) {
+          globalVariablesCode += `const ${variableName} = ${JSON.stringify(variableValue)};`;
+        }
+  
+        const customPlotWithVariables = `
+          ${globalVariablesCode}
+          ${this.customPlotCode}
+          return { data: data, layout: layout };
+        `;
+  
+        console.log('Adding custom plot:', this.selectedDataColumn, customPlotWithVariables);
+        this.addedPlots.push({ type: 'custom', dataColumn: "", code: customPlotWithVariables });
       } else if (this.selectedDataColumn) {
         console.log('Adding plot:', this.selectedDataColumn);
         this.addedPlots.push({ type: this.selectedPlot, dataColumn: this.selectedDataColumn });
       }
     }
   }
+  
+  
 
   onFileInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -94,31 +155,39 @@ export class EvaluationComponent implements OnInit {
 
   private setDefaultCustomPlotCode(): void {
     this.customPlotCode = `
-      var data = [
-        {
-          type: "isosurface",
-          x: [0,0,0,0,1,1,1,1],
-          y: [0,1,0,1,0,1,0,1],
-          z: [1,1,0,0,1,1,0,0],
-          value: [1,2,3,4,5,6,7,8],
-          isomin: 2,
-          isomax: 6,
-          colorscale: "Reds"
-        }
-      ];
       
-      var layout = {
-        margin: {t:0, l:0, b:0},
-        scene: {
-          camera: {
-            eye: {
-              x: 1.88,
-              y: -2.12,
-              z: 0.96
-            }
-          }
-        }
-      };
+    const positionData = dataContext['position_link_7_ur5_1'];
+
+    const x = positionData.map((values) => values[0]);
+    const y = positionData.map((values) => values[1]);
+    const z = positionData.map((values) => values[2]);
+    
+    const trace = {
+      x: x,
+      y: y,
+      z: z,
+      mode: 'lines+markers',
+      marker: {
+        size: 8,
+        color: z,
+        colorscale: 'Viridis',
+        opacity: 0.8
+      },
+      type: 'scatter3d'
+    };
+    
+    const layout = {
+      scene: {
+        xaxis: { title: 'X Axis' },
+        yaxis: { title: 'Y Axis' },
+        zaxis: { title: 'Z Axis' }
+      }
+    };
+    
+    const data = [trace];
+    
+              return { data: data, layout: layout };
+            
       
     `;
   }
@@ -134,21 +203,20 @@ export class EvaluationComponent implements OnInit {
     }
   }
 
-  openDataTable(): void {
-    if (this.firstExperiment) {
-      const experiment: Experiment | undefined = this.plotDataService.experiments.find(
-        (exp) => exp.name === this.firstExperiment
-      );
-      if (experiment) {
-        this.dialog.open(DataTableComponent, {
-          data: { experiment: experiment },
-          maxWidth: '100%',
-          maxHeight: '100%',
-          height: '92%',
-          width: '92%',
-        });
-      }
-    }
+  getExperiments(): Experiment[] {
+    return this.plotDataService.experiments;
   }
+
+  openDataTable(experiment: Experiment): void {
+    this.dialog.open(DataTableComponent, {
+      data: { experiment: experiment },
+      maxWidth: '100%',
+      maxHeight: '100%',
+      height: '92%',
+      width: '92%',
+    });
+  }
+  
+  
   
 }

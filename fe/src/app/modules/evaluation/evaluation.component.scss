@@ -6,7 +6,7 @@
 }
 
 .plot-view {
-  flex: 0 0 60%;
+  flex: 0 0 50%;
   padding: 1rem;
   box-sizing: border-box;
   display: flex;
@@ -28,7 +28,7 @@
   padding-right: 20px;
   min-height: 35rem;
   margin-bottom: 1em;
-  width: calc(50% - 0.5rem);
+  width: 90%;
 }
 
 .workspace {
@@ -37,7 +37,17 @@
   padding: 1rem;
   box-sizing: border-box;
   display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.left-controls,
+.right-controls {
+  width: 45%;
+  box-sizing: border-box;
+  display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
 .plot-controls {
@@ -168,4 +178,21 @@ textarea {
 
 .csv-list li {
   padding: 0.25rem 0;
+}
+
+.global-variables {
+  width: 100%;
+  padding: 1rem;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-sizing: border-box;
+}
+
+.variable-definition {
+  width: 100%;
+  box-sizing: border-box;
 }
