@@ -23,7 +23,9 @@ export class BarPlotComponent implements OnInit, OnDestroy {
       title: '',
       showlegend: false
     },
-    data: []
+    data: [
+
+    ]
   }
 
   constructor(protected plotService: PlotDataService, private plotUiService: PlotService) {
@@ -43,7 +45,8 @@ export class BarPlotComponent implements OnInit, OnDestroy {
 
   async loadBarPlot() {
     const experiments = await Promise.all(this.experiments.map(async(x) => await this.plotService.loadExperiment(x)));
-    this.titleSub.next(this.experiments.join(', '));
+    //this.titleSub.next('Avg Trajecotry Length: ' + this.experiments.join(', '));
+    this.titleSub.next('Avg Trajecotry Length');
     this.plot.data = this.plotService.categories.map(cat => {
       return {
         type: 'bar',

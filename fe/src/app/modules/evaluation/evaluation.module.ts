@@ -10,6 +10,8 @@ import { TrajectoryPlotComponent } from './plot/trajectory-plot/trajectory-plot.
 import { BarPlotComponent } from './plot/bar-plot/bar-plot.component';
 import { ColorPickerComponent } from './plot/color-picker/color-picker.component';
 import {FormsModule} from "@angular/forms";
+import { RadarPlotComponent } from './plot/radar-plot/radar-plot.component';
+import { LegendComponent } from './plot/legend/legend.component';
 
 
 PlotlyModule.plotlyjs = PlotlyJS;
@@ -19,6 +21,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     TrajectoryPlotComponent,
     BarPlotComponent,
     ColorPickerComponent,
+    RadarPlotComponent,
+    LegendComponent,
   ],
   imports: [
     CommonModule,

@@ -14,6 +14,6 @@ export class ColorPickerComponent {
 
   changeColor (eventTarget: any, type: string): void {
     const inputColor = eventTarget.value;
-    this.plotService.updateColor(type, inputColor);
+    this.plotService.updateCategory(type, inputColor);
   }
 }

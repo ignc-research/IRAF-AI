@@ -15,19 +15,27 @@ export class PlotDataService {
   categories: Category[] = [
     {
       name: 'RRT',
-      color: '#0000ff'
+      color: '#0000ff',
+      showAvg: true,
+      lineType: 'dashdot'
     },
     {
       name: 'DRL',
-      color: '#ff00ff'
+      color: '#ff00ff',
+      showAvg: true,
+      lineType: 'dashdot'
     },
     {
       name: 'NC-RRT',
-      color: '#00ff00'
+      color: '#00ff00',
+      showAvg: true,
+      lineType: 'dashdot'
     },
     {
       name: 'prm',
-      color: '#ff0000'
+      color: '#ff0000',
+      showAvg: true,
+      lineType: 'dashdot'
     }
   ];
   experiments: Experiment[] = [];
@@ -36,13 +44,14 @@ export class PlotDataService {
 
   }
 
-  mapRemoteData = (data: d3.DSVRowArray<string>) => {
+  mapTrajectoryData = (data: d3.DSVRowArray<string>) => {
     return {
       x: data.map(x => x[data.columns[1]] as any),
       y: data.map(x => x[data.columns[2]] as any),
       z: data.map(x => x[data.columns[3]] as any)
     }
   }
+  mapTimestampData = (data: d3.DSVRowArray<string>) => data.map(x => +x[data.columns[0]]! as any);
 
   async loadExperiment(name: string) {
     const existingExperiment = this.experiments.find(x => x.name);
@@ -59,17 +68,22 @@ export class PlotDataService {
     await Promise.all(this.categories.map(async(category) => {
       const type = category.name;
       const trajectories: Data[] = [];
+      const executionTime: number[] = [];
       for (let i = 1; i < 31; i++) {
         const remoteData = await d3.dsv(" ", `http://localhost:4200/assets/${name}/${type}/${i}.txt`);
-        const mappedData = this.mapRemoteData(remoteData)
-        trajectories.push(mappedData);
+        trajectories.push(this.mapTrajectoryData(remoteData));
+        const timestamps = this.mapTimestampData(remoteData);
+
+        executionTime.push(timestamps[timestamps.length - 1] - timestamps[0]);
       }
+
       const avgTrajectory = this.getAverageXyz(trajectories);
       newExperiment.data.push({
         trajectories,
         category,
         avgTrajectory,
-        avgPathLength: this.getAvgPathLength(trajectories)
+        avgPathLength: this.getAvgPathLength(trajectories),
+        avgExecutionTime: this.getAvg(executionTime)
       });
     }));
 
@@ -135,10 +149,12 @@ export class PlotDataService {
     }
   }
 
-  updateColor(category: string, color: string) {
+  updateCategory(category: string, color?: string, lineType?: any, showAvg?: boolean) {
     const cat = this.categories.find(x => x.name == category);
     if (cat) {
-       cat.color = color;
+       cat.color = color ? color : cat.color;
+       cat.lineType = lineType ? lineType : cat.lineType;
+       cat.showAvg = showAvg !== undefined ? showAvg : cat.showAvg;
        this.categoryChanged.next(cat);
     }
   }
@@ -152,11 +168,18 @@ export type Experiment = {
 export type Category = {
   name: string;
   color: string;
+
+  showAvg: boolean;
+
+  lineType: 'solid' | 'dashdot' | 'dot' | 'dash' | 'none';
 }
 
 export type ExperimentData = {
   category: Category;
   trajectories: Data[];
+
   avgTrajectory: Data;
   avgPathLength: number;
+
+  avgExecutionTime: number;
 }

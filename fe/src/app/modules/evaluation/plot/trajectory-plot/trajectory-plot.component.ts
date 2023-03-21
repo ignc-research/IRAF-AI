@@ -22,7 +22,11 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
     layout: {
       autosize: true,
       title: this.experimentName,
-      showlegend: false
+      showlegend: false,
+
+      /* scene: {
+        xaxis:{title: 'X AXIS TITLE'}
+      }*/
     },
     data: [] as any[]
   };
@@ -43,10 +47,24 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
   }
 
   async loadTrajectoryPlot() {
-    this.plot.data = [];
-
     const experiment = await this.plotService.loadExperiment(this.experimentName);
-    this.titleSub.next(this.experimentName);
+
+    const startEndData = (experiment.data[0].avgTrajectory as any);
+    this.plot.data = [{
+      type: 'scatter3d',
+      x: [startEndData.x[0], startEndData.x[startEndData.x.length - 1]],
+      y: [startEndData.y[0], startEndData.y[startEndData.y.length - 1]],
+      z: [startEndData.z[0], startEndData.z[startEndData.z.length - 1]],
+      marker: {
+        color: 'rgb(17, 157, 255)',
+        opacity: 0.5,
+        size: 10,
+
+      }
+    }];
+
+    this.titleSub.next('Trajectories');
+    //this.titleSub.next('Trajectories: ' + this.experimentName);
     experiment.data.forEach(robotData => {
       robotData.trajectories.forEach((trj, i) => {
         const newTrj = {
@@ -80,36 +98,22 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
     });
   }
 
-  titleChange = (ev: any) => {
-    const newValue = ev.target.value;
-    if (this.selectedTitleSub){
-      this.selectedTitleSub.next(newValue);
-    }
-    // this.plotUiService.titleSubjects.forEach(x => x.next(newValue));
-  }
 
-  toggleAverage(eventTarget: any, type: string) {
-    const isVisible = eventTarget.checked;
-    this.plot.data.filter((data: any) => data.legendgroup === `avg_${type}`).forEach((data: any) => {
-      data.visible = isVisible;
-    });
-  }
-
-  changeLineType(eventTarget: any, type: string) {
-    const lineType = eventTarget.value;
-    this.plot.data.filter((data: any) => data.legendgroup === type).forEach((data: any) => {
-      if (lineType === "none") {
-        data.visible = false;
-        return;
-      }
-      data.visible = true;
-      data.line.dash = lineType;
-    });
-  }
 
   onServiceCategoryChange(category: Category) {
     this.plot.data.filter((data: any) => data.legendgroup === category.name || data.legendgroup === `avg_${category.name}`).forEach((data: any) => {
       data.line.color = category.color;
+      if (data.legendgroup === `avg_${category.name}`) {
+        data.visible = category.showAvg;
+      }
+      else {
+        if (category.lineType === "none") {
+          data.visible = false;
+          return;
+        }
+        data.visible = true;
+        data.line.dash = category.lineType;
+      }
     });
   }
 }

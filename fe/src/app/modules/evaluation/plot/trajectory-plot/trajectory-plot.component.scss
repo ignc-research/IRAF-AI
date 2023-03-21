@@ -3,19 +3,7 @@
   height: 100%;
 }
 
-.legend {
-  width: 250rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
 
-.legend-item {
-  display: flex;
-  & > * {
-    padding-left: 9px;
-  }
-}
 
 plotly-plot {
   flex: 1;
