@@ -117,7 +117,7 @@ export class ConfigService {
         ? (YAML.load(configStr, { json: true }) as Config)
         : undefined;
 
-      if (!data) {
+      if (configStr && !data) {
         throw `YAML Parse error`;
       }
 
@@ -133,7 +133,7 @@ export class ConfigService {
       rootNode.addChild(robots);
 
       // Parse robots
-      data.env.robots.forEach((robotNode) => {
+      data?.env.robots.forEach((robotNode) => {
         const parsedRobot = parseRobot(this.apiService.robots, robotNode);
 
         const parsedSensors = robotNode.sensors.map((sensorNode) =>
@@ -155,7 +155,7 @@ export class ConfigService {
       });
       rootNode.addChild(obstacles);
 
-      data.env.world.config.obstacles.forEach((obstacleNode) => {
+      data?.env.world.config.obstacles.forEach((obstacleNode) => {
         const obstacle = parseObstacles(
           this.apiService.obstacles,
           obstacleNode

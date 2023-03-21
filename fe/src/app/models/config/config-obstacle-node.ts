@@ -30,6 +30,8 @@ export function parseObstacles(obstacles: IObstacle[], obstacleNode: ConfigObsta
     obstacleDef.name = obstacleNode.type;
     obstacleDef.position = ConfigUtils.getThreeVec3(obstacleNode.position);
     obstacleDef.rotation = ConfigUtils.getThreeEuler(obstacleNode.rotation);
+    obstacleNode.scale = obstacleNode.scale ?? 1;
+    obstacleDef.scale = ConfigUtils.getThreeVec3([obstacleNode.scale, obstacleNode.scale, obstacleNode.scale]);
     return new Obstacle(obstacleDef);
   } else {
     throw `Config contains unknown obstacle type: ${

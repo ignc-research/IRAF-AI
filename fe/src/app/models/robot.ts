@@ -24,6 +24,7 @@ export class Robot extends SceneObject implements IUrdfSceneObject, IRobot {
         super(obj);
         this.type = obj.type;
         this.urdf = obj.urdf;
+        this.name = obj.name ?? obj.type;
     }
 }
 

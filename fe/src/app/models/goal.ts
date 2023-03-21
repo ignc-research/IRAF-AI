@@ -11,6 +11,7 @@ export class Goal extends Marker implements IGoal {
   constructor(obj: IGoal) {
       super(obj);
       this.type = obj.type;
+      this.name = obj.name ?? obj.type;
   }
 }
 

@@ -6,8 +6,9 @@
     <app-scene></app-scene>
     <app-tree-view></app-tree-view>
   </div>
-  <div *ngIf="!sceneService.rootNode">
-    Please select a config or create a new one
+  <div class="hint" *ngIf="!sceneService.rootNode">
+    <div class="title">No config loaded</div>
+    <div class="subtitle">Please upload an existing config or create a new one</div>
   </div>
 </div>
 <app-robot-popover></app-robot-popover>

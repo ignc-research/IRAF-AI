@@ -8,6 +8,7 @@ import { IRobot, ISensor, Robot, Sensor } from 'src/app/models/robot';
 import { SceneNode } from 'src/app/models/scene-node';
 import { Trajectory } from 'src/app/models/trajectory';
 import * as THREE from 'three';
+import { GeneratorApiService } from './generator.api.service';
 
 
 @Injectable({
@@ -24,7 +25,7 @@ export class SceneService {
     return this.findRecursive((item) => item instanceof GroupNode && item.type == GroupType.Robots)
   }
 
-  constructor() {
+  constructor(private apiService: GeneratorApiService) {
   }
 
   getLastIndex = (objs: THREE.Object3D[], prefix: string) => (objs.filter(x => x.name.startsWith(prefix))
@@ -45,7 +46,9 @@ export class SceneService {
   }
 
   async addRobot(robot: IRobot) {
-    this.robotGroup?.addChild(new Robot(robot));
+    const robotObj = new Robot(robot);
+    this.robotGroup?.addChild(robotObj);
+    this.addGoal(robotObj, this.apiService.goals[0]);
   }
 
   addTrajectoryPoint(object: SceneNode, name: string) {

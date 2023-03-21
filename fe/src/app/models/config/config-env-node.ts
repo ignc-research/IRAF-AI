@@ -10,11 +10,8 @@ export type ConfigEnvNode = {
 };
 
 export function parseEnvironment(env: IEnvironment, configEnv?: ConfigEnvNode) {
-  if (!configEnv) {
-    throw "Environment node missing";
-  }
   const envDef = structuredClone(env);
-  envDef.params = ConfigParams.getParams(envDef.params!, configEnv);
+  envDef.params = ConfigParams.getParams(envDef.params!, configEnv ?? {});
   return new Environment(envDef);
 }
 

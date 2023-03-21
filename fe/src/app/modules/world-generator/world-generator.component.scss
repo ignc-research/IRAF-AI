@@ -11,4 +11,21 @@
             width: 100%;
         }
     }
+    .hint {
+      background: #ddd;
+      padding: 8px;
+      font-size: 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+      .subtitle {
+        color: #444;
+      }
+    }
 }
