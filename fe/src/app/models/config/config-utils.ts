@@ -1,4 +1,5 @@
 import { Mark } from "js-yaml";
+import { NumberUtils } from "src/app/helpers/number-utils";
 import * as THREE from "three";
 import { Marker } from "../marker";
 import { Parameters } from "../parameters";
@@ -11,7 +12,7 @@ function getThreeVec3(configVec: ConfigVec3) {
 }
 
 function getThreeEuler(configEuler: ConfigVec3) {
-  return new THREE.Euler(...configEuler.map((x) => x * (Math.PI / 180.0)));
+  return new THREE.Euler(...configEuler.map(NumberUtils.deg2Rad));
 }
 
 function getConfigVec3(threeVec3: THREE.Vector3): ConfigVec3 {
@@ -19,7 +20,7 @@ function getConfigVec3(threeVec3: THREE.Vector3): ConfigVec3 {
 }
 
 function getConfigEuler(threeVec3: THREE.Euler): ConfigVec3 {
-  return [threeVec3.x, threeVec3.y, threeVec3.z].map(x => x * 180.0 / Math.PI) as ConfigVec3;
+  return [threeVec3.x, threeVec3.y, threeVec3.z].map(NumberUtils.rad2Deg) as ConfigVec3;
 }
 
 function parseTrajectories(parameters: Parameters) {

@@ -136,10 +136,10 @@ export class ConfigService {
       data?.env.robots.forEach((robotNode) => {
         const parsedRobot = parseRobot(this.apiService.robots, robotNode);
 
-        const parsedSensors = robotNode.sensors.map((sensorNode) =>
+        const parsedSensors = robotNode.sensors?.map((sensorNode) =>
           parseSensor(this.apiService.sensors, sensorNode)
         );
-        parsedSensors.forEach((sensor) => parsedRobot.addChild(sensor));
+        parsedSensors?.forEach((sensor) => parsedRobot.addChild(sensor));
 
         if (robotNode.goal) {
           const parsedGoal = parseGoal(this.apiService.goals, robotNode.goal);
@@ -173,6 +173,7 @@ export class ConfigService {
       setTimeout(() => (this.sceneService.rootNode = rootNode), 0);
     } catch (e) {
       this.toast.error(`Error: ${e}`);
+      console.error(e);
     }
   }
 }

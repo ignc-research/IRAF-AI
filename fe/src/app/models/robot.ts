@@ -10,6 +10,7 @@ import { SceneObjectType } from "./scene-object-type";
 export class Robot extends SceneObject implements IUrdfSceneObject, IRobot {
     type: string;
     urdf: string;
+    resting_angles?: number[];
     goalMarker!: Marker;
 
     get sensors(): Sensor[] {
@@ -24,6 +25,7 @@ export class Robot extends SceneObject implements IUrdfSceneObject, IRobot {
         super(obj);
         this.type = obj.type;
         this.urdf = obj.urdf;
+        this.resting_angles = obj.resting_angles;
         this.name = obj.name ?? obj.type;
     }
 }
@@ -50,4 +52,5 @@ export interface ISensor extends ISceneObject {
 export interface IRobot extends ISceneObject {
     type: string;
     urdf: string;
+    resting_angles?: number[];
 }
