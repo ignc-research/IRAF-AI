@@ -1,18 +1,18 @@
 import { Goal, IGoal } from '../goal';
 import { Parameters } from '../parameters';
-import { ConfigParams } from './config-params';
+import { ConfigParams, ConfigParamUtils } from './config-params';
 import { ConfigUtils } from './config-utils';
 import { ConfigVec3 } from './config-vec3';
 
 export type ConfigGoalNode = {
   type: string;
-  config: Parameters;
+  config: ConfigParams;
 };
 
 export function parseGoal(goals: IGoal[], configGoal: ConfigGoalNode) {
   const goalDef = structuredClone(goals.find((x) => x.type == configGoal.type));
   if (goalDef && goalDef.params) {
-    goalDef.params = ConfigParams.getParams(goalDef.params, configGoal.config);
+    goalDef.params = ConfigParamUtils.getParams(goalDef.params, configGoal.config);
     goalDef.name = configGoal.type;
 
     return new Goal(goalDef);
@@ -26,6 +26,6 @@ export function parseGoal(goals: IGoal[], configGoal: ConfigGoalNode) {
 export function exportGoal(goal: Goal): ConfigGoalNode {
   return {
     type: goal.type,
-    config: ConfigParams.exportParams(goal.params)
+    config: ConfigParamUtils.exportParams(goal.params)
   }
 }

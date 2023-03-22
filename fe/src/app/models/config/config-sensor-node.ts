@@ -1,6 +1,6 @@
 import { Parameters } from "../parameters";
 import { ISensor, Sensor } from "../robot";
-import { ConfigParams } from "./config-params";
+import { ConfigParamUtils } from "./config-params";
 import { ConfigUtils } from "./config-utils";
 import { ConfigVec3 } from "./config-vec3";
 
@@ -18,7 +18,7 @@ export function parseSensor(sensors: ISensor[], sensorNode: ConfigSensorNode) {
     sensors.find((x) => x.type == sensorNode.type)
   );
   if (sensorDef && sensorDef.params) {
-    sensorDef.params = ConfigParams.getParams(sensorDef.params, sensorNode.config);
+    sensorDef.params = ConfigParamUtils.getParams(sensorDef.params, sensorNode.config);
     sensorDef.name = sensorNode.type;
     sensorDef.link = sensorNode.config.link;
     sensorDef.position = ConfigUtils.getThreeVec3(sensorNode.config.position);
@@ -43,7 +43,7 @@ export function exportSensor(sensor: Sensor): ConfigSensorNode {
       position: ConfigUtils.getConfigVec3(sensor.position),
       rotation: ConfigUtils.getConfigEuler(sensor.rotation),
       link: sensor.link,
-      ...ConfigParams.exportParams(sensor.params)
+      ...ConfigParamUtils.exportParams(sensor.params)
     }
   };
 }

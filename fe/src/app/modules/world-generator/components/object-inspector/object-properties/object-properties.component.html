@@ -1,9 +1,7 @@
-<mat-card *ngIf="node && node.params">
-    <div class="section">
-        <app-parameter-editor title="Parameters" [parameters]="node.params" [columns]="1"></app-parameter-editor>
-    </div>
-    <div class="section">
-      <app-trajectory-editor [sceneNode]="node"></app-trajectory-editor>
-    </div>
-    <button mat-button (click)="updateNode()">Update</button>
-</mat-card>
+<div class="section" *ngIf="node && node.params">
+  <app-parameter-editor title="Parameters" [parameters]="node.params" [columns]="1"></app-parameter-editor>
+</div>
+<div class="section">
+<app-trajectory-editor [sceneNode]="node"></app-trajectory-editor>
+</div>
+<button color="accent" mat-flat-button (click)="updateNode()">Update Node</button>

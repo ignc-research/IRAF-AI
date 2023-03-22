@@ -15,7 +15,8 @@ export class Obstacle extends SceneObject implements IObstacle, IUrdfSceneObject
 
     get urdfUrl() {
         if (this.params) {
-            var queryString = Object.keys(this.params).map(key => key + '=' + (this.params as any)[key].value).join('&');
+          console.log(this.params)
+            var queryString = this.params.map(param => param.key + '=' + JSON.stringify(param.value ?? null)).join('&');
             return `/obstacle/${this.type}/${this.urdf}?${queryString}`;
         }
         else {

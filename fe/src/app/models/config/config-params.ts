@@ -4,36 +4,38 @@ function getParams(
   paramDef: Parameters,
   configDict: { [key: string]: any }
 ): Parameters {
-  const newParams = { ...paramDef };
+  const newParams: Parameters = [];
 
-  Object.keys(paramDef).forEach((paramKey) => {
-    if (newParams[paramKey].type == 'group') {
-      newParams[paramKey].children = getParams(
-        newParams[paramKey].children!,
-        configDict ? configDict[paramKey] : {}
+  structuredClone(paramDef).forEach((param) => { 
+    if (param.children) {
+      param.children = getParams(
+        param.children!,
+        configDict ? configDict[param.key] : {}
       );
-      return;
     }
-    if (configDict && configDict[paramKey]) {
-      newParams[paramKey].value = configDict[paramKey];
+    else if (configDict && configDict[param.key]) {
+      param.value = configDict[param.key];
     }
+    newParams.push(param);
   });
   return newParams;
 }
 
-function exportParams(params: Parameters = {}) {
+function exportParams(params: Parameters = []) {
   const paramsObject: { [key: string]: any } = {}; 
-  Object.keys(params).forEach(paramKey => {
-    if (params[paramKey].type === 'group') {
-      paramsObject[paramKey] = exportParams(params[paramKey].children!);
+  params.forEach(param => {
+    if (param.children) {
+      paramsObject[param.key] = exportParams(param.children!);
       return;
     }
-    paramsObject[paramKey] = params[paramKey].value;
+    paramsObject[param.key] = param.value;
   });
   return paramsObject;
 }
 
-export const ConfigParams = {
+export const ConfigParamUtils = {
   getParams,
   exportParams
 }
+
+export type ConfigParams = { [key: string]: any }

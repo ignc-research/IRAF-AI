@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { Parameters } from '../parameters';
 import { IRobot, Robot } from '../robot';
 import { ConfigGoalNode } from './config-goal-node';
-import { ConfigParams } from './config-params';
+import { ConfigParamUtils } from './config-params';
 import { ConfigSensorNode } from './config-sensor-node';
 import { ConfigUtils } from './config-utils';
 import { ConfigVec3 } from './config-vec3';
@@ -26,7 +26,7 @@ export function parseRobot(robots: IRobot[], robotNode: ConfigRobotNode) {
     robots.find((x) => x.type == robotNode.type)
   );
   if (robotDef && robotDef.params) {
-    robotDef.params = ConfigParams.getParams(robotDef.params, robotNode.config);
+    robotDef.params = ConfigParamUtils.getParams(robotDef.params, robotNode.config);
     robotDef.position = ConfigUtils.getThreeVec3(robotNode.config.base_position);
     robotDef.rotation = ConfigUtils.getThreeEuler(
       robotNode.config.base_orientation
@@ -52,7 +52,7 @@ export function exportRobot(robot: Robot): ConfigRobotNode {
       base_position: ConfigUtils.getConfigVec3(robot.position),
       resting_angles: robot.resting_angles?.map(NumberUtils.rad2Deg),
       name: robot.name,
-      ...ConfigParams.exportParams(robot.params)
+      ...ConfigParamUtils.exportParams(robot.params)
     },
     sensors: [],
     goal: {} as any

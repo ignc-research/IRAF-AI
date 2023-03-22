@@ -160,7 +160,7 @@ export class ConfigService {
           this.apiService.obstacles,
           obstacleNode
         );
-        ConfigUtils.parseTrajectories(obstacle.params ?? {}).forEach((trj) =>
+        ConfigUtils.parseTrajectories(obstacle.params ?? []).forEach((trj) =>
           obstacle.addChild(trj)
         );
         obstacles.addChild(obstacle);

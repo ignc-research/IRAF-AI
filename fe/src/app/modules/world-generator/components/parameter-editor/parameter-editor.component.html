@@ -1,13 +1,7 @@
-<mat-card>
-  <mat-card-subtitle class="title" *ngIf="title">
-    {{title}}
-    <button mat-icon-button (click)="expanded = !expanded">
-      <mat-icon>{{expanded ? 'remove' : 'add'}}</mat-icon>
-    </button>
-  </mat-card-subtitle>
-  <div class="editor" *ngIf="expanded">
-    <div class="entry" *ngFor="let parameter of parameters | keyvalue" [style.width]="width">
-        <app-parameter-input [label]="parameter.key" [parameter]="parameter.value"></app-parameter-input>
+<app-expandable [title]="title" [expanded]="expanded">
+  <div class="editor">
+    <div class="entry" *ngFor="let parameter of parameters" [style.width]="width">
+        <app-parameter-input [label]="parameter.key" [parameter]="parameter"></app-parameter-input>
     </div>
   </div>
-</mat-card>
+</app-expandable>

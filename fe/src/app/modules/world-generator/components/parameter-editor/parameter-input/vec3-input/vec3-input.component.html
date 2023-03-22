@@ -1,0 +1,15 @@
+<h5>{{label}}</h5>
+<div class="row">
+  <mat-form-field>
+      <mat-label>X</mat-label>
+      <input [(ngModel)]="vec3[0]" (ngModelChange)="update()" matInput type="number">
+  </mat-form-field>
+  <mat-form-field>
+      <mat-label>Y</mat-label>
+      <input [(ngModel)]="vec3[1]" (ngModelChange)="update()" matInput type="number">
+  </mat-form-field>
+  <mat-form-field>
+      <mat-label>Z</mat-label>
+      <input [(ngModel)]="vec3[2]" (ngModelChange)="update()" matInput type="number">
+  </mat-form-field>
+</div>

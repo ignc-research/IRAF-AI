@@ -25,6 +25,6 @@
 </div>
 
 <div mat-dialog-actions align="end">
-    <button mat-button (click)="refreshPreview()">Refresh Preview</button>
-    <button mat-button [mat-dialog-close]="selectedCategory" cdkFocusInitial color="primary">Ok</button>
+    <button mat-flat-button color="accent" (click)="refreshPreview()">Refresh Preview</button>
+    <button mat-flat-button color="primary" [mat-dialog-close]="selectedCategory" cdkFocusInitial color="primary">Ok</button>
 </div>

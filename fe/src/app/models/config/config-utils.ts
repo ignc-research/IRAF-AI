@@ -25,10 +25,10 @@ function getConfigEuler(threeVec3: THREE.Euler): ConfigVec3 {
 
 function parseTrajectories(parameters: Parameters) {
   const trajectories: Trajectory[] = [];
-  Object.keys(parameters).forEach((x) => {
-    if (parameters[x].type == 'trajectory') {
-      const trj = new Trajectory({ name: x });
-      const points = parameters[x].value as ConfigVec3[];
+  parameters.forEach((param) => {
+    if (param.type == 'trajectory') {
+      const trj = new Trajectory({ name: param.key });
+      const points = param.value as ConfigVec3[];
 
       points?.forEach((point: ConfigVec3, idx: number) =>
         trj.addChild(
@@ -40,8 +40,8 @@ function parseTrajectories(parameters: Parameters) {
       );
       trajectories.push(trj);
     }
-    if (parameters[x].children) {
-      trajectories.push(...parseTrajectories(parameters[x].children!));
+    if (param.children) {
+      trajectories.push(...parseTrajectories(param.children!));
     }
   });
   return trajectories;
@@ -52,15 +52,15 @@ function updateTrajectoryParams (node: SceneNode, parameters: Parameters) {
     return;
   }
 
-  Object.keys(parameters).forEach((key) => {
-    if (parameters[key].type == 'trajectory') {
-      const findTrajectory = node.children.find(x => x instanceof Trajectory && x.name == key);
+  parameters.forEach((param) => {
+    if (param.type == 'trajectory') {
+      const findTrajectory = node.children.find(x => x instanceof Trajectory && x.name == param.key);
       if (findTrajectory) {
-        parameters[key].value = findTrajectory.children.map((point) => ConfigUtils.getConfigVec3((point as Marker).position));
+        param.value = findTrajectory.children.map((point) => ConfigUtils.getConfigVec3((point as Marker).position));
       }
     }
-    if (parameters[key].children) {
-      updateTrajectoryParams(node, parameters[key].children!);
+    if (param.children) {
+      updateTrajectoryParams(node, param.children!);
     }
   });
 }

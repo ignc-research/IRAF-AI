@@ -12,5 +12,9 @@ export class TrajectoryEditorComponent {
   @Input()
   sceneNode!: SceneNode;
 
+  get trajectories() {
+    return this.sceneNode.params?.filter(x => x.type == 'trajectory');
+  }
+
   constructor(public sceneService: SceneService) {}  
 }

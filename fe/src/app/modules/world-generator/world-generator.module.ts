@@ -54,6 +54,10 @@ import { GroupNodeComponent } from './components/scene/scene-node/group-node/gro
 import { MarkerComponent } from './components/scene/scene-node/marker/marker.component';
 import { ConfigSelectorComponent } from './components/toolbar-top/config-selector/config-selector.component';
 import { TrajectoryComponent } from './components/scene/scene-node/trajectory/trajectory.component';
+import { Vec3InputComponent } from './components/parameter-editor/parameter-input/vec3-input/vec3-input.component';
+import { ColorInputComponent } from './components/parameter-editor/parameter-input/color-input/color-input.component';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { ExpandableComponent } from './components/parameter-editor/expandable/expandable.component';
 
 @NgModule({
   
@@ -87,12 +91,17 @@ import { TrajectoryComponent } from './components/scene/scene-node/trajectory/tr
     GroupNodeComponent,
     MarkerComponent,
     ConfigSelectorComponent,
-    TrajectoryComponent
+    TrajectoryComponent,
+    Vec3InputComponent,
+    ColorInputComponent,
+    ExpandableComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     WorldGeneratorRoutingModule,
+
+    ColorPickerModule,
 
     // Material Design
     MatAutocompleteModule,
