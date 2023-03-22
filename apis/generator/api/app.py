@@ -7,7 +7,10 @@ from models.goal_definitions import goal_definitions
 from models.env_definition import env_definition
 from ir_drl.modular_drl_env.shared.maze_generator import MazeGenerator
 from ir_drl.modular_drl_env.shared.shelf_generator import ShelfGenerator
+from ir_drl.modular_drl_env.shared.shape_generators import ShapeGenerator
 from helpers.fs_util import *
+
+import json
 import os
 import glob
 import pybullet_data
@@ -22,12 +25,23 @@ def home():
 
 @app.route("/obstacle/<type>/<path:path>")
 def get_custom_obstacle_urdf(type, path):
+    args = {}
+    # Parse get params
+    for arg in request.args:
+        args[arg] = json.loads(request.args[arg])
+
     if type == "human":
         return send_from_directory(HUMAN_PATH, path)
     if type == "maze" or type == "shelf":
-        generator = MazeGenerator(request.args) if type == "maze" else ShelfGenerator(request.args)
+        generator = MazeGenerator(args) if type == "maze" else ShelfGenerator(args)
         return Response(generator.generate(), mimetype="text/urdf", headers={"Content-disposition":
                  "attachment; filename=generated.urdf"}) 
+    if type == "box":
+        return ShapeGenerator().generate_box(**args)
+    if type == "sphere":
+        return ShapeGenerator().generate_sphere(**args)
+    if type == "cylinder":
+        return ShapeGenerator().generate_cylinder(**args)
     if type == "basic":
         if os.path.exists(os.path.join(WORKSPACE_PATH, path)):
             return send_from_directory(WORKSPACE_PATH, path)

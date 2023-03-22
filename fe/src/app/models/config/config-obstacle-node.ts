@@ -11,7 +11,7 @@ export type ConfigObstacleNode = {
   type: string;
   position: ConfigVec3;
   rotation: ConfigVec3;
-  scale: number;
+  scale?: number;
   urdf?: string;
   params: { [key: string]: any };
 };
@@ -30,7 +30,7 @@ export function parseObstacles(obstacles: IObstacle[], obstacleNode: ConfigObsta
     obstacleDef.name = obstacleNode.type;
     obstacleDef.position = ConfigUtils.getThreeVec3(obstacleNode.position);
     obstacleDef.rotation = ConfigUtils.getThreeEuler(obstacleNode.rotation);
-    obstacleDef.scale = ConfigUtils.getThreeVec3([obstacleNode.scale, obstacleNode.scale, obstacleNode.scale]);
+    obstacleDef.scale = ConfigUtils.getThreeVec3([obstacleNode.scale ?? 1, obstacleNode.scale ?? 1, obstacleNode.scale ?? 1]);
     return new Obstacle(obstacleDef);
   } else {
     throw `Config contains unknown obstacle type: ${

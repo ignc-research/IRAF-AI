@@ -1,53 +1,61 @@
 goal_definitions = [
     {
       "type": "PositionCollision",
-      "params": {
-        "add_to_logging": {
+      "params": [
+        {
+          "key": "add_to_logging",
           "type": "bool",
           "value": False
         },
-        "continue_after_success": {
+        {
+          "key": "continue_after_success",
           "type": "bool",
           "value": False
         },
-        "reward_success": {
+        {
+          "key": "reward_success",
           "type": "int",
-          "value": False
+          "value": 10
         },
-        "reward_collision": {
+        {
+          "key": "reward_collision",
           "type": "int",
-          "value": False
+          "value": -5
         },
-        "reward_distance_mult": {
+        {
+          "key": "reward_distance_mult",
           "type": "float",
-          "value": False
+          "value": -0.01
         },
-        "dist_threshold_start": {
+        {
+          "key": "dist_threshold_start",
           "type": "float",
-          "value": False
+          "value": 0.2
         },
-        "dist_threshold_end": {
+        {
+          "key": "dist_threshold_end",
           "type": "float",
-          "value": False
+          "value": 0.01
         },
-        "dist_threshold_increment_start": {
+        {
+          "key":  "dist_threshold_increment_start",
           "type": "float",
-          "value": False
+          "value": 0.01
         },
-        "dist_threshold_increment_end": {
+        {
+          "key": "dist_threshold_increment_end",
           "type": "float",
-          "value": False
+          "value": 0.001
         },
-        "dist_threshold_overwrite": {
+        {
+          "key": "dist_threshold_overwrite",
           "type": "string",
-          "value": False
+          "value": "None"
         }
-      }
+      ]
     },
     {
       "type": "PositionRotationCollision",
-      "params": {
-    
-      }
+      "params": []
     }
 ]

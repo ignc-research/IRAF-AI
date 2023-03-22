@@ -1,14 +1,10 @@
 sensor_definitions = [
     {
       "type": "LiDAR",
-      "params": {
-        
-      }
+      "params": []
     },
     {
       "type": "Camera",
-      "params": {
-    
-      }
+      "params": []
     }
 ]
