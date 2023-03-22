@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PlotDataService, Experiment } from './plot/plot-data.service';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +17,8 @@ import { Subject } from 'rxjs';
 export class EvaluationComponent implements OnInit {
 
   @Input() experiment: Experiment | undefined;
+  @ViewChild('variableEditor') variableEditor!: ElementRef;
+
 
   
   firstExperiment: string | undefined;
@@ -31,6 +33,8 @@ export class EvaluationComponent implements OnInit {
   globalVariables: { [key: string]: any } = {};
   variableDefinition: string = '';
   globalVariableAdded: Subject<void> = new Subject<void>();
+  isDarkModeEnabled = false;
+
 
 
 
@@ -71,22 +75,11 @@ export class EvaluationComponent implements OnInit {
 
   addVariable(): void {
     try {
-      const dataContext = this.experiment ? this.experiment.data : {};
-      
-      const variableFunction = (context: any) => {
-        console.log('Evaluating variable:', eval(this.variableDefinition));
-        return eval(this.variableDefinition);
-      };
-      const result = variableFunction(dataContext);
-  
       // Extract variable name from definition
       const variableNameMatch = this.variableDefinition.match(/^(?:const|let|var)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)\s*=/);
       if (variableNameMatch && variableNameMatch[1]) {
         const variableName = variableNameMatch[1];
-        this.globalVariables[variableName] = result;
-  
-        // Add the variable to the window object (global namespace)
-        (window as any)[variableName] = result;
+        this.globalVariables[variableName] = this.variableDefinition;
       } else {
         throw new Error("Variable name not found");
       }
@@ -100,19 +93,39 @@ export class EvaluationComponent implements OnInit {
       alert('Error evaluating variable: ' + error);
     }
   }
-  
-  
-  
-  
-  
 
+  openVariableEditor(variableName: string): void {
+    this.variableDefinition = this.globalVariables[variableName];
+
+    const variableDiv = document.querySelector('.variable-div');
+    if (variableDiv) {
+      const rect = variableDiv.getBoundingClientRect();
+
+      this.variableEditor.nativeElement.style.position = 'absolute';
+      this.variableEditor.nativeElement.style.left = rect.left + 'px';
+      this.variableEditor.nativeElement.style.top = rect.bottom + 'px';
+      this.variableEditor.nativeElement.style.display = 'block';
+    }
+  }
+
+  closeVariableEditor(): void {
+    this.variableEditor.nativeElement.style.display = 'none';
+  }
+
+  saveVariable(variableName: string): void {
+    this.globalVariables[variableName] = this.variableDefinition;
+    this.closeVariableEditor();
+  }
+  
   addPlot(): void {
     if (this.selectedPlot) {
       if (this.selectedPlot === 'custom') {
-        // Execute global variables
+        // Check for variables in the customPlotCode and add their definitions
         let globalVariablesCode = '';
-        for (const [variableName, variableValue] of Object.entries(this.globalVariables)) {
-          globalVariablesCode += `const ${variableName} = ${JSON.stringify(variableValue)};`;
+        for (const [variableName, variableDefinition] of Object.entries(this.globalVariables)) {
+          if (this.customPlotCode.includes(variableName)) {
+            globalVariablesCode += `${variableDefinition}\n`;
+          }
         }
   
         const customPlotWithVariables = `
@@ -130,8 +143,6 @@ export class EvaluationComponent implements OnInit {
     }
   }
   
-  
-
   onFileInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
@@ -197,11 +208,14 @@ export class EvaluationComponent implements OnInit {
     if (this.renderer != undefined) {
       if (body.classList.contains('dark-mode')) {
         this.renderer.removeClass(body, 'dark-mode');
+        this.isDarkModeEnabled = false;
       } else {
         this.renderer.addClass(body, 'dark-mode');
+        this.isDarkModeEnabled = true;
       }
     }
   }
+  
 
   getExperiments(): Experiment[] {
     return this.plotDataService.experiments;

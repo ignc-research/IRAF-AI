@@ -1,19 +1,24 @@
 <div class="close-btn-wrapper">
-    <button class="close-btn" (click)="close()">x</button>
-  </div>
+  <button class="close-btn" (click)="close()">x</button>
+</div>
+<div class="plotly-table-wrapper">
   <plotly-plot
     class="plotly-table"
     [data]="[
       {
         type: 'table',
-        header: { values: dataColumns },
+        header: { 
+          values: dataColumns,
+          font: { family: 'Arial', size: 8 },
+          width: 300
+        
+        },
         cells: {
           values: dataRows,
           align: 'left',
-          height: 30,
-          line: { color: 'white' },
-          font: { family: 'Arial', size: 14 },
-          columnwidth: 100
+          height: 50,
+          line: { color: 'grey' },
+          font: { family: 'Arial', size: 7 }
         }
       }
     ]"
@@ -23,14 +28,17 @@
       margin: { t: 50, b: 50, l: 50, r: 50 },
       xaxis: { automargin: true },
       yaxis: { automargin: true },
-      scrollY: true
+      scrollY: true,
+      scrollX: true
     }"
-    [config]="{ responsive: true }">
+    [config]="{ responsive: true }"
+    [useResizeHandler]="true"
+  >
   </plotly-plot>
-  
-  <div class="pagination">
-    <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
-    <span #pageInfo class="page-info">Page {{currentPage}} of {{totalPages}}</span>
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
-  </div>
-  
+</div>
+
+<div class="pagination">
+  <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+  <span #pageInfo class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+</div>

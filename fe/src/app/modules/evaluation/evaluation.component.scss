@@ -25,10 +25,9 @@
   border-radius: 4px;
   overflow: visible;
   z-index: 2;
-  padding-right: 20px;
   min-height: 35rem;
   margin-bottom: 1em;
-  width: 90%;
+  width: 97%;
 }
 
 .workspace {
@@ -124,6 +123,7 @@ textarea {
   font-size: 12px;
   background-color: #f8f9fa;
   box-sizing: border-box;
+  align-self: center;
 }
 
 .custom-plot-definition {
@@ -135,7 +135,7 @@ textarea {
   width: 100%;
   height: 100px;
   resize: vertical;
-  padding: 0.5rem;
+  padding: 0rem !important;
   border-radius: 4px;
   border: 1px solid #c4c4c4;
   font-size: 12px;
@@ -195,4 +195,51 @@ textarea {
 .variable-definition {
   width: 100%;
   box-sizing: border-box;
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  bottom: 16px;
+  right: 26px;
+  z-index: 1000;
+  background-color: #f8f9fa;
+  border-radius: 50%;
+  color: #555;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+
+}
+
+.dark-mode .dark-mode-toggle {
+  background-color: #444;
+  color: #f8f9fa;
+}
+
+.dark-mode-toggle:hover {
+  background-color: #e0e0e0;
+}
+
+.variable-div {
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  margin-bottom: 0.25rem;
+  width: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.variable-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
 }

@@ -59,7 +59,7 @@
           <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
         </select>
         <div *ngIf="selectedPlot === 'custom'" class="custom-plot-definition">
-          <label for="customPlotCode">Custom Plot Definition: <a href="https://plotly.com/javascript/" style="text-decoration: none;" target="_blank">Plotly Example Plots</a></label>
+          <label for="customPlotCode">Custom Plot Definition: <a href="https://plotly.com/javascript/" style="text-decoration: none;" id="plotly-examples" target="_blank">Plotly Example Plots</a></label>
           <textarea [(ngModel)]="customPlotCode" id="customPlotCode" rows="4" cols="50"></textarea>
         </div>
         <button (click)="addPlot()">Add Plot</button>
@@ -67,7 +67,7 @@
         <button *ngFor="let experiment of getExperiments()" (click)="openDataTable(experiment)">
           Show Data Table for {{ experiment.name }}
         </button>
-        <button (click)="toggleDarkMode()">Toggle Dark Mode</button>
+        
 
         <div class="import-csv-section">
           <label for="importCsvInput">Import CSV:</label>
@@ -85,11 +85,11 @@
     <div class="right-controls">
       <div class="global-variables">
         <h4>Current Variables:</h4>
-        <ul>
-          <li *ngFor="let variable of globalVariables | keyvalue">
-            {{ variable.key }} = {{ variable.value }}
-          </li>
-        </ul>
+        <div class="variable-group">
+          <div *ngFor="let variable of globalVariables | keyvalue" class="variable-div" (click)="openVariableEditor(variable.key)">
+            {{ variable.key }}
+          </div>
+        </div>
       </div>
       
       <div class="variable-definition">
@@ -98,5 +98,16 @@
       </div>
       <button (click)="addVariable()">Add Variable</button>
     </div>
+
+    <button mat-icon-button (click)="toggleDarkMode()" class="dark-mode-toggle" [ngClass]="{'dark-mode': isDarkModeEnabled}">
+      <mat-icon *ngIf="isDarkModeEnabled; else sunIcon">nights_stay</mat-icon>
+      <ng-template #sunIcon>
+        <mat-icon>wb_sunny</mat-icon>
+      </ng-template>
+    </button>
+
   </div>
+
+
+  
 </div>

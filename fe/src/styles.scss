@@ -37,7 +37,31 @@ body.dark-mode {
     background-color: #555;
     color: #ffffff;
   }
+
+  body.dark-mode .plot-specific-code {
+    background-color: #555 !important;
+    color: #ffffff !important;
+  }
+
+  body.dark-mode .global-variables {
+    background-color: #555 !important;
+    color: #ffffff !important;
+  }
+
+  body.dark-mode .variable-div {
+    background-color: rgb(103, 103, 113) !important;
+    color: #ffffff !important;
+  }
   
+  body.dark-mode #importCsvInput {
+    background-color: #555 !important;
+    color: #ffffff !important;
+  }
+
+  body.dark-mode #plotly-examples {
+    color: #c0ffc6 !important;
+  }
+
   body.dark-mode button {
     background-color: #3a9eff;
   }

@@ -17,8 +17,9 @@ export class DataTableComponent implements OnInit {
   experiment: Experiment;
   dataColumns: string[] = [];
   dataRows: any[][] = [];
+  allDataRows: any[][] = [];
   currentPage: number = 1;
-  pageSize: number = 50; // Adjust the number of rows per page
+  pageSize: number = 50;
   totalPages: number = 1;
 
   constructor(
@@ -42,7 +43,7 @@ export class DataTableComponent implements OnInit {
       if (paginationElement) {
         (paginationElement as HTMLElement).style.opacity = '1';
       }
-    }, 600); // Update the time to 1 second
+    }, 600);
   }
 
   close(): void {
@@ -51,41 +52,48 @@ export class DataTableComponent implements OnInit {
 
   private processData(): void {
     const data = this.experiment.data;
-  
+
     if (Object.keys(data).length > 0) {
-      // Get the column names
       this.dataColumns = Object.keys(data);
-  
-      // Get the data rows
+
       const rowCount = data[this.dataColumns[0]].length;
-      const allDataRows = new Array(rowCount).fill(null).map((_, rowIndex) => {
+      const tempDataRows = new Array(rowCount).fill(null).map((_, rowIndex) => {
         return this.dataColumns.map((columnName) => data[columnName][rowIndex]);
       });
-  
-      // Transpose the data rows to switch rows and columns
-      const transposedDataRows = allDataRows[0].map((_, columnIndex) => {
-        return allDataRows.map((row) => row[columnIndex]);
+
+      this.allDataRows = tempDataRows[0].map((_, columnIndex) => {
+        return tempDataRows.map((row) => row[columnIndex]);
       });
-  
-      // Calculate the total number of pages
+
       this.totalPages = Math.ceil(rowCount / this.pageSize);
-  
-      // Update table data for the current page
-      this.updateTableData(transposedDataRows, this.currentPage);
+      this.updateDataForCurrentPage();
     }
   }
-  
 
-  private updateTableData(allDataRows: any[][], page: number): void {
-    const start = (page - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.dataRows = allDataRows.slice(start, end);
+  updateDataForCurrentPage(): void {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.dataRows = this.allDataRows.slice(startIndex, endIndex).map((row) => {
+      return row.map((cell) => {
+        if (Array.isArray(cell)) {
+          return cell.map((val) => this.formatValue(val)).join('<br>');
+        }
+        return this.formatValue(cell);
+      });
+    });
+  }
+
+  private formatValue(value: any): string {
+    if (typeof value === 'number') {
+      return value.toFixed(7) + '...';
+    }
+    return value;
   }
 
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
-      this.processData();
+      this.updateDataForCurrentPage();
     }
   }
 

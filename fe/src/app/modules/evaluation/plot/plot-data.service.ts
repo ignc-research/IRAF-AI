@@ -121,6 +121,9 @@ export class PlotDataService {
     this.experiments.push(experiment);
   }
 
+  
+  
+
   groupDataByEpisode(data: any[]): { [episode: string]: any[] } {
     const groupedData: { [episode: string]: any[] } = {};
 
@@ -138,7 +141,6 @@ export class PlotDataService {
   }
 }
 
-// Define the necessary types
 export type Experiment = {
   name: string;
   data: { [key: string]: (number | number[])[] };
@@ -149,4 +151,5 @@ type ExperimentData = {
   episode: number;
   data: { [key: string]: (number | number[])[] };
 };
+
     
