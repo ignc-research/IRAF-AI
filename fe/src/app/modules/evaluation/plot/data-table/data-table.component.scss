@@ -1,5 +1,5 @@
 .data-table {
-  height: 100%;
+  height: 50%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -8,8 +8,6 @@
 
 .close-btn-wrapper {
   position: absolute;
-  top: 25px;
-  right: 25px;
   z-index: 999;
   opacity: 0;
   transition: opacity 0.5s ease-in;
@@ -52,14 +50,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 16px;
   gap: 10px;
 }
 
 button {
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  min-width: 80px;
+  min-width: 40px;
   height: 40px;
   border: 1px solid #c9c9c9;
   font-size: 16px;

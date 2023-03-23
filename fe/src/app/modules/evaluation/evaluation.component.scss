@@ -226,14 +226,29 @@ textarea {
 .variable-div {
   cursor: pointer;
   padding: 0.25rem 0.5rem;
-  background-color: #f0f0f0;
+  background-color: #fcfcfc;
   border-radius: 4px;
   margin-bottom: 0.25rem;
   width: 2.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transform-origin: center;
+  animation: pop-up 400ms ease-out;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+@keyframes pop-up {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .variable-group {
@@ -243,3 +258,6 @@ textarea {
   align-items: center;
   gap: 0.5rem;
 }
+
+
+

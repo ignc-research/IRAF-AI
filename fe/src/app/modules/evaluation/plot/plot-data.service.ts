@@ -20,7 +20,7 @@ export class PlotDataService {
     // Load CSV file
     const csvUrl = csvData
       ? URL.createObjectURL(new Blob([csvData], { type: 'text/csv' }))
-      : 'http://localhost:4200/assets/test_csv.csv';
+      : 'http://localhost:4200/assets/episode_300.csv';
 
     d3.csv(csvUrl).then((parsedData) => {
       // Preprocess and process the loaded data
@@ -61,7 +61,7 @@ export class PlotDataService {
           rowData[columnName] = cell
             .replace(/\s+\]/g, ']') // Fix faulty spaces before closing bracket
             .slice(1, -1)
-            .split(/\s+/) // Use a regex to split on commas with optional surrounding spaces
+            .split(/\s+/) // Use a regex to split on spaces with optional surrounding spaces
             .map((value) => parseFloat(value));
         } else {
           rowData[columnName] = parseFloat(cell);

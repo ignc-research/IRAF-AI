@@ -48,6 +48,16 @@ body.dark-mode {
     color: #ffffff !important;
   }
 
+  body.dark-mode .plotly-table {
+    background-color: #555 !important;
+    color: #ffffff !important;
+  }
+
+  body.dark-mode .pagination {
+    background-color: #555 !important;
+    color: #ffffff !important;
+  }
+
   body.dark-mode .variable-div {
     background-color: rgb(103, 103, 113) !important;
     color: #ffffff !important;

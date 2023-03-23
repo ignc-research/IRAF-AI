@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
 import { PlotDataService, Experiment } from '../plot-data.service';
 import * as Plotly from 'plotly.js-dist-min';
 import { Subject } from 'rxjs';
@@ -15,12 +15,16 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() elementId: string | undefined;
   @Input() uniqueKey: any;
   @Input() globalVariableAdded: Subject<void> | undefined;
+  @Input() darkMode: boolean = false;
+
 
 
 
   private experiment: Experiment | undefined;
 
-  constructor(private plotDataService: PlotDataService) {}
+  constructor(private plotDataService: PlotDataService, private elRef: ElementRef, private renderer: Renderer2) {}
+
+  
 
   ngOnInit(): void {
     if (this.experimentName) {
@@ -44,6 +48,11 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.renderCustomPlot();
+    if (this.darkMode) {
+      this.renderer.addClass(this.elRef.nativeElement, 'dark-mode');
+    } else {
+      this.renderer.removeClass(this.elRef.nativeElement, 'dark-mode');
+    }
   }
 
   private renderCustomPlot(): void {

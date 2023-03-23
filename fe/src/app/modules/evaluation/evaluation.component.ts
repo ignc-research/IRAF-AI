@@ -168,36 +168,47 @@ export class EvaluationComponent implements OnInit {
     this.customPlotCode = `
       
     const positionData = dataContext['position_link_7_ur5_1'];
+const velocityData = dataContext['velocity_link_7_ur5_1'];
 
-    const x = positionData.map((values) => values[0]);
-    const y = positionData.map((values) => values[1]);
-    const z = positionData.map((values) => values[2]);
-    
-    const trace = {
-      x: x,
-      y: y,
-      z: z,
-      mode: 'lines+markers',
-      marker: {
-        size: 8,
-        color: z,
-        colorscale: 'Viridis',
-        opacity: 0.8
-      },
-      type: 'scatter3d'
-    };
-    
-    const layout = {
-      scene: {
-        xaxis: { title: 'X Axis' },
-        yaxis: { title: 'Y Axis' },
-        zaxis: { title: 'Z Axis' }
-      }
-    };
-    
-    const data = [trace];
-    
-              return { data: data, layout: layout };
+const x = positionData.map((values) => values[0]);
+const y = positionData.map((values) => values[1]);
+const z = positionData.map((values) => values[2]);
+
+const velocityMagnitude = velocityData.map((values) => {
+  const vx = values[0];
+  const vy = values[1];
+  const vz = values[2];
+  return Math.sqrt(vx * vx + vy * vy + vz * vz);
+});
+
+const trace = {
+  x: z, // Swap x and z axes
+  y: y,
+  z: x, // Swap x and z axes
+  mode: 'markers',
+  marker: {
+    size: 2,
+    color: velocityMagnitude,
+    colorscale: 'Viridis',
+    opacity: 0.8,
+    showscale: true,
+  },
+  type: 'scatter3d',
+};
+
+const layout = {
+  title: '3D Scatter Plot of Position with Velocity Magnitude',
+  scene: {
+    xaxis: { title: 'Z Axis' }, // Update axis labels
+    yaxis: { title: 'Y Axis' },
+    zaxis: { title: 'X Axis' }, // Update axis labels
+  },
+};
+
+const data = [trace];
+
+return { data: data, layout: layout };
+
             
       
     `;
