@@ -14,10 +14,10 @@ export class ToastService {
   }
 
   warning(message: string, title?: string) {
-    this.toastr.warning(message, title ?? 'Warning');
+    this.toastr.warning(message, title ?? 'Warning', { timeOut: 15000 });
   }
 
   error(message: string, title?: string) {
-    this.toastr.error(message, title ?? 'Error');
+    this.toastr.error(message, title ?? 'Error', { disableTimeOut: true });
   }
 }

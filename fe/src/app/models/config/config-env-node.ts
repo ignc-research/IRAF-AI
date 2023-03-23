@@ -1,7 +1,7 @@
 import { Environment, IEnvironment } from "../environment";
+import { ConfigIoResult } from "./config-io-result";
 import { ConfigParamUtils } from "./config-params";
 import { ConfigRobotNode } from "./config-robot-node";
-import { ConfigVec3 } from "./config-vec3";
 import { ConfigWorldNode } from "./config-world-node";
 
 export type ConfigEnvNode = {
@@ -9,12 +9,16 @@ export type ConfigEnvNode = {
   world: ConfigWorldNode;
 };
 
-export function parseEnvironment(env: IEnvironment, configEnv?: ConfigEnvNode) {
+export function parseEnvironment(env: IEnvironment, configEnv?: ConfigEnvNode): ConfigIoResult<Environment> {
+  const output = new ConfigIoResult<Environment>();
+
   const envDef = structuredClone(env);
-  console.log(envDef)
-  envDef.params = ConfigParamUtils.getParams(envDef.params!, configEnv ?? {});
-  console.log(envDef.params)
-  return new Environment(envDef);
+
+  const params = ConfigParamUtils.getParams(envDef.params!, configEnv ?? {});;
+  output.withMessages(params.messages, `Environment: `);
+  envDef.params = params.data;
+
+  return output.withData(new Environment(envDef));
 }
 
 export function exportEnvironment(env: Environment): ConfigEnvNode {

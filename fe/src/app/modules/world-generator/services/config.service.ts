@@ -42,6 +42,8 @@ import { Trajectory } from 'src/app/models/trajectory';
 import { Marker } from 'src/app/models/marker';
 import { Config } from 'src/app/models/config/config';
 import { ConfigUtils } from 'src/app/models/config/config-utils';
+import { ConfigIoMessage, ConfigIoMsgType, ConfigIoResult } from 'src/app/models/config/config-io-result';
+import { SceneObject } from 'src/app/models/scene-object';
 
 @Injectable({
   providedIn: 'root',
@@ -111,7 +113,21 @@ export class ConfigService {
     document.body.removeChild(elem);
   }
 
+  showMessages (messages: ConfigIoMessage[]) {
+    messages.forEach(msg => {
+      switch(msg.type) {
+        case ConfigIoMsgType.SUCCESS:
+          return this.toast.success(msg.message, 'Success');
+        case ConfigIoMsgType.WARNING:
+          return this.toast.warning(msg.message, 'Warning');
+        case ConfigIoMsgType.ERROR:
+          return this.toast.error(msg.message, 'Error');
+      }
+    })
+  }
+
   parseConfig(configStr?: string) {
+    const output = new ConfigIoResult<Environment>();
     try {
       const data = configStr
         ? (YAML.load(configStr, { json: true }) as Config)
@@ -121,59 +137,77 @@ export class ConfigService {
         throw `YAML Parse error`;
       }
 
-      const rootNode = parseEnvironment(
+      const parsedEnvironment = parseEnvironment(
         this.apiService.environment!,
         data?.env
       );
+      output.withMessages(parsedEnvironment.messages);
+      output.withData(parsedEnvironment.data!);
 
       const robots: GroupNode = new GroupNode({
         name: 'Robots',
         type: GroupType.Robots,
       });
-      rootNode.addChild(robots);
+      output.data?.addChild(robots);
 
       // Parse robots
       data?.env.robots.forEach((robotNode) => {
         const parsedRobot = parseRobot(this.apiService.robots, robotNode);
+        output.withMessages(parsedRobot.messages);
 
-        const parsedSensors = robotNode.sensors?.map((sensorNode) =>
-          parseSensor(this.apiService.sensors, sensorNode)
-        );
-        parsedSensors?.forEach((sensor) => parsedRobot.addChild(sensor));
+        const parsedSensors = robotNode.sensors?.map((sensorNode) => {
+          const parsedSensor = parseSensor(this.apiService.sensors, sensorNode);
+          output.withMessages(parsedSensor.messages);
+
+          return parsedSensor.data;
+        });
+        parsedSensors?.filter(x => !!x).forEach((sensor) => parsedRobot.data?.addChild(sensor!));
 
         if (robotNode.goal) {
           const parsedGoal = parseGoal(this.apiService.goals, robotNode.goal);
-          parsedRobot.addChild(parsedGoal);
+          output.withMessages(parsedGoal.messages);
+
+          if (parsedGoal.data) {
+              parsedRobot.data?.addChild(parsedGoal.data);
+          }
         }
 
-        robots.addChild(parsedRobot);
+        if (parsedRobot.data) {
+            robots.addChild(parsedRobot.data);
+        }
       });
 
       const obstacles: GroupNode = new GroupNode({
         name: 'Obstacles',
         type: GroupType.Obstacles,
       });
-      rootNode.addChild(obstacles);
+      output.data?.addChild(obstacles);
 
-      data?.env.world.config.obstacles.forEach((obstacleNode) => {
+      data?.env.world.config.obstacles?.forEach((obstacleNode) => {
         const obstacle = parseObstacles(
           this.apiService.obstacles,
           obstacleNode
         );
-        ConfigUtils.parseTrajectories(obstacle.params ?? []).forEach((trj) =>
-          obstacle.addChild(trj)
+        output.withMessages(obstacle.messages);
+
+        ConfigUtils.parseTrajectories(obstacle.data?.params ?? []).forEach((trj) =>
+          obstacle.data?.addChild(trj)
         );
-        obstacles.addChild(obstacle);
+
+        if (obstacle.data) {
+            obstacles.addChild(obstacle.data);
+        }
       });
 
       this.uiService.selectNode(null);
 
       // Fix for refs not updating properly
       setTimeout(() => (this.sceneService.rootNode = undefined), 0);
-      setTimeout(() => (this.sceneService.rootNode = rootNode), 0);
+      setTimeout(() => (this.sceneService.rootNode = output.data), 0);
     } catch (e) {
-      this.toast.error(`Error: ${e}`);
       console.error(e);
+      output.withMessage(new ConfigIoMessage(`An unknown error occured: ${e}`, ConfigIoMsgType.ERROR));
     }
+    this.showMessages(output.messages);
   }
 }

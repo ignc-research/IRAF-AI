@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { Parameters } from '../parameters';
 import { IRobot, Robot } from '../robot';
 import { ConfigGoalNode } from './config-goal-node';
+import { ConfigIoMessage, ConfigIoMsgType, ConfigIoResult } from './config-io-result';
 import { ConfigParamUtils } from './config-params';
 import { ConfigSensorNode } from './config-sensor-node';
 import { ConfigUtils } from './config-utils';
@@ -21,26 +22,33 @@ export type ConfigRobotNode = {
   type: string;
 };
 
-export function parseRobot(robots: IRobot[], robotNode: ConfigRobotNode) {
+export function parseRobot(robots: IRobot[], robotNode: ConfigRobotNode): ConfigIoResult<Robot> {
+  const output = new ConfigIoResult<Robot>();
+
   const robotDef = structuredClone(
     robots.find((x) => x.type == robotNode.type)
   );
   if (robotDef && robotDef.params) {
-    robotDef.params = ConfigParamUtils.getParams(robotDef.params, robotNode.config);
+    const params = ConfigParamUtils.getParams(robotDef.params, robotNode.config);
+    output.withMessages(params.messages, `Robot ${robotDef.type}: `);
+
+    robotDef.params = params.data;
     robotDef.position = ConfigUtils.getThreeVec3(robotNode.config.base_position);
     robotDef.rotation = ConfigUtils.getThreeEuler(
       robotNode.config.base_orientation
     );
     robotDef.name = robotNode.config.name;
     robotDef.resting_angles = robotNode.config.resting_angles?.map(NumberUtils.deg2Rad);
-    return new Robot(robotDef);
+    output.withData(new Robot(robotDef));
   } else {
-    throw `Config contains unknown robot type: ${
+    output.withMessage(new ConfigIoMessage(`Config contains unknown robot type: ${
         robotNode.type
       }. Known robot types are ${robots
         .map((x) => x.type)
-        .join(', ')}`;
+        .join(', ')}`, ConfigIoMsgType.ERROR));
   }
+
+  return output;
 }
 
 export function exportRobot(robot: Robot): ConfigRobotNode {

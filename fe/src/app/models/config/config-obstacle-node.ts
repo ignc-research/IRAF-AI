@@ -3,6 +3,7 @@ import { Marker } from "../marker";
 import { IObstacle, Obstacle } from "../obstacle";
 import { Parameters } from "../parameters";
 import { Trajectory } from "../trajectory";
+import { ConfigIoMessage, ConfigIoMsgType, ConfigIoResult } from "./config-io-result";
 import { ConfigParamUtils } from "./config-params";
 import { ConfigUtils } from "./config-utils";
 import { ConfigVec3 } from "./config-vec3";
@@ -17,29 +18,31 @@ export type ConfigObstacleNode = {
 };
 
 
-export function parseObstacles(obstacles: IObstacle[], obstacleNode: ConfigObstacleNode) {
-
+export function parseObstacles(obstacles: IObstacle[], obstacleNode: ConfigObstacleNode): ConfigIoResult<Obstacle> {
+  const output = new ConfigIoResult<Obstacle>();
   let obstacleDef = structuredClone(obstacles.find((x) => x.type == obstacleNode.type));
 
   if (obstacleDef && obstacleDef.params) {
     obstacleDef.urdf = obstacleNode.urdf ?? obstacleDef.urdf;
-    obstacleDef.params = ConfigParamUtils.getParams(
+    const params = ConfigParamUtils.getParams(
       obstacleDef.params,
       obstacleNode.params
     );
+    output.withMessages(params.messages, `Obstacle ${obstacleDef.type}: `);
+    obstacleDef.params = params.data;
     obstacleDef.name = obstacleNode.type;
     obstacleDef.position = ConfigUtils.getThreeVec3(obstacleNode.position);
     obstacleDef.rotation = ConfigUtils.getThreeEuler(obstacleNode.rotation);
     obstacleDef.scale = ConfigUtils.getThreeVec3([obstacleNode.scale ?? 1, obstacleNode.scale ?? 1, obstacleNode.scale ?? 1]);
-    return new Obstacle(obstacleDef);
+    output.withData(new Obstacle(obstacleDef));
   } else {
-    throw `Config contains unknown obstacle type: ${
-        obstacleNode.type
-      }. Known obstacle types are ${obstacles
-        .map((x) => x.type)
-        .join(', ')}`;
+    output.withMessage(new ConfigIoMessage(`Config contains unknown obstacle type: ${
+      obstacleNode.type
+    }. Known obstacle types are ${obstacles
+      .map((x) => x.type)
+      .join(', ')}`, ConfigIoMsgType.ERROR));
   }
-  
+  return output;
 }
 
 export function exportObstacle( obstacle: Obstacle): ConfigObstacleNode {
