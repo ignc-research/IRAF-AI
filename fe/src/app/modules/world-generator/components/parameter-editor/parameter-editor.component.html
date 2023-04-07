@@ -1,0 +1,7 @@
+<app-expandable [title]="title" [expanded]="expanded">
+  <div class="editor">
+    <div class="entry" *ngFor="let parameter of parameters" [style.width]="width">
+        <app-parameter-input [label]="parameter.key" [parameter]="parameter"></app-parameter-input>
+    </div>
+  </div>
+</app-expandable>

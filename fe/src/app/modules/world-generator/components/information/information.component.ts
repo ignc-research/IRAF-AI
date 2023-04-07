@@ -1,18 +1,13 @@
 import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { Color, LoaderUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
-import URDFLoader, { URDFJoint, URDFRobot } from 'urdf-loader';
+import { URDFJoint } from 'libs/urdf-loader/URDFLoader';
 import * as YAML from 'js-yaml';
-import { CommonModule } from '@angular/common';
 import { SceneService } from '../../services/scene.service';
-import { UserDataComponent } from './user-data/user-data.component';
-import { map, Observable } from 'rxjs';
+import { Object3D } from 'three';
 
 @Component({
   selector: 'app-information',
-  standalone: true,
   templateUrl: './information.component.html',
   styleUrls: ['./information.component.scss'],
-  imports: [CommonModule, UserDataComponent]
 })
 export class InformationComponent {
 

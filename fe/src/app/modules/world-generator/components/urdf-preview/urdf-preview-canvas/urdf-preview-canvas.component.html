@@ -1,0 +1,16 @@
+<h1 *ngIf="urdfPath && !robot && !hasError">Loading...</h1>
+<h1 *ngIf="hasError">Error</h1>
+<h1 *ngIf="!urdfPath">No URDF available</h1>
+<ngt-canvas *ngIf="robot" style="background: #aaa;">
+    <ngt-ambient-light intensity="0.5"></ngt-ambient-light>
+    <ngt-spot-light [position]="10" angle="0.15" penumbra="1"></ngt-spot-light>
+    <ngt-point-light [position]="-10"></ngt-point-light>
+    <ngt-axes-helper [scale]="1"></ngt-axes-helper>
+
+    <ngt-primitive [object]="robot">
+
+    </ngt-primitive>
+
+
+    <ngt-soba-orbit-controls [makeDefault]="true" [enableZoom]="true"></ngt-soba-orbit-controls>
+</ngt-canvas>

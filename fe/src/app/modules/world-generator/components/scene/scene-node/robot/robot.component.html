@@ -1,0 +1,13 @@
+<ngt-primitive *ngIf="robotObj && robot.parent"
+
+(contextmenu)="onRobotRightClick($event)"
+(wheel)="onWheel($event)"
+[position]="robot.position"
+[rotation]="robot.rotation"
+[scale]="robot.scale"
+[object]="robotObj"
+[appendTo]="robot.parent.ref"
+[ref]="robot.ref"
+(pointerleave)="pointerLeave()">
+    
+</ngt-primitive>

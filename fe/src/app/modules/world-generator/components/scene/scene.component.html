@@ -1,0 +1,18 @@
+<ngt-canvas [scene]="scene" [camera]="camera" style="background: rgba(0, 0, 0, .8)">
+    <ngt-ambient-light intensity="0.5"></ngt-ambient-light>
+    <ngt-spot-light [position]="10" angle="0.15" penumbra="1"></ngt-spot-light>
+    <ngt-point-light [position]="-10"></ngt-point-light>
+    <ngt-axes-helper [scale]="1"></ngt-axes-helper>
+
+    <ngt-group (click)="objectClick($event)" (pointermissed)="objectMiss($event)" (pointerover)="pointerOver($event)" (pointerout)="pointerOut($event)" >
+        <app-scene-node [sceneNode]="sceneService.rootNode!"></app-scene-node>
+        <app-transform-controls [controlledObject]="uiService.selectedObject"></app-transform-controls>
+    </ngt-group>
+  
+    <ngt-mesh receiveShadow>
+        <ngt-plane-geometry [args]="[1000, 1000]"></ngt-plane-geometry>
+        <ngt-mesh-phong-material color="#333"></ngt-mesh-phong-material>
+    </ngt-mesh>
+
+    <ngt-soba-orbit-controls [makeDefault]="true" [maxPolarAngle]="minPolarAngle" [enableZoom]="uiService.enableZoom"></ngt-soba-orbit-controls>
+</ngt-canvas>

@@ -1,0 +1,3 @@
+[submodule "apis/generator/api/IR-DRL"]
+	path = apis/generator/api/ir_drl
+	url = git@github.com:ignc-research/IR-DRL.git

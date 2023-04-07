@@ -1,0 +1,19 @@
+<mat-button-toggle-group (click)="createNewConfig()">
+  <mat-button-toggle>
+    <mat-icon>note_add</mat-icon>  
+  </mat-button-toggle>
+</mat-button-toggle-group>
+
+<mat-button-toggle-group (click)="file.click()">
+  <mat-button-toggle>
+    <mat-icon>upload_file</mat-icon>  
+  </mat-button-toggle>
+</mat-button-toggle-group>
+
+<input type="file" accept=".yml,.yaml" (change)="onFileSelected($event)" #file hidden>
+
+<mat-button-toggle-group *ngIf="sceneService.rootNode" (click)="exportConfig()">
+  <mat-button-toggle>
+    <mat-icon>download</mat-icon>  
+  </mat-button-toggle>
+</mat-button-toggle-group>

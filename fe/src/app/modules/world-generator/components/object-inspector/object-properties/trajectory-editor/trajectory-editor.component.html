@@ -1,0 +1,10 @@
+<app-expandable *ngIf="(trajectories?.length ?? 0) > 0" title="Trajectories">
+  <ng-container *ngFor="let params of trajectories">
+      <div class="trajectory">
+          <div class="info-row">
+              <h5>{{params.key}}</h5>
+              <button color="primary" mat-flat-button (click)="sceneService.addTrajectoryPoint(sceneNode, params.key)">Add Point</button>
+          </div>
+      </div>
+  </ng-container>
+</app-expandable>

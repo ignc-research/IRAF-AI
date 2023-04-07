@@ -1,0 +1,10 @@
+<ngt-mesh *ngIf="link"
+    [appendTo]="link"
+    [ref]="sensor.ref"
+    [position]="sensor.position"
+    [rotation]="sensor.rotation"
+    [scale]="sensor.scale"
+    >
+<ngt-sphere-geometry></ngt-sphere-geometry>
+<ngt-mesh-standard-material [color]="'hotpink'"></ngt-mesh-standard-material>
+</ngt-mesh>

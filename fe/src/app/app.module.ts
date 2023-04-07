@@ -11,6 +11,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { SideMenuItemComponent } from './components/side-menu/side-menu-item/side-menu-item.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,7 @@ import { SideMenuItemComponent } from './components/side-menu/side-menu-item/sid
     SideMenuItemComponent
   ],
   imports: [
+    HttpClientModule,
     MatListModule,
     MatSidenavModule,
     MatButtonModule,
@@ -26,7 +29,8 @@ import { SideMenuItemComponent } from './components/side-menu/side-menu-item/sid
     MatToolbarModule,
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

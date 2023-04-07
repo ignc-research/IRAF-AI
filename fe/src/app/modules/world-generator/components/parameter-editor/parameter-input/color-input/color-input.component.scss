@@ -1,0 +1,13 @@
+.color-wrapper {
+  height: 32px;
+  border-style: solid;
+  border: 1px solid gray;
+  width: 100%;
+  display: flex;
+  cursor: pointer;
+  transition: all 300ms;
+  border-radius: 4px;
+  &:hover {
+    opacity: .5;
+  }
+}

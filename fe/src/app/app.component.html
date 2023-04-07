@@ -7,9 +7,11 @@
 <div class="content">
   <app-side-menu [opened]="navOpened">
     <app-side-menu-item icon="home" routerLink="home">Home</app-side-menu-item>
-    <app-side-menu-item icon="settings" routerLink="world-generator">World Generator</app-side-menu-item>
-    <app-side-menu-item icon="precision_manufacturing" routerLink="pose-estimation">Pose Estimation</app-side-menu-item>
+    <app-side-menu-item icon="precision_manufacturing" routerLink="world-generator">World Generator</app-side-menu-item>
+    <app-side-menu-item icon="task" routerLink="server-tasks">Tasks</app-side-menu-item>
     <app-side-menu-item icon="analytics" routerLink="evaluation">Evaluation</app-side-menu-item>
+    <!-- <app-side-menu-item icon="precision_manufacturing" routerLink="pose-estimation">Pose Estimation</app-side-menu-item> -->
+    <!-- <app-side-menu-item icon="" routerLink="evaluation">Evaluation</app-side-menu-item> -->
   </app-side-menu>
   <div class="router-outlet">
     <router-outlet></router-outlet>

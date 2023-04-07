@@ -1,0 +1,3 @@
+<ngt-group [name]="trajectory.name" *ngIf="trajectory.parent && trajectory.parent.ref.value" [appendTo]="trajectory.parent.ref" [ref]="trajectory.ref">
+    <ngt-primitive [object]="line"></ngt-primitive>
+</ngt-group>

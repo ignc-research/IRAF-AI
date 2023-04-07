@@ -1,0 +1,19 @@
+<div class="inspector">
+    <div class="content">
+        <div class="section" *ngIf="node">
+            <div class="row">
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input [(ngModel)]="node.name" [readonly]="node.readonly" matInput type="text">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div *ngIf="object">
+            <app-transform-input [object]="object"></app-transform-input>
+        </div>
+        <div *ngIf="node">
+            <app-object-properties [node]="node"></app-object-properties>
+        </div>
+    </div>
+</div>

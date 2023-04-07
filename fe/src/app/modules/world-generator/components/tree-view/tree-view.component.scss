@@ -1,0 +1,46 @@
+.container {
+    width: 250px;
+    height: 100%;
+    overflow: auto;
+    background: #ccc;
+}
+
+.wrapper {
+    padding: 8px;
+}
+
+.category-header {
+    margin: 0px 0px 8px 0px !important;
+}
+
+::ng-deep .subheader {
+    margin: 0px !important;
+}
+
+::ng-deep .mdc-list-group__subheader {
+    border-bottom: 1px solid gray;
+}
+::ng-deep .mdc-list {
+    padding: 0px !important;
+}
+
+::ng-deep .mdc-list-item__content {
+    text-align: start;
+}
+
+::ng-deep .mdc-list-item--activated {
+    background: #eee;
+}
+
+.obstacle-list {
+    margin-top: 16px;
+}
+
+
+// mat-list-item {
+//     border-bottom: 1px solid gray;
+// }
+.item {
+    margin-bottom: 8px;
+    border: 1px solid black;
+}

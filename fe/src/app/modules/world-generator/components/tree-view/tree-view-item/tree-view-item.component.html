@@ -1,0 +1,9 @@
+<a mat-list-item (click)="uiService.selectNode(sceneNode)" [activated]="uiService.selectedNode == sceneNode">
+    <mat-icon matListItemIcon>{{icon}}</mat-icon>
+    <span matListItemTitle>{{sceneNode.name}}</span>
+</a>
+<mat-nav-list class="children-list" *ngIf="sceneNode.children.length > 0">
+    <div *ngFor="let child of sceneNode.children">
+        <app-tree-view-item [sceneNode]="child"></app-tree-view-item>
+    </div>
+</mat-nav-list>

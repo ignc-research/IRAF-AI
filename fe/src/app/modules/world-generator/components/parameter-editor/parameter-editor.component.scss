@@ -1,0 +1,18 @@
+.entry {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    &>* {
+        flex: 1;
+    }
+}
+.editor {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+
+::ng-deep .editor mat-form-field {
+  width: 100%;
+}

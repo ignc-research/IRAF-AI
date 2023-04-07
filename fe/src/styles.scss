@@ -1,4 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import 'ngx-toastr/toastr';
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+h5 {
+  margin-bottom: .25rem !important;
+  margin-left: .25rem !important;
+  font-size: .9rem !important;
+}
+
+.toolbar {
+  display: flex;
+  padding: 8px;
+  background: #aaa;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mat-mdc-form-field{
+  margin-bottom: -1.25em;
+}

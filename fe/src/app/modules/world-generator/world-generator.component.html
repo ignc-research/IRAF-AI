@@ -1,20 +1,17 @@
-<app-information [dataObject]="dataObject"></app-information>
-<div style="z-index: 999;">
-  <app-popover *ngIf="showPopover" [position]="popoverPosition"></app-popover>
+
+<div class="container" style="height: 100%; width: 100%;">
+  <app-toolbar-top></app-toolbar-top>
+  <div class="horizontal-container" *ngIf="sceneService.rootNode">
+    <app-object-inspector></app-object-inspector>
+    <div class="center-container">
+        <app-scene></app-scene>
+        <app-motion-replay></app-motion-replay>
+    </div>
+    <app-tree-view></app-tree-view>
+  </div>
+  <div class="hint" *ngIf="!sceneService.rootNode">
+    <div class="title">No config loaded</div>
+    <div class="subtitle">Please upload an existing config or create a new one</div>
+  </div>
 </div>
-<div style="height: 100%; width: 100%;">
-  <ngt-canvas (pointermissed)="pointerMissed($event)">
-    <ngt-ambient-light intensity="0.5"></ngt-ambient-light>
-    <ngt-spot-light [position]="10" angle="0.15" penumbra="1"></ngt-spot-light>
-    <ngt-point-light [position]="-10"></ngt-point-light>
-    <ngt-axes-helper [scale]="1"></ngt-axes-helper>
-    <ngt-soba-transform-controls appTransformControls>
-      <app-robot [position]="[0, 0, 0]" [dataObject]="dataObject" (newDataObject)="changeDataObject($event)"></app-robot>
-    </ngt-soba-transform-controls>
-    <app-sensor></app-sensor>
-
-    <ngt-soba-orbit-controls [makeDefault]="true" [enableZoom]="enableZoom"></ngt-soba-orbit-controls>
-  </ngt-canvas>
-</div>
-
-
+<app-robot-popover></app-robot-popover>

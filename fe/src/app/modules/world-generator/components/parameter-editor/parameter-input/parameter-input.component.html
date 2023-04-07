@@ -1,0 +1,34 @@
+<div class="wrapper">
+  <!-- Render Input Field -->
+  <div *ngIf="parameter.type && !parameter.options">
+    <mat-form-field *ngIf="parameter.type == 'string' || parameter.type == 'float' || parameter.type == 'int'">
+        <mat-label>{{label}}</mat-label>
+        <input [(ngModel)]="parameter.value" *ngIf="parameter.type == 'string'" matInput type="text">
+        <input [(ngModel)]="parameter.value" *ngIf="parameter.type == 'float'" matInput type="number" step=".01">
+        <input [(ngModel)]="parameter.value" *ngIf="parameter.type == 'int'" matInput type="number">
+    </mat-form-field>
+    <mat-checkbox *ngIf="parameter.type == 'bool'" [(ngModel)]="parameter.value">{{label}}</mat-checkbox>
+    <app-vec3-input *ngIf="parameter.type == 'vec3'" [(vec3)]="parameter.value" [label]="label"></app-vec3-input>
+    <app-color-input *ngIf="parameter.type == 'color'" [(color)]="parameter.value" [label]="label"></app-color-input>
+    <div *ngIf="parameter.type == 'trajectory'">
+      <h5>Trajectory ({{label}})</h5>
+      <small>Not editable in this view</small>
+    </div>
+  </div>
+
+  <div *ngIf="parameter.options">
+    <mat-form-field appearance="fill">
+      <mat-label>{{label}}</mat-label>
+      <mat-select [(ngModel)]="parameter.value">
+        <mat-option *ngFor="let option of parameter.options" [value]="option.value">
+          {{option.label ?? option.value}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Render Children if exists -->
+  <div class="group" *ngIf="parameter.children">
+    <app-parameter-editor [title]="label" [columns]="1" [parameters]="parameter.children"></app-parameter-editor>
+  </div>
+</div>
