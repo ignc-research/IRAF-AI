@@ -20,6 +20,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/world-generator/world-generator.module').then(m => m.WorldGeneratorModule)
   },
   {
+    path: 'server-tasks',
+    loadChildren: () => import('./modules/server-tasks/server-tasks.module').then(m => m.ServerTasksModule)
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'home'

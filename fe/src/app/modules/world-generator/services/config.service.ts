@@ -134,7 +134,7 @@ export class ConfigService {
         : undefined;
 
       if (configStr && !data) {
-        throw `YAML Parse error`;
+        output.withMessage(new ConfigIoMessage(`YAML Parse error`, ConfigIoMsgType.ERROR));
       }
 
       const parsedEnvironment = parseEnvironment(
@@ -208,6 +208,10 @@ export class ConfigService {
       console.error(e);
       output.withMessage(new ConfigIoMessage(`An unknown error occured: ${e}`, ConfigIoMsgType.ERROR));
     }
-    this.showMessages(output.messages);
+
+    // Do not show warnings for newly created config
+    if (configStr) {
+        this.showMessages(output.messages);
+    }
   }
 }

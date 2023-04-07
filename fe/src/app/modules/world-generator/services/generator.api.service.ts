@@ -4,6 +4,7 @@ import { IEnvironment } from 'src/app/models/environment';
 import { IGoal } from 'src/app/models/goal';
 import { IObstacle } from 'src/app/models/obstacle';
 import { IRobot, ISensor } from 'src/app/models/robot';
+import { ApiService } from 'src/app/services/api.service';
 import { environment } from 'src/environment/environment';
 
 @Injectable({
@@ -21,20 +22,20 @@ export class GeneratorApiService  {
 
   goals: IGoal[] = [];
 
-  constructor(private httpClient: HttpClient) { 
-    this.httpClient.get<IObstacle[]>(`${environment.apiUrl}/obstacle`).subscribe(x => {
+  constructor(private apiService: ApiService) { 
+    this.apiService.getObstacles.subscribe(x => {
       this.obstacles = x
     });
-    this.httpClient.get<IRobot[]>(`${environment.apiUrl}/robot`).subscribe(x => {
+    this.apiService.getRobots.subscribe(x => {
       this.robots = x;
     });
-    this.httpClient.get<ISensor[]>(`${environment.apiUrl}/sensor`).subscribe(x => {
+    this.apiService.getSensors.subscribe(x => {
       this.sensors = x;
     });
-    this.httpClient.get<IGoal[]>(`${environment.apiUrl}/goal`).subscribe(x => {
+    this.apiService.getGoals.subscribe(x => {
       this.goals = x;
     });
-    this.httpClient.get<IEnvironment>(`${environment.apiUrl}/environment`).subscribe(x => {
+    this.apiService.getEnvironment.subscribe(x => {
       this.environment = x;
     });
   }

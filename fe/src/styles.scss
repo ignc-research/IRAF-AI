@@ -10,3 +10,15 @@ h5 {
   margin-left: .25rem !important;
   font-size: .9rem !important;
 }
+
+.toolbar {
+  display: flex;
+  padding: 8px;
+  background: #aaa;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mat-mdc-form-field{
+  margin-bottom: -1.25em;
+}

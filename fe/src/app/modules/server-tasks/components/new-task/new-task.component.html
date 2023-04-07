@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="toolbar">
+    <div class="config-selector">
+      <mat-form-field appearance="fill">
+        <mat-label>Config</mat-label>
+        <mat-select [(ngModel)]="selectedConfig" (ngModelChange)="onConfigChange()">
+          <mat-option [value]="''">New Config</mat-option>
+          <mat-option [value]="config" *ngFor="let config of configs">{{config}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="config-name" appearance="fill" *ngIf="!selectedConfig">
+        <mat-label>Config Name</mat-label>
+        <input matInput placeholder="Config Name"  [(ngModel)]="configName">
+      </mat-form-field>
+      <button class="config-delete" mat-icon-button *ngIf="selectedConfig" (click)="deleteConfig()">
+        <mat-icon>
+          delete
+        </mat-icon>
+      </button>
+      <button class="config-write" mat-icon-button (click)="writeConfig()">
+        <mat-icon>
+          save
+        </mat-icon>
+      </button>
+    </div>
+
+
+    <mat-radio-group aria-label="Select an option" [(ngModel)]="taskMode">
+        <mat-radio-button value="eval">Eval</mat-radio-button>
+      <mat-radio-button value="train">Train</mat-radio-button>
+    </mat-radio-group>
+
+    <button mat-icon-button (click)="runTask()">
+      <mat-icon>
+        play_arrow
+      </mat-icon>
+    </button>
+  </div>
+  <app-ace-editor [(editorContent)]="configContent" [mode]="'ace/mode/yaml'"></app-ace-editor>
+</div>

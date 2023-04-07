@@ -58,6 +58,8 @@ import { Vec3InputComponent } from './components/parameter-editor/parameter-inpu
 import { ColorInputComponent } from './components/parameter-editor/parameter-input/color-input/color-input.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ExpandableComponent } from './components/parameter-editor/expandable/expandable.component';
+import { MotionReplayComponent } from './components/motion-replay/motion-replay.component';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   
@@ -94,7 +96,8 @@ import { ExpandableComponent } from './components/parameter-editor/expandable/ex
     TrajectoryComponent,
     Vec3InputComponent,
     ColorInputComponent,
-    ExpandableComponent
+    ExpandableComponent,
+    MotionReplayComponent
   ],
   imports: [
     CommonModule,
@@ -115,6 +118,7 @@ import { ExpandableComponent } from './components/parameter-editor/expandable/ex
     MatInputModule,
     MatIconModule,
     MatSelectModule,
+    MatSliderModule,
     MatToolbarModule,
     MatChipsModule,
     

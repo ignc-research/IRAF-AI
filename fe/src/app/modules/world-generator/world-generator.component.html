@@ -3,7 +3,10 @@
   <app-toolbar-top></app-toolbar-top>
   <div class="horizontal-container" *ngIf="sceneService.rootNode">
     <app-object-inspector></app-object-inspector>
-    <app-scene></app-scene>
+    <div class="center-container">
+        <app-scene></app-scene>
+        <app-motion-replay></app-motion-replay>
+    </div>
     <app-tree-view></app-tree-view>
   </div>
   <div class="hint" *ngIf="!sceneService.rootNode">

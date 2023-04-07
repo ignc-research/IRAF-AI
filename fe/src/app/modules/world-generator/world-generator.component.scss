@@ -7,8 +7,13 @@
         display: flex;
         flex: 1;
         min-height: 0;
-        app-scene {
+        .center-container {
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            app-scene {
+              flex: 1;
+            }
         }
     }
     .hint {

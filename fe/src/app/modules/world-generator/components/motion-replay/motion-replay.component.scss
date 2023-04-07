@@ -1,0 +1,14 @@
+.motion-replay {
+  background: #999;
+  color: white;
+  display: flex;
+  align-items: center;
+  button {
+    mat-icon {
+      transform: scale(2);
+    }
+  }
+  mat-slider {
+    flex: 1;
+  }
+}

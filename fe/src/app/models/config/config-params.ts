@@ -14,6 +14,7 @@ function getParams(
 
   structuredClone(paramDef).forEach((param) => {
     if (param.children) {
+      console.log(param)
       const children = getParams(
         param.children!,
         configDict ? configDict[param.key] : {}
@@ -34,7 +35,7 @@ function getParams(
   });
 
   // Detect parameters defined in config but not defined in backend definitions
-  Object.keys(configDict)
+  Object.keys(configDict ?? {})
     .filter((key) => !paramDef.map((param) => param.key).includes(key))
     .forEach(
       (key) =>
