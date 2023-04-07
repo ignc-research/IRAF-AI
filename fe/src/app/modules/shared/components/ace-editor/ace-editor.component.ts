@@ -28,7 +28,7 @@ export class AceEditorComponent implements AfterViewInit {
     this.aceEditor?.session.setValue(this._content ?? '');
 
     if (this.autoscroll) {
-      this.aceEditor.renderer.scrollToLine(Number.POSITIVE_INFINITY, false, false, () => null)
+      this.aceEditor?.renderer.scrollToLine(Number.POSITIVE_INFINITY, false, false, () => null)
     }
   }
 
