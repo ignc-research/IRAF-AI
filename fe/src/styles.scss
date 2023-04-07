@@ -22,3 +22,87 @@ h5 {
 .mat-mdc-form-field{
   margin-bottom: -1.25em;
 }
+/* Dark mode styles */
+body.dark-mode {
+    background-color: #333;
+    color: #ffffff;
+  }
+  
+  body.dark-mode .plot-controls {
+    background-color: #444;
+  }
+  
+  body.dark-mode select {
+    background-color: #555;
+    color: #ffffff;
+  }
+
+  body.dark-mode .container {
+    background-color: rgb(61, 61, 68);
+    color: #ffffff;
+  }
+
+  body.dark-mode #app-side-menu {
+    background-color: rgb(40, 40, 47);
+    color: #ffffff;
+  }
+
+  body.dark-mode .workspace {
+    background-color: #555;
+    color: #ffffff;
+  }
+  
+  body.dark-mode textarea {
+    background-color: #555;
+    color: #ffffff;
+  }
+
+  body.dark-mode .plot-specific-code {
+    background-color: #555 !important;
+    color: #ffffff !important;
+  }
+
+  body.dark-mode .global-variables {
+    background-color: #555 !important;
+    color: #ffffff !important;
+  }
+
+  body.dark-mode .plotly-table {
+    background-color: #555 !important;
+    color: #ffffff !important;
+  }
+
+  body.dark-mode .pagination {
+    background-color: #555 !important;
+    color: #ffffff !important;
+  }
+
+  body.dark-mode .variable-div {
+    background-color: rgb(103, 103, 113) !important;
+    color: #ffffff !important;
+  }
+  
+  body.dark-mode #importCsvInput {
+    background-color: #555 !important;
+    color: #ffffff !important;
+  }
+
+  body.dark-mode #plotly-examples {
+    color: #c0ffc6 !important;
+  }
+
+  body.dark-mode button {
+    background-color: #3a9eff;
+  }
+  
+  body.dark-mode button:hover {
+    background-color: #0073cc;
+  }
+  
+  body.dark-mode .close-btn {
+    background-color: #ff6b6b;
+  }
+  
+  body.dark-mode .close-btn:hover {
+    background-color: #ff3030;
+  }

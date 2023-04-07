@@ -1,0 +1,97 @@
+.data-table {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.close-btn-wrapper {
+  position: absolute;
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+
+.close-btn {
+  border: none;
+  background-color: #ffa9a9;
+  color: #ffffff;
+  padding: 5px 8px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #ff5656;
+  }
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.plotly-table-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.plotly-table {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  min-width: 40px;
+  height: 40px;
+  border: 1px solid #c9c9c9;
+  font-size: 16px;
+  background-color: #f0f0f0;
+  color: #333333;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: #d9d9d9;
+    color: #000000
+  }
+
+  &:disabled {
+    background-color: #e8e8e8;
+    color: #999999;
+    cursor: not-allowed;
+  }
+}
+
+.page-info {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 14px;
+  animation: fade-in 0.3s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+

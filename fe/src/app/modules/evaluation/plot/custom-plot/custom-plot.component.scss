@@ -1,0 +1,25 @@
+.plot-container {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  :host(.dark-mode) {
+    /* Add the styles for the dark mode here */
+    background-color: #282c34;
+    color: #ffffff;
+  }
+  
+  :host(.dark-mode) .axis line,
+  :host(.dark-mode) .axis path {
+    stroke: #ffffff;
+  }
+  
+  :host(.dark-mode) .grid line {
+    stroke: #444;
+  }

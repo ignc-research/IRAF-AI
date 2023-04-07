@@ -1,1 +1,114 @@
-<h1>TEST bla</h1>
+<div class="container">
+  <div class="plot-view">
+    <ng-container *ngIf="firstExperiment; else noExperiments">
+      <ng-container *ngFor="let plot of addedPlots; let i = index">
+        <div class="plot-wrapper">
+          <div>
+            <app-trajectory-plot
+              *ngIf="plot.type === 'trajectory'"
+              [experimentName]="firstExperiment"
+              [dataColumn]="plot.dataColumn">
+            </app-trajectory-plot>
+            <app-bar-plot
+              *ngIf="plot.type === 'bar'"
+              [experiments]="[firstExperiment]"
+              [dataColumn]="plot.dataColumn"
+            ></app-bar-plot>
+            <app-line-plot
+              *ngIf="plot.type === 'line'"
+              [experimentName]="firstExperiment"
+              [dataColumn]="plot.dataColumn"
+            ></app-line-plot>
+            <app-custom-plot
+              *ngIf="plot.type === 'custom'"
+              [experimentName]="firstExperiment"
+              [customPlotCode]="plot.code"
+              [elementId]="'custom-plot-' + i">
+            </app-custom-plot>
+          </div>
+          <textarea
+            *ngIf="plot.type === 'custom'"
+            [(ngModel)]="plot.code"
+            [id]="'custom-plot-code-' + i"
+            rows="4"
+            cols="50"
+            class="plot-specific-code"
+          ></textarea>
+          <button class="close-btn" (click)="removePlot(i)">
+            x
+          </button>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-template #noExperiments>
+      <p>No experiments available.</p>
+    </ng-template>
+  </div>
+  <div class="workspace">
+    <div class="left-controls">
+      <div class="plot-controls">
+        <select [(ngModel)]="selectedPlot">
+          <option value="">-- Select a plot --</option>
+          <option value="trajectory">Trajectory Plot</option>
+          <option value="bar">Bar Plot</option>
+          <option value="line">Line Plot</option>
+          <option value="custom">Custom Plot</option>
+        </select>
+        <!-- <select [(ngModel)]="selectedDataColumn" [disabled]="!selectedPlot || selectedPlot === 'custom'">
+          <option value="">-- Select a data column --</option>
+          <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
+        </select> -->
+        <div *ngIf="selectedPlot === 'custom'" class="custom-plot-definition">
+          <label for="customPlotCode">Custom Plot Definition: <a href="https://plotly.com/javascript/" style="text-decoration: none;" id="plotly-examples" target="_blank">Plotly Example Plots</a></label>
+          <textarea [(ngModel)]="customPlotCode" id="customPlotCode" rows="4" cols="50"></textarea>
+        </div>
+        <button (click)="addPlot()">Add Plot</button>
+        <!-- Add this button inside the plot-controls div -->
+        <button *ngFor="let experiment of getExperiments()" (click)="openDataTable(experiment)">
+          Show Data Table for {{ experiment.name }}
+        </button>
+        
+
+        <div class="import-csv-section">
+          <label for="importCsvInput">Import CSV:</label>
+          <input type="file" id="importCsvInput" (change)="onFileInputChange($event)" accept=".csv" />
+          <div class="csv-list">
+            <h4>Imported CSV Files:</h4>
+            <ul>
+              <li *ngFor="let fileName of getImportedCsvFileNames()">{{ fileName }}</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="right-controls">
+      <div class="global-variables">
+        <h4>Current Variables:</h4>
+        <div class="variable-group">
+          <div *ngFor="let variable of globalVariables | keyvalue" class="variable-div" (click)="openVariableEditor(variable.key)">
+            {{ variable.key }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="variable-definition">
+        <label for="variableDefinition">Variable Definition:</label>
+        <textarea [(ngModel)]="variableDefinition" id="variableDefinition" rows="4" cols="50" attr.experiment="{{firstExperiment}}"></textarea>
+      </div>
+      <button (click)="addVariable()">Add Variable</button>
+    </div>
+
+    <button mat-icon-button (click)="toggleDarkMode()" class="dark-mode-toggle" [ngClass]="{'dark-mode': isDarkModeEnabled}">
+      <mat-icon *ngIf="isDarkModeEnabled; else sunIcon">nights_stay</mat-icon>
+      <ng-template #sunIcon>
+        <mat-icon>wb_sunny</mat-icon>
+      </ng-template>
+    </button>
+
+  </div>
+
+
+  
+</div>
+
