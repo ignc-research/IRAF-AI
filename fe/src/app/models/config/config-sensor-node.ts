@@ -1,17 +1,16 @@
 import { Parameters } from "../parameters";
 import { ISensor, Sensor } from "../robot";
 import { ConfigIoMessage, ConfigIoMsgType, ConfigIoResult } from "./config-io-result";
-import { ConfigParamUtils } from "./config-params";
+import { ConfigParamUtils, ConfigParams } from "./config-params";
 import { ConfigUtils } from "./config-utils";
 import { ConfigVec3 } from "./config-vec3";
 
 export type ConfigSensorNode = {
   type: string;
-  config: {
-    position: ConfigVec3;
-    rotation: ConfigVec3;
-    link: string;
-  };
+  position: ConfigVec3;
+  rotation: ConfigVec3;
+  link: string;
+  config: ConfigParams
 };
 
 export function parseSensor(sensors: ISensor[], sensorNode: ConfigSensorNode): ConfigIoResult<Sensor> {
@@ -26,10 +25,10 @@ export function parseSensor(sensors: ISensor[], sensorNode: ConfigSensorNode): C
 
     sensorDef.params = params.data;
     sensorDef.name = sensorNode.type;
-    sensorDef.link = sensorNode.config.link;
-    sensorDef.position = ConfigUtils.getThreeVec3(sensorNode.config.position);
+    sensorDef.link = sensorNode.link;
+    sensorDef.position = ConfigUtils.getThreeVec3(sensorNode.position ?? [0, 0, 0]);
     sensorDef.rotation = ConfigUtils.getThreeEuler(
-      sensorNode.config.rotation
+      sensorNode.rotation ?? [0, 0, 0]
     );
 
     output.withData(new Sensor(sensorDef));
@@ -47,11 +46,9 @@ export function parseSensor(sensors: ISensor[], sensorNode: ConfigSensorNode): C
 export function exportSensor(sensor: Sensor): ConfigSensorNode {
   return {
     type: sensor.type,
-    config: {
-      position: ConfigUtils.getConfigVec3(sensor.position),
-      rotation: ConfigUtils.getConfigEuler(sensor.rotation),
-      link: sensor.link,
-      ...ConfigParamUtils.exportParams(sensor.params)
-    }
+    position: ConfigUtils.getConfigVec3(sensor.position),
+    rotation: ConfigUtils.getConfigEuler(sensor.rotation),
+    link: sensor.link,
+    config: ConfigParamUtils.exportParams(sensor.params)
   };
 }

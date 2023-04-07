@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { NgtEvent, NgtRenderState, NgtVector3 } from '@angular-three/core';
 import { Color, Mesh, Object3D } from 'three';
 // import URDFLoader, { URDFJoint, URDFLink, URDFRobot } from 'libs/urdf-loader/URDFLoader';
@@ -11,12 +11,16 @@ import { Robot } from 'src/app/models/robot';
 import { SceneObjectType } from 'src/app/models/scene-object-type';
 import { AdvancedUrdfLoader } from 'src/app/helpers/advanced-urdf-loader';
 import { NumberUtils } from 'src/app/helpers/number-utils';
+import { Subscription } from 'rxjs';
+import { MotionReplayService } from 'src/app/modules/world-generator/services/motion-replay.service';
 
 @Component({
   selector: 'app-robot',
   templateUrl: 'robot.component.html',
 })
-export class RobotComponent {
+export class RobotComponent implements OnDestroy {
+  private _motionReplaySub: Subscription | null = null;
+
   robotObj: URDFRobot | null = null;
   _robot!: Robot;
 
@@ -118,6 +122,26 @@ export class RobotComponent {
 
   constructor(
     public sceneService: SceneService,
-    private uiService: UiControlService
-  ) {}
+    private uiService: UiControlService,
+    private motionReplayService: MotionReplayService
+  ) {
+
+    this._motionReplaySub = this.motionReplayService.currentAngleState.subscribe(state => {
+      const jointState = state[this.robot?.name];
+      if (jointState) {
+        const jointNames = Object.keys(this.robotObj?.joints ?? {});
+        this.robotObj?.setJointValues(jointNames.reduce((prev, curr, idx) => {
+          prev[curr] = jointState[idx];
+          return prev;
+        }, {} as { [key: string]: number }))
+      }
+    });
+  }
+
+  
+    ngOnDestroy(): void {
+      if (this._motionReplaySub) {
+        this._motionReplaySub.unsubscribe();
+      }
+    }
 }

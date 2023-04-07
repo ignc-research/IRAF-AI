@@ -1,4 +1,4 @@
-.motion-replay {
+.animation-controls {
   background: #999;
   color: white;
   display: flex;
@@ -11,4 +11,13 @@
   mat-slider {
     flex: 1;
   }
+}
+.robots {
+  padding: 4px;
+  display: flex;
+  background: #888;
+  margin-bottom: 1px solid black;
+}
+mat-card {
+  padding: 4px;
 }
