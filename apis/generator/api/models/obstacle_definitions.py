@@ -9,7 +9,8 @@ color_param = {
             }
 move_param = {
       "key": "move",
-      "type": "trajectory"
+      "type": "trajectory",
+      "value": []
     }
 
 radius_param = {
@@ -26,13 +27,6 @@ obstacle_definitions = [
         "params": [
           move_param
         ]
-    },
-    {
-      "type": "human",
-      "urdf": "man_visual.urdf",
-      "params": [
-          move_param
-      ]
     },
     {
         "type": "box",
