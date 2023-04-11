@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, Renderer2, ElementRef, OnDestroy } from '@angular/core';
 import { PlotDataService, Experiment } from '../plot-data.service';
 import * as Plotly from 'plotly.js-dist-min';
 import { Subject } from 'rxjs';
@@ -17,14 +17,9 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() globalVariableAdded: Subject<void> | undefined;
   @Input() darkMode: boolean = false;
 
-
-
-
   private experiment: Experiment | undefined;
 
   constructor(private plotDataService: PlotDataService, private elRef: ElementRef, private renderer: Renderer2) {}
-
-  
 
   ngOnInit(): void {
     if (this.experimentName) {
@@ -41,19 +36,21 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
   
-
   ngAfterViewInit(): void {
     this.renderCustomPlot();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.renderCustomPlot();
-    if (this.darkMode) {
-      this.renderer.addClass(this.elRef.nativeElement, 'dark-mode');
-    } else {
-      this.renderer.removeClass(this.elRef.nativeElement, 'dark-mode');
+    if (changes['darkMode']) {
+      if (this.darkMode) {
+        this.renderer.addClass(this.elRef.nativeElement, 'dark-mode');
+      } else {
+        this.renderer.removeClass(this.elRef.nativeElement, 'dark-mode');
+      }
     }
   }
+  
 
   private renderCustomPlot(): void {
     if (this.experiment && this.customPlotCode && this.elementId) {
@@ -65,8 +62,7 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
             dataContext[key] = values;
           }
         }
-        
-
+  
         // Create a function from the user's custom plot code
         const customPlotFunction = new Function(
           'dataContext',
@@ -80,10 +76,10 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
             Plotly.newPlot(elementId, data, layout);
           `
         );
-
+  
         // Call the customPlotFunction with the data context, Plotly, and elementId
         customPlotFunction(dataContext, Plotly, this.elementId);
-
+  
       } catch (error) {
         if (error instanceof ReferenceError) {
           console.error('Error: Custom plot definition uses an unknown reference:', error);
@@ -93,6 +89,7 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
       }
     }
   }
+  
 }
 
          
