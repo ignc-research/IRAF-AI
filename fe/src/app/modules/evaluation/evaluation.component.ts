@@ -31,6 +31,8 @@ export class EvaluationComponent implements OnInit {
   globalVariableAdded: Subject<void> = new Subject<void>();
   isDarkModeEnabled = false;
   globalVariableValues: { [key: string]: any } = {};
+  overwriteMode: boolean = false;
+
 
 
   constructor(private plotDataService: PlotDataService, public dialog: MatDialog, rendererFactory: RendererFactory2) {
@@ -45,12 +47,12 @@ export class EvaluationComponent implements OnInit {
       this.firstExperiment = experimentNames.length > 0 ? experimentNames[0] : undefined;
 
       if (this.firstExperiment) {
-        const experiment: Experiment | undefined = this.plotDataService.experiments.find(
+        this.experiment = this.plotDataService.experiments.find(
           (exp) => exp.name === this.firstExperiment
         );
-        if (experiment) {
-          if (experiment) {
-            this.dataColumns = Object.keys(experiment.data);
+        if (this.experiment) {
+          if (this.experiment) {
+            this.dataColumns = Object.keys(this.experiment.data);
             if (this.dataColumns.length > 0) {
               this.setDefaultCustomPlotCode();
             }
@@ -68,32 +70,53 @@ export class EvaluationComponent implements OnInit {
 
   addVariable(): void {
     try {
-      // Extract variable name from definition
-      const variableNameMatch = this.variableDefinition.match(/^(?:const|let|var)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)\s*=/);
-      if (variableNameMatch && variableNameMatch[1]) {
-        const variableName = variableNameMatch[1];
-  
-        // Check if the variable is a function declaration
-        const functionDeclarationMatch = this.variableDefinition.match(/\s*=\s*\(?\s*function\s*\(\s*.*\s*\)\s*{|\s*=\s*\(\s*.*\s*\)\s*=>\s*{/);
-        if (functionDeclarationMatch) {
-          this.globalVariables[variableName] = this.variableDefinition;
-  
-          // Create a function that wraps the function definition and executes it with the nj library available
-          const wrappedFunction = new Function(`const nj = arguments[0]; ${this.variableDefinition} return ${variableName}.apply(null, [nj].concat(Array.from(arguments).slice(1)));`);
-  
-          // Execute the custom function after adding it and store the result in globalVariableValues
-          const result = wrappedFunction(nj); // Pass nj as the first argument
-          this.globalVariableValues[variableName] = result;
-          console.log(`Result of custom function '${variableName}':`, result);
-        } else {
-          this.globalVariables[variableName] = this.variableDefinition;
-          // Evaluate the variable and store its value
-          const evalVariable = new Function(`${this.variableDefinition} return ${variableName};`);
-          this.globalVariableValues[variableName] = evalVariable();
-        }
-      } else {
-        throw new Error("Variable name not found or already declared");
+    // Extract variable name from definition
+    const variableNameMatch = this.variableDefinition.match(/^(?:const|let|var)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)\s*=/);
+    if (variableNameMatch && variableNameMatch[1]) {
+      const variableName = variableNameMatch[1];
+
+      // Check if the variable already exists
+      if (this.globalVariables.hasOwnProperty(variableName) && !this.overwriteMode) {
+        this.overwriteMode = true;
+        return;
       }
+
+      // Prepare data context
+      const dataContext: { [key: string]: any[] } = {};
+      if (this.experiment) {
+        for (const [key, values] of Object.entries(this.experiment.data)) {
+          dataContext[key] = values;
+        }
+      }
+      console.log("dataContext", this.experiment?.data)
+
+      // Check if the variable is a function declaration
+      const functionDeclarationMatch = this.variableDefinition.match(/\s*=\s*\(?\s*function\s*\(\s*.*\s*\)\s*{|\s*=\s*\(\s*.*\s*\)\s*=>\s*{/);
+      if (functionDeclarationMatch) {
+        this.globalVariables[variableName] = this.variableDefinition;
+
+        // Prepare a code block with custom variables
+        let customVariablesCode = '';
+        for (const [existingVarName, existingVarValue] of Object.entries(this.globalVariableValues)) {
+          customVariablesCode += `const ${existingVarName} = ${JSON.stringify(existingVarValue)};\n`;
+        }
+
+        // Create a function that wraps the function definition and executes it with the nj library and custom variables available
+        const wrappedFunction = new Function(`const nj = arguments[0]; const dataContext = arguments[1]; ${customVariablesCode} ${this.variableDefinition} return ${variableName}.apply(null, [nj].concat(Array.from(arguments).slice(1)));`);
+
+        // Execute the custom function after adding it and store the result in globalVariableValues
+        const result = wrappedFunction(nj, dataContext); // Pass nj as the first argument and dataContext as the second argument
+        this.globalVariableValues[variableName] = result;
+        console.log(`Result of custom function '${variableName}':`, result);
+      } else {
+        this.globalVariables[variableName] = this.variableDefinition;
+        // Evaluate the variable and store its value
+        const evalVariable = new Function(`const nj = arguments[0]; const dataContext = arguments[1]; ${this.variableDefinition} return ${variableName};`);
+        this.globalVariableValues[variableName] = evalVariable();
+      }
+    } else {
+      throw new Error("Variable name not found");
+    }
   
       this.variableDefinition = '';
   
@@ -101,17 +124,29 @@ export class EvaluationComponent implements OnInit {
       this.globalVariableAdded.next();
     } catch (error) {
       console.error('Error evaluating variable:', error);
-      alert('Error evaluating variable: ' + error);
+      //alert('Error evaluating variable: ' + error);
     }
   }
   
-
-
+  overwriteVariable(): void {
+    // Extract variable name from definition
+    const variableNameMatch = this.variableDefinition.match(/^(?:const|let|var)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)\s*=/);
+    if (variableNameMatch && variableNameMatch[1]) {
+      const variableName = variableNameMatch[1];
+      
+      // Remove the old function or variable with the same name
+      delete this.globalVariables[variableName];
+    }
+  
+    this.addVariable();
+    this.overwriteMode = false;
+  }
   
   
-
   
-
+  cancelOverwrite(): void {
+    this.overwriteMode = false;
+  }
   
 
   openVariableEditor(variableName: string): void {

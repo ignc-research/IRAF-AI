@@ -242,6 +242,42 @@ textarea {
   }
 }
 
+.overwrite-cancel-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.overwrite-cancel-buttons {
+  width: 45%;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  color: #ffffff;
+}
+
+.overwrite {
+  background-color: #4caf50; // Green
+
+  &:hover {
+    background-color: #3e8e41;
+  }
+}
+
+.cancel {
+  background-color: #f44336; // Red
+
+  &:hover {
+    background-color: #da190b;
+  }
+}
+
+
+
+
 @keyframes pop-up {
   0% {
     transform: scale(0.9);
