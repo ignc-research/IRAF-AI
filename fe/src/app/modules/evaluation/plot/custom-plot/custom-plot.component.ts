@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, Rend
 import { PlotDataService, Experiment } from '../plot-data.service';
 import * as Plotly from 'plotly.js-dist-min';
 import { Subject } from 'rxjs';
+import { ColorService } from '../color.service';
 
 
 @Component({
@@ -16,10 +17,17 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() uniqueKey: any;
   @Input() globalVariableAdded: Subject<void> | undefined;
   @Input() darkMode: boolean = false;
+  @Input() dataContext: { [key: string]: { [key: string]: any[] } } = {};
+
 
   private experiment: Experiment | undefined;
 
-  constructor(private plotDataService: PlotDataService, private elRef: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private plotDataService: PlotDataService, 
+    private elRef: ElementRef, 
+    private renderer: Renderer2, 
+    private colorService: ColorService
+    ) {}
 
   ngOnInit(): void {
     if (this.experimentName) {
@@ -41,7 +49,6 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.renderCustomPlot();
     if (changes['darkMode']) {
       if (this.darkMode) {
         this.renderer.addClass(this.elRef.nativeElement, 'dark-mode');
@@ -51,44 +58,85 @@ export class CustomPlotComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
   
+  
 
   private renderCustomPlot(): void {
     if (this.experiment && this.customPlotCode && this.elementId) {
+      let errorOccurred = false;
+
       try {
-        // Prepare data context
-        const dataContext: { [key: string]: any[] } = {};
-        if (this.experiment) {
-          for (const [key, values] of Object.entries(this.experiment.data)) {
-            dataContext[key] = values;
+        // Update data context
+        this.plotDataService.experiments.forEach((experiment) => {
+          if (!this.dataContext[experiment.name]) {
+            this.dataContext[experiment.name] = {};
           }
-        }
+          for (const [key, values] of Object.entries(experiment.data)) {
+            if (!this.dataContext[experiment.name][key]) {
+              this.dataContext[experiment.name][key] = [];
+            }
+            this.dataContext[experiment.name][key].push(...values);
+          }
+        });
+        console.log("dataContext", this.dataContext)
+  
+        // Get the color for the experiment from the ColorService
+        const experimentColor = this.colorService.getColor(this.experiment.name);
   
         // Create a function from the user's custom plot code
         const customPlotFunction = new Function(
           'dataContext',
           'Plotly',
           'elementId',
+          'experimentColor',
           `
             const createPlot = () => {
               ${this.customPlotCode}
             };
             const { data, layout } = createPlot(dataContext);
+            // Set the color for each trace
+            data.forEach(trace => {
+              if (!trace.marker) {
+                trace.marker = {};
+              }
+              trace.marker.color = experimentColor;
+            });
             Plotly.newPlot(elementId, data, layout);
           `
         );
   
-        // Call the customPlotFunction with the data context, Plotly, and elementId
-        customPlotFunction(dataContext, Plotly, this.elementId);
+        // Call the customPlotFunction with the data context, Plotly, elementId, and experimentColor
+        customPlotFunction(this.dataContext, Plotly, this.elementId, experimentColor);
   
       } catch (error) {
+        errorOccurred = true;
+  
         if (error instanceof ReferenceError) {
           console.error('Error: Custom plot definition uses an unknown reference:', error);
         } else {
           console.error('Error while rendering the custom plot:', error);
         }
+      } finally {
+        if (errorOccurred) {
+          const errorTrace: Partial<Plotly.ScatterData> = {
+            x: [0],
+            y: [0],
+            mode: 'text',
+            text: ['Error rendering plot'],
+            type: 'scatter'
+          };
+  
+          const errorLayout = {
+            title: 'Error',
+            xaxis: { visible: false },
+            yaxis: { visible: false }
+          };
+  
+          Plotly.newPlot(this.elementId, [errorTrace], errorLayout);
+        }
       }
     }
   }
+  
   
 }
 

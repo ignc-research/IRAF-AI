@@ -95,7 +95,7 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
         mode: 'lines',
         type: 'scatter3d',
         line: {
-          color: this.colorService.getColor(episode),
+          color: this.colorService.getColor(""),
         },
       };
     }
@@ -115,7 +115,7 @@ export class TrajectoryPlotComponent implements OnInit, OnDestroy {
         mode: 'lines',
         type: 'scatter',
         line: {
-          color: this.colorService.getColor(episode),
+          color: this.colorService.getColor(""),
         },
       };
     }

@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-material-components/color-picker": "^9.0.0",
     "@angular-three/core": "^6.0.0",
     "@angular-three/schematics": "^6.0.1",
     "@angular-three/soba": "^6.0.1",

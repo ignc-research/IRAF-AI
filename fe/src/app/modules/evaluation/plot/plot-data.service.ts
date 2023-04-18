@@ -2,6 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Data } from 'plotly.js-dist-min';
 import * as d3 from 'd3';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { ColorService } from './color.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class PlotDataService {
   experiments: Experiment[] = [];
   importedCsvFiles: { [key: string]: string } = {};
 
-  constructor() {
+  constructor(private colorService: ColorService) {
     this.parseCsv();
   }
 
@@ -82,9 +83,10 @@ export class PlotDataService {
 
   processData(preprocessedData: any[], csvFileName?: string): void {
     const experiment: Experiment = {
-      name: csvFileName ?? 'Sample Experiment',
+      name: csvFileName ?? 'example_experiment',
       data: {},
       episodes: {},
+      color: this.colorService.generateColor(csvFileName ?? 'example_experiment'),
     };
 
     // Extract the column names
@@ -145,6 +147,8 @@ export type Experiment = {
   name: string;
   data: { [key: string]: (number | number[])[] };
   episodes: { [episode: number]: ExperimentData };
+  color: string;
+
 };
 
 type ExperimentData = {

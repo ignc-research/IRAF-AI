@@ -6,6 +6,7 @@ import { DataTableComponent } from './plot/data-table/data-table.component';
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { Subject } from 'rxjs';
 import nj from '@d4c/numjs/build/module/numjs.min.js';
+import { ColorService } from './plot/color.service';
 
 @Component({
   selector: 'app-evaluation',
@@ -32,14 +33,18 @@ export class EvaluationComponent implements OnInit {
   isDarkModeEnabled = false;
   globalVariableValues: { [key: string]: any } = {};
   overwriteMode: boolean = false;
+  dataContext: { [key: string]: { [key: string]: any[] } } = {};
+  
+  
 
 
 
-  constructor(private plotDataService: PlotDataService, public dialog: MatDialog, rendererFactory: RendererFactory2) {
+  constructor(private plotDataService: PlotDataService, public dialog: MatDialog, rendererFactory: RendererFactory2, private colorService: ColorService) {
     this.selectedPlot = 'custom';
     this.renderer = rendererFactory.createRenderer(null, null);
-
   }
+  
+  
 
   ngOnInit(): void {
     this.dataReadySubscription = this.plotDataService.onDataReady.subscribe(() => {
@@ -59,6 +64,21 @@ export class EvaluationComponent implements OnInit {
           }
         }
       }
+
+      // initialize dataContext
+      this.plotDataService.experiments.forEach((experiment) => {
+        if (!this.dataContext[experiment.name]) {
+          this.dataContext[experiment.name] = {};
+        }
+        for (const [key, values] of Object.entries(experiment.data)) {
+          if (!this.dataContext[experiment.name][key]) {
+            this.dataContext[experiment.name][key] = [];
+          }
+          this.dataContext[experiment.name][key].push(...values);
+        }
+      });
+      console.log("dataContext", this.dataContext)
+
     });
   }
 
@@ -67,7 +87,19 @@ export class EvaluationComponent implements OnInit {
       this.dataReadySubscription.unsubscribe();
     }
   }
-
+  
+  refreshPlot(index: number): void {
+    const plot = this.addedPlots[index];
+    if (plot.type === 'custom' && plot.code) {  
+      this.removePlot(index);
+      console.log("deleted plot at: ", index)
+  
+      this.customPlotCode = plot.code;
+  
+      this.addPlot();
+    }
+  }
+  
   addVariable(): void {
     try {
       // Extract variable name from definition
@@ -81,14 +113,25 @@ export class EvaluationComponent implements OnInit {
           return;
         }
   
-        // Prepare data context
-        const dataContext: { [key: string]: any[] } = {};
-        if (this.experiment) {
-          for (const [key, values] of Object.entries(this.experiment.data)) {
-            dataContext[key] = values;
+        // Update data context
+        this.plotDataService.experiments.forEach((experiment) => {
+          if (!this.dataContext[experiment.name]) {
+            this.dataContext[experiment.name] = {};
           }
-        }
-        console.log("dataContext", this.experiment?.data)
+          for (const [key, values] of Object.entries(experiment.data)) {
+            if (!this.dataContext[experiment.name][key]) {
+              this.dataContext[experiment.name][key] = [];
+            }
+            this.dataContext[experiment.name][key].push(...values);
+          }
+        });
+        console.log("dataContext", this.dataContext)
+
+        // Prepare experiment colors
+        const experimentColors: { [key: string]: string } = {};
+        this.plotDataService.experiments.forEach((experiment) => {
+          experimentColors[experiment.name] = this.colorService.generateColor(experiment.name);
+        });
   
         // Prepare a code block with custom variables
         let customVariablesCode = '';
@@ -105,14 +148,14 @@ export class EvaluationComponent implements OnInit {
           const wrappedFunction = new Function(`const nj = arguments[0]; const dataContext = arguments[1]; ${customVariablesCode} ${this.variableDefinition} return ${variableName}.apply(null, [nj, dataContext].concat(Array.from(arguments).slice(2)));`);
   
           // Execute the custom function after adding it and store the result in globalVariableValues
-          const result = wrappedFunction(nj, dataContext); // Pass nj as the first argument and dataContext as the second argument
+          const result = wrappedFunction(nj, this.dataContext, experimentColors); // Pass nj as the first argument and dataContext as the second argument and experimentColors as the third argument
           this.globalVariableValues[variableName] = result;
           console.log(`Result of custom function '${variableName}':`, result);
         } else {
           this.globalVariables[variableName] = this.variableDefinition;
           // Evaluate the variable and store its value
           const evalVariable = new Function(`const nj = arguments[0]; const dataContext = arguments[1]; ${customVariablesCode} ${this.variableDefinition} return ${variableName};`);
-          this.globalVariableValues[variableName] = evalVariable(nj, dataContext);
+          this.globalVariableValues[variableName] = evalVariable(nj, this.dataContext);
         }
       } else {
         throw new Error("Variable name not found");
@@ -174,31 +217,27 @@ export class EvaluationComponent implements OnInit {
   }
 
   addPlot(): void {
-    if (this.selectedPlot) {
-      if (this.selectedPlot === 'custom') {
-        // Check for variables in the customPlotCode and add their values
-        let globalVariablesValuesCode = '';
-        for (const [variableName, variableValue] of Object.entries(this.globalVariableValues)) {
-          if (this.customPlotCode.includes(variableName)) {
-            globalVariablesValuesCode += `const ${variableName} = ${JSON.stringify(variableValue)};\n`;
-          }
-        }
-  
-        const customPlotWithVariables = `
-          ${globalVariablesValuesCode}
-          ${this.customPlotCode}
-          return { data: data, layout: layout };
-        `;
-  
-        console.log('Adding custom plot:', this.selectedDataColumn, customPlotWithVariables);
-        this.addedPlots.push({ type: 'custom', dataColumn: "", code: customPlotWithVariables });
-      } else if (this.selectedDataColumn) {
-        console.log('Adding plot:', this.selectedDataColumn);
-        this.addedPlots.push({ type: this.selectedPlot, dataColumn: this.selectedDataColumn });
+    // Check for variables in the customPlotCode and add their values
+    let globalVariablesValuesCode = '';
+    for (const [variableName, variableValue] of Object.entries(this.globalVariableValues)) {
+      if (this.customPlotCode.includes(variableName)) {
+        globalVariablesValuesCode += `const ${variableName} = ${JSON.stringify(variableValue)};\n`;
       }
     }
+
+    const customPlotStartIndex = this.customPlotCode.indexOf('//start')
+    const customPlotEndIndex = this.customPlotCode.indexOf('//end')
+
+    const customPlotWithVariables = `
+      ${globalVariablesValuesCode}
+      ${this.customPlotCode.slice(0, customPlotStartIndex)}
+      ${this.customPlotCode.slice(customPlotStartIndex, customPlotEndIndex)}
+    `;
+
+    //console.log('Adding custom plot:', customPlotWithVariables);
+    this.addedPlots.push({ type: 'custom', dataColumn: "", code: customPlotWithVariables });
+
   }
-  
 
   onFileInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -222,54 +261,53 @@ export class EvaluationComponent implements OnInit {
   }
 
   private setDefaultCustomPlotCode(): void {
+
     this.customPlotCode = `
-      
-    const positionData = dataContext['position_link_7_ur5_1'];
-    const velocityData = dataContext['velocity_link_7_ur5_1'];
-
-    const x = positionData.map((values) => values[0]);
-    const y = positionData.map((values) => values[1]);
-    const z = positionData.map((values) => values[2]);
-
-    const velocityMagnitude = velocityData.map((values) => {
-      const vx = values[0];
-      const vy = values[1];
-      const vz = values[2];
-      return Math.sqrt(vx * vx + vy * vy + vz * vz);
-    });
-
-    const trace = {
-      x: z, // Swap x and z axes
-      y: y,
-      z: x, // Swap x and z axes
-      mode: 'markers',
-      marker: {
-        size: 2,
-        color: velocityMagnitude,
-        colorscale: 'Viridis',
-        opacity: 0.8,
-        showscale: true,
-      },
-      type: 'scatter3d',
-    };
-
-    const layout = {
-      title: '3D Scatter Plot of Position with Velocity Magnitude',
-      scene: {
-        xaxis: { title: 'Z Axis' }, // Update axis labels
-        yaxis: { title: 'Y Axis' },
-        zaxis: { title: 'X Axis' }, // Update axis labels
-      },
-    };
-
-    const data = [trace];
-
-    return { data: data, layout: layout };
-
-                
-      
+      //start
+      const positionData = dataContext['example_experiment']['position_link_7_ur5_1'];
+      const velocityData = dataContext['example_experiment']['velocity_link_7_ur5_1'];
+  
+      const x = positionData.map((values) => values[0]);
+      const y = positionData.map((values) => values[1]);
+      const z = positionData.map((values) => values[2]);
+  
+      const velocityMagnitude = velocityData.map((values) => {
+        const vx = values[0];
+        const vy = values[1];
+        const vz = values[2];
+        return Math.sqrt(vx * vx + vy * vy + vz * vz);
+      });
+  
+      const trace = {
+        x: z, 
+        y: y,
+        z: x, 
+        mode: 'markers',
+        marker: {
+          size: 2,
+          color: "Veridis",
+          opacity: 0.8,
+          showscale: true,
+        },
+        type: 'scatter3d',
+      };
+  
+      const layout = {
+        title: '3D Scatter Plot of Position with Velocity Magnitude',
+        scene: {
+          xaxis: { title: 'Z Axis' }, 
+          yaxis: { title: 'Y Axis' },
+          zaxis: { title: 'X Axis' }, 
+        },
+      };
+  
+      const data = [trace];
+  
+      return { data: data, layout: layout };
+      //end
     `;
   }
+  
 
   toggleDarkMode(): void {
     const body = document.body;

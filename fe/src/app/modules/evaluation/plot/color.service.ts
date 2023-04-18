@@ -4,14 +4,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ColorService {
-  private episodeColors: Map<number, string> = new Map();
+  private experimentColors: Map<string, string> = new Map();
 
-  constructor() {
-    this.generateDefaultColors();
-  }
+  constructor() {}
 
-  generateDefaultColors(): void {
-    const defaultColors = [
+  generateColor(experimentName: string): string {
+    const colors = [
       'red',
       'blue',
       'green',
@@ -24,16 +22,23 @@ export class ColorService {
       'lime',
     ];
 
-    defaultColors.forEach((color, index) => {
-      this.episodeColors.set(index + 1, color);
-    });
+    const availableColors = colors.filter(color => !Array.from(this.experimentColors.values()).includes(color));
+
+    if (availableColors.length === 0) {
+      console.warn('No more available colors. Reusing existing colors.');
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    const color = availableColors[0];
+    this.experimentColors.set(experimentName, color);
+    return color;
   }
 
-  getColor(episode: number): string {
-    return this.episodeColors.get(episode) || 'gray';
+  getColor(experimentName: string): string {
+    return this.experimentColors.get(experimentName) || 'gray';
   }
 
-  setColor(episode: number, color: string): void {
-    this.episodeColors.set(episode, color);
+  setColor(experimentName: string, color: string): void {
+    this.experimentColors.set(experimentName, color);
   }
 }
