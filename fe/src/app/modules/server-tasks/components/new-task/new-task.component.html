@@ -30,7 +30,7 @@
       <mat-radio-button value="train">Train</mat-radio-button>
     </mat-radio-group>
 
-    <button mat-icon-button (click)="runTask()">
+    <button mat-icon-button [class.invisible]="!selectedConfig" (click)="runTask()">
       <mat-icon>
         play_arrow
       </mat-icon>
