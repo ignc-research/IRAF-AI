@@ -17,3 +17,9 @@
     <mat-icon>download</mat-icon>  
   </mat-button-toggle>
 </mat-button-toggle-group>
+
+<mat-button-toggle-group *ngIf="sceneService.rootNode" (click)="runConfigAsNewTask()">
+  <mat-button-toggle>
+    <mat-icon>download</mat-icon>  
+  </mat-button-toggle>
+</mat-button-toggle-group>

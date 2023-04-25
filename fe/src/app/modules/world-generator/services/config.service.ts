@@ -33,27 +33,28 @@ import { Obstacle } from 'src/app/models/obstacle';
 import { Config } from 'src/app/models/config/config';
 import { ConfigUtils } from 'src/app/models/config/config-utils';
 import { ConfigIoMessage, ConfigIoMsgType, ConfigIoResult } from 'src/app/models/config/config-io-result';
+import { SceneNode } from 'src/app/models/scene-node';
+import { getDefaultRunNode } from 'src/app/models/config/config-run-node';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigService {
+  // Cache run node as it is not user editable
+  private runNode: any = null;
+
   constructor(
     private apiService: GeneratorApiService,
     private toast: ToastService,
-    private sceneService: SceneService,
     private uiService: UiControlService
   ) {}
 
-  exportConfig() {
+  exportConfig(envNode: SceneNode) {
     try {
-      if (!this.sceneService.rootNode) {
-        return;
-      }
-      const env = exportEnvironment(this.sceneService.rootNode as Environment);
+      const env = exportEnvironment(envNode as Environment);
 
       const bbox = new THREE.Box3().setFromObject(
-        this.sceneService.rootNode.ref.value
+        envNode.ref.value
       );
       env.world.config.workspace_boundaries = [
         bbox.min.x,
@@ -64,7 +65,7 @@ export class ConfigService {
         bbox.max.z,
       ];
 
-      this.sceneService.robotGroup?.children
+      envNode.findRecursive(item => item instanceof GroupNode && item.type == GroupType.Robots)?.children
         .map((x) => x as Robot)
         .forEach((robot) => {
           const configRobot = exportRobot(robot);
@@ -80,15 +81,16 @@ export class ConfigService {
         });
 
       env.world.config.obstacles =
-        this.sceneService.obstacleGroup?.children.map((x) =>
+      envNode.findRecursive(item => item instanceof GroupNode && item.type == GroupType.Obstacles)?.children.map((x) =>
           exportObstacle(x as Obstacle)
         ) ?? [];
 
-      const out = YAML.dump({ env });
-      this.downloadYAML(out);
+      const out = YAML.dump({ run: this.runNode, env });
+      return out;
     } catch (e) {
       this.toast.error(`An error occured: ${e}`);
     }
+    return '';
   }
 
   downloadYAML(yaml: string) {
@@ -124,6 +126,8 @@ export class ConfigService {
       if (configStr && !data) {
         output.withMessage(new ConfigIoMessage(`YAML Parse error`, ConfigIoMsgType.ERROR));
       }
+
+      this.runNode = data?.run ?? getDefaultRunNode();
 
       const parsedEnvironment = parseEnvironment(
         this.apiService.environment!,
@@ -188,10 +192,7 @@ export class ConfigService {
       });
 
       this.uiService.selectNode(null);
-
-      // Fix for refs not updating properly
-      setTimeout(() => (this.sceneService.rootNode = undefined), 0);
-      setTimeout(() => (this.sceneService.rootNode = output.data), 0);
+      return output.data;
     } catch (e) {
       console.error(e);
       output.withMessage(new ConfigIoMessage(`An unknown error occured: ${e}`, ConfigIoMsgType.ERROR));
@@ -201,5 +202,7 @@ export class ConfigService {
     if (configStr) {
         this.showMessages(output.messages);
     }
+
+    return null;
   }
 }

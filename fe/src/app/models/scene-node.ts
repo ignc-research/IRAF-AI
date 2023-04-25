@@ -38,6 +38,13 @@ export class SceneNode {
         this.ref = new Ref<THREE.Object3D>();
         this.children.forEach(x => x.invalidateRef());
     }
+
+    findRecursive(condition: (item: SceneNode) => boolean, item: SceneNode=this): SceneNode | null {
+      if (condition(item)) {
+        return item;
+      }
+      return item.children.find(x => this.findRecursive(condition, x)) ?? null;
+    }
 }
 
 export interface ISceneNode {

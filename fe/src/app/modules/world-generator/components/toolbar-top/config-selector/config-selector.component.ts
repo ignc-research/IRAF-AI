@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 
 import { ConfigService } from '../../../services/config.service';
 import { SceneService } from '../../../services/scene.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-config-selector',
@@ -10,12 +11,12 @@ import { SceneService } from '../../../services/scene.service';
 })
 export class ConfigSelectorComponent {
 
-  constructor(private configService: ConfigService, public sceneService: SceneService) {
+  constructor(private configService: ConfigService, public sceneService: SceneService, private router: Router) {
     
   }
 
   createNewConfig() {
-    this.configService.parseConfig();
+    this.sceneService.rootNode = this.configService.parseConfig() ?? undefined;
   }
 
   onFileSelected(event: Event) {
@@ -25,7 +26,12 @@ export class ConfigSelectorComponent {
         reader.onload = async () => {
             if (typeof reader.result === 'string') {
                 let fileContent = reader.result;
-                this.configService.parseConfig(fileContent);
+                const env = this.configService.parseConfig(fileContent);
+                if (env) {
+                  // Fix for refs not updating properly
+                  setTimeout(() => (this.sceneService.rootNode = undefined), 0);
+                  setTimeout(() => (this.sceneService.rootNode = env), 0);
+                }
             }
         };
         reader.readAsText(file);
@@ -34,6 +40,10 @@ export class ConfigSelectorComponent {
   }
 
   exportConfig() {
-    this.configService.exportConfig();
+    this.configService.downloadYAML(this.configService.exportConfig(this.sceneService.rootNode!));
+  }
+
+  runConfigAsNewTask() {
+    this.router.navigateByUrl('/server-tasks/new-task', { state: { config: this.configService.exportConfig(this.sceneService.rootNode!) } });
   }
 }

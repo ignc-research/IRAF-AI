@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import * as ace from 'ace-builds';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-task',
@@ -18,14 +19,16 @@ export class NewTaskComponent {
 
   configName: string = '';
 
-  
-  configContent: string | null = '';
+  configContent: string | null = null;
 
-  constructor(private apiService: ApiService) {
+  constructor(private apiService: ApiService, private router: Router) {
     this.apiService.getConfigs.subscribe(x => this.configs = x);
+
+    const routeConfig = this.router.getCurrentNavigation()?.extras?.state?.["config"];
+    if (routeConfig) {
+      this.configContent = routeConfig;
+    }
   }
-
-
 
   onConfigChange = () => {
     if (!this.selectedConfig) {

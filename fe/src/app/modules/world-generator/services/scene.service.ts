@@ -18,11 +18,11 @@ export class SceneService {
   rootNode?: SceneNode;
 
   get obstacleGroup() {
-    return this.findRecursive((item: SceneNode) => item instanceof GroupNode && item.type == GroupType.Obstacles)
+    return this.rootNode?.findRecursive((item: SceneNode) => item instanceof GroupNode && item.type == GroupType.Obstacles)
   }
 
   get robotGroup() {
-    return this.findRecursive((item) => item instanceof GroupNode && item.type == GroupType.Robots)
+    return this.rootNode?.findRecursive((item) => item instanceof GroupNode && item.type == GroupType.Robots)
   }
 
   constructor(private apiService: GeneratorApiService) {
@@ -31,13 +31,6 @@ export class SceneService {
   getLastIndex = (objs: THREE.Object3D[], prefix: string) => (objs.filter(x => x.name.startsWith(prefix))
                                                                   .map(x => +(x.name.split('_').at(-1) ?? 0))
                                                                   .sort((a, b) => b - a)[0] ?? 0)
-
-  findRecursive(condition: (item: SceneNode) => boolean, item: SceneNode=this.rootNode!): SceneNode | null {
-    if (condition(item)) {
-      return item;
-    }
-    return item.children.find(x => this.findRecursive(condition, x)) ?? null;
-  }
 
   async addObstacle(obstacle: IObstacle) {
     obstacle.name = StringUtils.getFileNameWithoutExt(obstacle.urdf);

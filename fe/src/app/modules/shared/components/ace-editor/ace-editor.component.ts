@@ -24,7 +24,6 @@ export class AceEditorComponent implements AfterViewInit {
   @Input()
   set editorContent(val: string | null) {
     this._content = val;
-
     this.aceEditor?.session.setValue(this._content ?? '');
 
     if (this.autoscroll) {
@@ -59,6 +58,6 @@ export class AceEditorComponent implements AfterViewInit {
     this.aceEditor.setValue(this._content ?? '');
     this.aceEditor.setReadOnly(this.readonly);
     this.aceEditor.on('change', () => this.editorContentChange.emit(this.editorContent));
-    this.editorContent = null;
+    this.editorContent = this._content;
   }
 }
