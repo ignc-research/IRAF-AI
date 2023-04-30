@@ -35,15 +35,11 @@ export class EvaluationComponent implements OnInit {
   overwriteMode: boolean = false;
   dataContext: { [key: string]: { [key: string]: any[] } } = {};
   
-  
-
-
 
   constructor(private plotDataService: PlotDataService, public dialog: MatDialog, rendererFactory: RendererFactory2, private colorService: ColorService) {
     this.selectedPlot = 'custom';
     this.renderer = rendererFactory.createRenderer(null, null);
   }
-  
   
 
   ngOnInit(): void {
