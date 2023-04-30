@@ -79,6 +79,12 @@ export class EvaluationComponent implements OnInit {
       });
       console.log("dataContext", this.dataContext)
 
+
+      // addVariable() throws error while trying to add default custom functions
+      //this.addDefaultCustomFunctions();
+      //console.log("added default custom functions")
+
+
     });
   }
 
@@ -86,6 +92,63 @@ export class EvaluationComponent implements OnInit {
     if (this.dataReadySubscription) {
       this.dataReadySubscription.unsubscribe();
     }
+  }
+
+  addDefaultCustomFunctions(): void {
+    this.variableDefinition = `
+    const avgTrj = (experimentName: string, field: string) => {
+      const positionData = dataContext[experimentName][field];
+    
+      function getAverageXyz(trajectories: { x: number[]; y: number[]; z: number[] }[]) {
+        const minCount = Math.min(...trajectories.map((line) => line.x.length));
+    
+        trajectories.forEach((line) => {
+          while (line.x.length - minCount > 0) {
+            const randomIndex = Math.round(Math.random() * 2 + 1);
+            line.x.splice(randomIndex, 1);
+            line.y.splice(randomIndex, 1);
+            line.z.splice(randomIndex, 1);
+          }
+        });
+    
+        const avgXValues = nj.zeros(minCount).tolist();
+        const avgYValues = nj.zeros(minCount).tolist();
+        const avgZValues = nj.zeros(minCount).tolist();
+    
+        trajectories.forEach((line) => {
+          for (let i = 0; i < minCount; i++) {
+            avgXValues[i] += line.x[i];
+            avgYValues[i] += line.y[i];
+            avgZValues[i] += line.z[i];
+          }
+        });
+    
+        for (let i = 0; i < minCount; i++) {
+          avgXValues[i] /= trajectories.length;
+          avgYValues[i] /= trajectories.length;
+          avgZValues[i] /= trajectories.length;
+        }
+    
+        return {
+          x: avgXValues,
+          y: avgYValues,
+          z: avgZValues,
+        };
+      }
+    
+      const trajectories = positionData.map((values: number[][]) => ({
+        x: values.map((value) => value[0]),
+        y: values.map((value) => value[1]),
+        z: values.map((value) => value[2]),
+      }));
+    
+      const avgTrajectory = getAverageXyz(trajectories);
+    
+      return avgTrajectory;
+    }
+    `;
+    this.addVariable();
+    this.variableDefinition = '';
   }
   
   refreshPlot(index: number): void {
