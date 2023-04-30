@@ -2,6 +2,16 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.3.
 
+See evaluation_readme.pdf for complete instructions!
+
+## Requirements
+
+Node.js 
+
+## Installation
+
+Run `npm install --legacy-peer-deps` to install required packages for the project.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
