@@ -6,6 +6,12 @@ See evaluation_readme.pdf for complete instructions! <br>
 See evaluation_readme.pdf for complete instructions! <br>
 See evaluation_readme.pdf for complete instructions! <br>
 
+<img width="802" alt="Screenshot 2023-05-01 at 00 44 13" src="https://user-images.githubusercontent.com/16864877/235374484-dfeb1b96-8ad4-4647-94cb-408b15d58721.png">
+
+<img width="807" alt="Screenshot 2023-05-01 at 00 44 20" src="https://user-images.githubusercontent.com/16864877/235374490-920c2ca8-b62b-4e13-a233-3f5cc261333f.png">
+
+
+
 ## Requirements
 
 Node.js 
@@ -37,3 +43,9 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+
+https://user-images.githubusercontent.com/16864877/235374460-300e7f48-4bb8-4c47-828d-b3af0b29ae1e.mp4
+
+
