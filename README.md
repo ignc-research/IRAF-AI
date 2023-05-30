@@ -1,7 +1,19 @@
 # IRAF-AI
 
+## Cloning
+As the backend depends on the [IR-DRL](https://github.com/ignc-research/IR-DRL) repository, we need to initially pull this repo which is included as a git submodule by running:
+
+```
+git submodule update --init --recursive
+```
+
 ## Backend 
-Code and readme file in folder `./api`
+The backend needs to be executed in order for some frontend functionalities to work. This includes the world editor as well as the server task page.
+The backend can be executed by running the app.py inside the ./apis/generator/api folder:
+```
+cd ./apis/generator/api
+python ./app.py
+```
 
 ## Frontend 
 Code and readme file in folder `./fe`
