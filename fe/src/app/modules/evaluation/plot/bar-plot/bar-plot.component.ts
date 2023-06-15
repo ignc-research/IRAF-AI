@@ -86,7 +86,7 @@ export class BarPlotComponent implements OnInit, OnDestroy {
       y: Object.values(avgData),
       type: 'bar',
       marker: {
-        color: Object.keys(avgData).map((episode) => this.colorService.getColor(parseInt(episode))),
+        color: Object.keys(avgData).map((episode) => this.colorService.getColor("")),
       },
     };
 

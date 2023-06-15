@@ -4,26 +4,12 @@
       <ng-container *ngFor="let plot of addedPlots; let i = index">
         <div class="plot-wrapper">
           <div>
-            <app-trajectory-plot
-              *ngIf="plot.type === 'trajectory'"
-              [experimentName]="firstExperiment"
-              [dataColumn]="plot.dataColumn">
-            </app-trajectory-plot>
-            <app-bar-plot
-              *ngIf="plot.type === 'bar'"
-              [experiments]="[firstExperiment]"
-              [dataColumn]="plot.dataColumn"
-            ></app-bar-plot>
-            <app-line-plot
-              *ngIf="plot.type === 'line'"
-              [experimentName]="firstExperiment"
-              [dataColumn]="plot.dataColumn"
-            ></app-line-plot>
             <app-custom-plot
               *ngIf="plot.type === 'custom'"
               [experimentName]="firstExperiment"
               [customPlotCode]="plot.code"
               [elementId]="'custom-plot-' + i">
+              [dataContext]="dataContext"
             </app-custom-plot>
           </div>
           <textarea
@@ -36,6 +22,9 @@
           ></textarea>
           <button class="close-btn" (click)="removePlot(i)">
             x
+          </button>
+          <button class="refresh-btn" (click)="refreshPlot(i)">
+            ⟳
           </button>
         </div>
       </ng-container>
@@ -54,10 +43,7 @@
           <option value="line">Line Plot</option>
           <option value="custom">Custom Plot</option>
         </select>
-        <!-- <select [(ngModel)]="selectedDataColumn" [disabled]="!selectedPlot || selectedPlot === 'custom'">
-          <option value="">-- Select a data column --</option>
-          <option *ngFor="let column of dataColumns" [value]="column">{{ column }}</option>
-        </select> -->
+
         <div *ngIf="selectedPlot === 'custom'" class="custom-plot-definition">
           <label for="customPlotCode">Custom Plot Definition: <a href="https://plotly.com/javascript/" style="text-decoration: none;" id="plotly-examples" target="_blank">Plotly Example Plots</a></label>
           <textarea [(ngModel)]="customPlotCode" id="customPlotCode" rows="4" cols="50"></textarea>
@@ -67,7 +53,6 @@
         <button *ngFor="let experiment of getExperiments()" (click)="openDataTable(experiment)">
           Show Data Table for {{ experiment.name }}
         </button>
-        
 
         <div class="import-csv-section">
           <label for="importCsvInput">Import CSV:</label>
@@ -96,7 +81,13 @@
         <label for="variableDefinition">Variable Definition:</label>
         <textarea [(ngModel)]="variableDefinition" id="variableDefinition" rows="4" cols="50" attr.experiment="{{firstExperiment}}"></textarea>
       </div>
-      <button (click)="addVariable()">Add Variable</button>
+        
+      <button *ngIf="!overwriteMode" (click)="addVariable()">Add Variable</button>
+      <div class="overwrite-cancel-wrapper">
+        <button *ngIf="overwriteMode" (click)="overwriteVariable()" class="overwrite-cancel-buttons overwrite">Overwrite</button>
+        <button *ngIf="overwriteMode" (click)="cancelOverwrite()" class="overwrite-cancel-buttons cancel">Cancel</button>
+      </div>
+      
     </div>
 
     <button mat-icon-button (click)="toggleDarkMode()" class="dark-mode-toggle" [ngClass]="{'dark-mode': isDarkModeEnabled}">

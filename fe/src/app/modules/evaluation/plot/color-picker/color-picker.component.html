@@ -1,0 +1,9 @@
+<div>
+    <h2>Change color for {{data.experiment.name}}</h2>
+    <ngx-mat-color-picker [(ngModel)]="color"></ngx-mat-color-picker>
+    <div class="buttons">
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-button (click)="onSave()">Save</button>
+    </div>
+  </div>
+  
